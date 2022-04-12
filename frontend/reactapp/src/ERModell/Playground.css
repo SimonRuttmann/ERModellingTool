@@ -1,0 +1,219 @@
+:root {
+    --interfacesBarWidthPx: 100px;
+    --canvasWidthVw: 70vw;
+    --canvasHeightVh: 70vh;
+  }
+  
+.svgclass{
+  height:150px;
+  width:150px;
+  overflow: visible;
+}
+
+  .boxesContainer {
+    position: relative;
+    min-height: calc(99vh);
+    min-width: calc(99vw - 600px);
+    border: solid black 1px;
+  }
+  
+  .titleStyle {
+    font-size: 40px;
+    margin: 20px 0 0 20px;
+  }
+  
+  .canvasStyle {
+    display: flex;
+    position: relative;
+
+    background: white;
+    color: black;
+  }
+  
+  /*.canvasContainerStyle {*/
+  /*  position: relative;*/
+  /*  background: white;*/
+  /*  color: black;*/
+  /*  width: var(--canvasWidthVw);*/
+  /*}*/
+  
+  .toolboxMenu {
+    width: 300px;
+    background: rgb(200, 200, 200);
+    text-align: center;
+  }
+  
+  .toolboxTitle {
+    font-size: 20px;
+    height: 50px;
+  }
+  .toolboxContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: calc(100% - 68px);
+  }
+  .wideBox,
+  .interfaceBox {
+    border: 1px #999 solid;
+    border-radius: 10px;
+    text-align: center;
+    width: 100px;
+    height: 30px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .tallBox {
+    border: 1px #999 solid;
+    border-radius: 10px;
+    text-align: center;
+    width: 20px;
+    height: 80px;
+    background: white;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  .interfaceBox {
+    height: 50px;
+  }
+  
+  .triangle {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid #555;
+  }
+  
+  .switchIcon {
+    top: 0;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .iconContainer {
+    background: white;
+    border-color: #999;
+    border-style: solid;
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+  }
+  
+
+  .Entity {
+    width: 200px;
+    height: 100px;
+    background: rgb(255, 255, 255);
+    opacity: 1;
+    top: 10px;
+    left: 15px;
+    overflow: hidden;
+
+    border: 1px rgb(0, 0, 0) solid;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .Attribute {
+    width: 200px;
+    height: 100px;
+    background: rgb(255, 255, 255);
+    opacity: 1;
+    display: flex;
+    top: 10px;
+    left: 15px;
+    border-radius: 50%;
+
+    
+    border: 1px rgb(0, 0, 0) solid;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+     
+  .relation {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 91, 0, 1);
+    opacity: 1;
+    display: flex;
+    top: 10px;
+    left: 15px;
+    overflow: hidden;
+
+    border: 1px #999 solid;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(45deg);
+    transform-origin: right;
+  }
+
+  .relation2 {
+    left: 10px;
+    width: 0;
+    height: 0;
+    border: 125px solid transparent;
+    border-bottom: 70px solid rgb(98, 209, 46, 1);
+    position: relative;
+    top: -115px;
+    justify-content: center;
+    align-items: center;
+
+
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .relation2:after {
+    content: "";
+    position: absolute;
+    left: -125px;
+    top: 70px;
+    width: 0;
+    height: 0;
+    border: 125px solid transparent;
+    border-top: 70px solid rgb(98, 209, 46, 1);
+    
+  }
+  
+
+  .textfieldObjects {
+    width: 160px;
+    height: 25px;
+    background-color: inherit;
+    opacity: 1;
+    position: absolute;
+    overflow: hidden;
+    border:0;
+    outline:0;
+    text-align: center;
+    text-justify: auto;    
+  }
+
+  .draggableContainer {
+    /*   width: 300px;
+       height: 300px; */
+       background: rgba(255, 255, 255, 1);
+       opacity: 1;
+       position: relative;
+       top: 0px;
+       left: 0px;
+       cursor: grab;
+   /*    overflow: hidden; */
+     }
