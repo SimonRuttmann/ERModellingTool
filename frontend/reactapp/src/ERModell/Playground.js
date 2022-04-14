@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Playground.css';
 import Box from './Components/Box';
 import TopBar from './Components/TopBar';
@@ -12,7 +12,30 @@ import { Xwrapper } from 'react-xarrows';
 
 */
 
+
+/*
+--> 1. Finde heraus wie die position des svgs ist (Alle eckpunkte)
+---> 2. Setze diese als bounds bei den svg elementen 				<Draggable bounds={{left: 100, top: 200, right: 300, bottom: 400}}>
+ */
 const erTypes= ["Entity", "Attribute"];
+
+
+function getBoundsOfSvg(){
+
+
+  let svgContainer = document.getElementById("boxesContainer");
+  console.log(svgContainer)
+  if(svgContainer === null) return;
+  let bounds = svgContainer.getBoundingClientRect();
+
+  return {
+    right: bounds.right,
+    left: bounds.left,
+    top: bounds.top,
+    bottom: bounds.bottom}
+
+
+}
 
 const PlayGround = () => {
 
@@ -38,18 +61,38 @@ const PlayGround = () => {
          setSelected({ id: e.target.id, type: 'box' });
      }
   };
+/*
 
+  const [svgBounds, setSvgBounds] = useState(undefined)
+  //component did mount
+  useEffect(() => {
 
+    console.log("Did mount")
+    let svgContainer = document.getElementById("boxesContainer");
+    console.log(svgContainer)
+    if(svgContainer === null) return;
+    let bounds = svgContainer.getBoundingClientRect();
 
+    let bounds2 = {
+      right: bounds.right,
+      left: bounds.left,
+      top: bounds.top,
+      bottom: bounds.bottom}
 
+    console.log(bounds)
 
+      setSvgBounds(bounds2)
+
+  },[]);
+
+*/
   const createNewElement = (e) => {
     let erType = e.dataTransfer.getData('erType');
   
 
     if (erTypes.includes(erType)){
 
-      var newId = erType + "--" + Date.now();
+      let newId = erType + "--" + Date.now();
       let { x, y } = e.target.getBoundingClientRect();
      /* 
       console.log("x" + e.target.getBoundingClientRect().x);
@@ -136,7 +179,7 @@ const PlayGround = () => {
 
 
 
-        <div id="mostouter" className="outerDrawboardContainer" style={{position: "relative"}}>
+        <div id="mostouter" className="outerDrawboardContainer scrollAble">
 
           <div className="drawboardBackgroundPage"/>
 
@@ -146,11 +189,11 @@ const PlayGround = () => {
             className="drawboardDragArea"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => createNewElement(e)}
-            style={{position: "relative"}}>
+            style={{position: "absolute"}}>
            
            
             {boxes.map((box) => (
-              <Box {...boxProps} key={box.id} box={box} position="absolute" sidePos="middle" />
+              <Box {...boxProps} key={box.id} box={box} bounds={getBoundsOfSvg()} position="absolute" sidePos="middle" />
             ))}
           
           </svg>

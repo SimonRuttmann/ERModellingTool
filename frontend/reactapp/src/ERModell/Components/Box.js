@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Box.css';
 import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
@@ -25,10 +25,16 @@ import Attribute from './Attribute';
 */
 const Box = (props) => {
   const updateXarrow = useXarrow();
-  
+
+
+  const [isDragging, setDragging] = useState(false)
 
   const handleClick = (e) => {
+
+    console.log("click and : " + isDragging)
     e.stopPropagation(); //Hier wird das Event konsumiert. Damit werden evtl. Seiteneffekte von Subelementen eleminiert.
+    if (isDragging===true) return;
+
     console.log("Click on " + props.box.id )
     if (props.actionState === 'Normal') {
       props.handleSelect(e);
@@ -72,25 +78,47 @@ const Box = (props) => {
   }
 
   var erObject = {};
+  // eslint-disable-next-line default-case
   switch(props.box.erType){
     case "Entity":    erObject = <Entity    id={props.box.id} highlight={background} />; break;
     case "Attribute": erObject = <Attribute id={props.box.id} highlight={background} />; break;
-    default: erObject={}; break;
+
   }
  
   //bounds="#mostouter"
   const fontFamily="arial" 
   const fontSize="12"
 
+
+
+
+  function onDrag(e) {
+    setDragging(true)
+    updateXarrow();
+  }
+  const PRESS_TIME_UNTIL_DRAG_MS = 250;
+  function onStop(e) {
+    setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
+  }
+//bounds={{left: number, top: number, right: number, bottom: number}}
   //Props for svgs: id, displayText, color (highlight), fontFamily, fontSize
+
+  const offset = 50;
+  const elementWidth = 150;
+  const elementHeight = 50;
   return (
     <React.Fragment>
      
-      <Draggable 
-        
-         onDrag={updateXarrow}
-      
-         bounds="#mostouter"
+      <Draggable
+         bounds={props.bounds ? {
+               left: offset,
+               top: props.bounds.top + offset ,
+               right: props.bounds.right-props.bounds.left - elementWidth - offset ,
+               bottom: props.bounds.bottom -elementHeight - offset}
+               : undefined}
+
+         onDrag={onDrag}
+         onStop ={onStop}
          grid={[1, 1]} 
          scale={1} 
          defaultPosition={{x: props.box.x, y: props.box.y}}> 
@@ -102,7 +130,7 @@ const Box = (props) => {
            fill="#61DAFB" 
            transform="scale(2)"
 
-           onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */} 
+           onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
 
           <StrongEntity id={props.box.id} displayText={"Hasdfdsfsdfsdfdsffdllo"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>  
         </g>
@@ -168,7 +196,7 @@ function StrongEntity({id, displayText, color, fontFamily, fontSize}){
   var width = 137;   const height= 67;
 
   //If necesarry, increase width to fit text
-  var width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
+  width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
   
   return (
     <React.Fragment>

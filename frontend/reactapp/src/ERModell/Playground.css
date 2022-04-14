@@ -23,7 +23,7 @@ body {
   width: 30%;
   height: 100%;
   min-height: 100%;
-  background: rgb(194, 185, 185);
+  background: rgb(107, 75, 75);
   text-align: center;
 }
 
@@ -46,53 +46,93 @@ body {
 
 /* The main outer drawboard container */
 .outerDrawboardContainer {
-  position: absolute;
-  overflow: auto;
+  position: absolute !important;
   display: block;
-  top: 0%;
-  bottom: 0%;
   left: 30%;
-  right: 0%;
   height: 100%;
   width: 70%;
   background-color: white;
+  text-align: left;
 }
+
+.scrollAble {
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
 
 /* The background page / grid showed inside the drawable area*/
 .drawboardBackgroundPage {
-  position: absolute;
+  position: absolute !important;
   height: 100%;
   width: 100%;
   background-image:
           /* from left to right,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
-          repeating-linear-gradient(0deg, transparent 0px, transparent 30px, #d0d0d0 30px, #d0d0d0 31px),
+          repeating-linear-gradient(0deg, transparent 0px, transparent 30px, #efeded 30px, #efeded 31px),
           /* from top to bot,       from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
-          repeating-linear-gradient(-90deg, transparent 0px, transparent 30px, #d0d0d0 30px, #d0d0d0 31px);
+          repeating-linear-gradient(-90deg, transparent 0px, transparent 30px, #efeded 30px, #efeded 31px);
 }
 
 
 /* The area, where elements can be dragged inside */
 .drawboardDragArea {
+  position: absolute !important;
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+}
+
+
+.draggableContainer {
+  background: rgba(255, 255, 255, 1);
+  opacity: 1;
+  position: relative;
+  cursor: grab;
+}
+
+
+/* Right edit bar */
+
+.rightSidebarContainer {
   position: absolute;
-  min-height: 300px;
-  min-width: 300px;
-  border: solid black 1px;
+  width:30%;
+  left: 70%;
+  height: 100%;
+  background: rgb(1, 39, 175);
 }
 
+.rightSidebarTitle{
 
-.scrollAble {
-    overflow: auto;
-    min-height: calc(99vh);
-    width: calc(99vw - 600px);
 }
 
+.anotherS{
+  width:300px;
+  background: rgb(220, 240, 250);
+  padding: 0px 20px;
+  height: 100%;
+  flex-direction: column;
+  display: flex;
+  justify-content: space-evenly;
+}
 
-  /*.canvasContainerStyle {*/
-  /*  position: relative;*/
-  /*  background: white;*/
-  /*  color: black;*/
-  /*  width: var(--canvasWidthVw);*/
-  /*}*/
+.actionBubble {
+  background: white;
+  border-radius: 50px;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 25px;
+}
+
+.actionBubble:hover {
+  background: azure;
+}
+
+.actionBubble:active {
+  background: DeepSkyBlue;
+}
+
 
 
   .wideBox,
@@ -107,7 +147,7 @@ body {
     justify-content: center;
     align-items: center;
   }
-  
+
   .tallBox {
     border: 1px #999 solid;
     border-radius: 10px;
@@ -121,7 +161,7 @@ body {
   .interfaceBox {
     height: 50px;
   }
-  
+
   .triangle {
     width: 0;
     height: 0;
@@ -129,7 +169,7 @@ body {
     border-right: 25px solid transparent;
     border-bottom: 50px solid #555;
   }
-  
+
   .switchIcon {
     top: 0;
     width: 50px;
@@ -247,17 +287,6 @@ body {
     text-justify: auto;    
   }
 
-  .draggableContainer {
-    /*   width: 300px;
-       height: 300px; */
-       background: rgba(255, 255, 255, 1);
-       opacity: 1;
-       position: relative;
-       top: 0px;
-       left: 0px;
-       cursor: grab;
-   /*    overflow: hidden; */
-     }
 
 .svgclass{
   height:150px;
@@ -265,34 +294,3 @@ body {
   overflow: visible;
 }
 
-/* Top Bar */
-
-.topBarStyle {
-
-  width:300px;
-  background: rgb(220, 240, 250);
-  padding: 0px 20px;
-  height: 100%;
-  flex-direction: column;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-
-
-
-.actionBubble {
-  background: white;
-  border-radius: 50px;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  margin: 25px;
-}
-.actionBubble:hover {
-  background: azure;
-}
-.actionBubble:active {
-  background: DeepSkyBlue;
-}

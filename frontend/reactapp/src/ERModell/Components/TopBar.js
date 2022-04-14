@@ -247,7 +247,7 @@ const TopBar = (props) => {
 
 
   var displayMenu = null;
-  if(props != undefined && props.selected != undefined && props.selected != null) {
+  if(props !== undefined && props.selected !== undefined && props.selected !== null) {
   //  console.log("hallo?")
   //  console.log(props.selected.type)
     switch(props.selected.type){
@@ -259,12 +259,12 @@ const TopBar = (props) => {
   }
   return (
     <div
-      className="topBarStyle"
+      className="rightSidebarContainer"
       style={{ visibility: props.selected === null ? 'hidden' : 'visible' }}
       onClick={(e) => e.stopPropagation()}>
-      <div className="topBarLabel" onClick={() => props.handleSelect(null)}>         {/* Can be removed*/}
+      <div onClick={() => props.handleSelect(null)}>         {/* Can be removed*/}
       </div>
-      {returnTopBarApearnce()}
+        {/*  {returnTopBarApearnce()} */}
 
 
       {displayMenu}
