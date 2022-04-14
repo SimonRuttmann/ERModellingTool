@@ -17,7 +17,7 @@ body {
 
 
 
-/* TOOLBOX LEFT SIDE */
+/* Toolbox left side */
 .leftSidebarContainer {
   position: absolute;
   width: 30%;
@@ -32,6 +32,7 @@ body {
   font-size: 20px;
   height: 5%;
 }
+
 .leftSidebarSelectionContainer {
   display: flex;
   flex-direction: column;
@@ -48,39 +49,27 @@ body {
   position: absolute;
   overflow: auto;
   display: block;
-  top: 0px;
-  bottom: 0px;
-  left: 300px;
-  right: 0px;
-  background-color: #a69393;
+  top: 0%;
+  bottom: 0%;
+  left: 30%;
+  right: 0%;
+  height: 100%;
+  width: 70%;
+  background-color: white;
 }
 
 /* The background page / grid showed inside the drawable area*/
 .drawboardBackgroundPage {
   position: absolute;
-  height: 100px;
-  width: 100px;
-  left: 150px;
-  right: 150px;
-
-  margin: 0;
-  overflow:hidden;
-  border-width: 1px;
-
-}
-
-.drawboardBackgroundPage {
-  height: 100px;
-  width: 100px;
-  margin: 0;
-  position: absolute;
-}
-.drawboardBackgroundPage {
+  height: 100%;
+  width: 100%;
   background-image:
-          repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%),
-          repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
-  background-size: 71px 71px;
+          /* from left to right,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
+          repeating-linear-gradient(0deg, transparent 0px, transparent 30px, #d0d0d0 30px, #d0d0d0 31px),
+          /* from top to bot,       from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
+          repeating-linear-gradient(-90deg, transparent 0px, transparent 30px, #d0d0d0 30px, #d0d0d0 31px);
 }
+
 
 /* The area, where elements can be dragged inside */
 .drawboardDragArea {

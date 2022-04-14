@@ -138,9 +138,8 @@ const PlayGround = () => {
 
         <div id="mostouter" className="outerDrawboardContainer" style={{position: "relative"}}>
 
-          <div id="drawboardBackgroundPage">
+          <div className="drawboardBackgroundPage"/>
 
-          </div>
 
           <svg
             id="boxesContainer"
