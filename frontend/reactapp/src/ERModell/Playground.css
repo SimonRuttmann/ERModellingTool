@@ -1,18 +1,47 @@
-
-
-:root {
-  width: 100%;
-  height: 100%;
-  background: #0DB8DE;
+body {
   position: absolute;
   display: block;
-  }
+  width: 100%;
+  height: 100%;
+}
+
 
 /* Root element of the website*/
 .canvasStyle {
   position: absolute;
-  background: white;
+  background: red;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
+
+
+
+/* TOOLBOX LEFT SIDE */
+.leftSidebarContainer {
+  position: absolute;
+  width: 30%;
+  height: 100%;
+  min-height: 100%;
+  background: rgb(194, 185, 185);
+  text-align: center;
+}
+
+.leftSidebarTitle {
+  margin-top: 20px;
+  font-size: 20px;
+  height: 5%;
+}
+.leftSidebarSelectionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+  min-height: 100%;
+}
+
+
 
 /* The main outer drawboard container */
 .outerDrawboardContainer {
@@ -56,7 +85,8 @@
 /* The area, where elements can be dragged inside */
 .drawboardDragArea {
   position: absolute;
-
+  min-height: 300px;
+  min-width: 300px;
   border: solid black 1px;
 }
 
@@ -67,28 +97,6 @@
     width: calc(99vw - 600px);
 }
 
-
-/* TOOLBOX LEFT SIDE */
-.leftSidebarContainer {
-  position: absolute;
-  width: 300px;
-  height: 100%;
-  background: rgb(49, 31, 31);
-  text-align: center;
-}
-
-.leftSidebarTitle {
-  font-size: 20px;
-  height: 50px;
-}
-.leftSidebarSelectionContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 100%;
-  min-height: 100%;
-}
 
   /*.canvasContainerStyle {*/
   /*  position: relative;*/
@@ -266,4 +274,36 @@
   height:150px;
   width:150px;
   overflow: visible;
+}
+
+/* Top Bar */
+
+.topBarStyle {
+
+  width:300px;
+  background: rgb(220, 240, 250);
+  padding: 0px 20px;
+  height: 100%;
+  flex-direction: column;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+
+
+.actionBubble {
+  background: white;
+  border-radius: 50px;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin: 25px;
+}
+.actionBubble:hover {
+  background: azure;
+}
+.actionBubble:active {
+  background: DeepSkyBlue;
 }
