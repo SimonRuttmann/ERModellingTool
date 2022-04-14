@@ -106,10 +106,10 @@ const PlayGround = () => {
         <div className="canvasStyle" id="canvas" onClick={() => handleSelect(null)}>
 
                               {/* Linke Toolbar */}
-          <div className="toolboxMenu">
-            <div className="toolboxTitle">Drag & drop me!</div>
+          <div className="leftSidebarContainer">
+            <div className="leftSidebarTitle">Drag & drop me!</div>
             <hr />
-            <div className="toolboxContainer">
+            <div className="leftSidebarSelectionContainer">
               {erTypes.map((erType) => (
                 
                 <div
@@ -133,11 +133,18 @@ const PlayGround = () => {
 
         
         {/* Zeichenbrett */}
-        <div id="mostouter" className="boxesContainer"  style={{position: "relative"}}> 
-		      <div className="boxesContainer" style={{position: "relative"}}> 
+
+
+
+        <div id="mostouter" className="outerDrawboardContainer" style={{position: "relative"}}>
+
+          <div id="drawboardBackgroundPage">
+
+          </div>
+
           <svg
             id="boxesContainer"
-            className="boxesContainer"
+            className="drawboardDragArea"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => createNewElement(e)}
             style={{position: "relative"}}>
@@ -148,8 +155,8 @@ const PlayGround = () => {
             ))}
           
           </svg>
-          </div>
-          </div> 
+
+        </div>
         
         
           {/* rechte bar */}    
