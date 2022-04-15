@@ -132,7 +132,7 @@ const Box = (props) => {
 
            onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
 
-          <StrongEntity id={props.box.id} displayText={"Hasdfdsfsdfsdfdsffdllo"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>  
+          <StrongEntity id={props.box.id} displayText={"Hasdfdsfsdfsdfdsffdllo"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>
         </g>
 
       {/*

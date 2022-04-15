@@ -1,0 +1,10 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <rect fill="#fff" stroke="#000" x="1055" y="19" width="1" height="2" id="svg_2"/>
+  <path id="svg_10" d="m106.89446,250.34259" opacity="NaN" stroke-width="0" stroke="#000" fill="#000000"/>
+  <path id="svg_19" d="m347.90886,235.13046l45.51706,-70.34455l45.51706,70.34455l-91.03413,0z" stroke="#000" fill="#ffffff"/>
+  <text font-style="normal" font-weight="normal" fill="#000000" stroke="#000" x="375.79446" y="222.37189" id="svg_6" stroke-width="0" font-size="24" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve">IsA</text>
+ </g>
+
+</svg>

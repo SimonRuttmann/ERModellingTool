@@ -1,0 +1,7 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <ellipse stroke="#000" ry="33" rx="66" id="svg_11" cy="200" cx="400" fill="#fff"/>
+        <text xml:space="preserve" text-anchor="start"  font-family="Noto Sans JP" font-size="24" stroke-width="0" id="svg_6" y="208" x="377.68164" stroke="#000" fill="#000000">Text</text>
+        <line x1="375" y1="215" x2="430" y2="215" stroke="black" stroke-width="3" stroke-dasharray="4 2"/>
+    </g>
+</svg>
