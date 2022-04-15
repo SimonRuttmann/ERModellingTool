@@ -1,0 +1,10 @@
+<svg width="200" height="140" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <rect id="svg_2" height="2" width="1" y="19" x="1055" stroke="#000" fill="#fff"/>
+  <path stroke="#000" fill="#ffffff" d="m2.86238,70l98.13761,-61.93079l98.13761,61.93079l-98.13761,61.93079l-98.13761,-61.93079z" id="svg_11"/>
+  <path stroke="#000" fill="#ffffff" d="m11.82786,69.99979l89.17214,-55.9998l89.17214,55.9998l-89.17214,55.9998l-89.17214,-55.9998z" id="svg_15"/>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" stroke-width="0" id="svg_6" y="77.93098" x="28.82423" stroke="#000" fill="#000000" font-weight="normal" font-style="normal">Weak Relation</text>
+ </g>
+
+</svg>

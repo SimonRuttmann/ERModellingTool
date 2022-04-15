@@ -1,0 +1,11 @@
+<svg width="270" height="70" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_1">
+   <ellipse stroke="#000" fill="#fff" cx="133.29167" cy="35" id="svg_11" rx="131.70832" ry="33"/>
+   <line stroke="black" id="svg_2" stroke-width="3" y2="48" x2="244" y1="48" x1="29"/>
+  </g>
+  <text xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" id="svg_4" y="39" x="38" stroke-width="0" stroke="#000" fill="#000000">Identifying Attribute</text>
+ </g>
+
+</svg>
