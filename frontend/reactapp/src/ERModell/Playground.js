@@ -4,7 +4,8 @@ import Box from './Components/Box';
 import TopBar from './Components/TopBar';
 import Xarrow from './Components/Xarrow';
 import { Xwrapper } from 'react-xarrows';
-
+import ErTypesEnum from './ErTypesEnum';
+import DragBarManager from "./DragBarImageManager";
 /*
   Nächste Todo´s
   1. Die Views in TopBar einbinden.
@@ -17,7 +18,9 @@ import { Xwrapper } from 'react-xarrows';
 --> 1. Finde heraus wie die position des svgs ist (Alle eckpunkte)
 ---> 2. Setze diese als bounds bei den svg elementen 				<Draggable bounds={{left: 100, top: 200, right: 300, bottom: 400}}>
  */
-const erTypes= ["Entity", "Attribute"];
+
+
+const erTypes = Object.keys(ErTypesEnum);
 
 
 function getBoundsOfSvg(){
@@ -149,30 +152,7 @@ const PlayGround = () => {
         <div className="canvasStyle" id="canvas" onClick={() => handleSelect(null)}>
 
                               {/* Linke Toolbar */}
-          <div className="leftSidebarContainer">
-            <div className="leftSidebarTitle">Drag & drop me!</div>
-            <hr />
-            <div className="leftSidebarSelectionContainer">
-              {erTypes.map((erType) => (
-                
-                <div
-                  key={erType+"_draggableContainer"}
-                  className="draggableContainer"
-                  onDragStart={(e) => {/* console.log(e.pageX);*/ return e.dataTransfer.setData('erType', erType)}}
-                  draggable>
-
-                  <div className={erType}> 
-
-                  {erType}
-                  </div>
-
-                </div>
-
-                
-                  
-              ))}
-            </div>
-          </div>
+          <DragBarManager erTypes={erTypes}/>
 
         
         {/* Zeichenbrett */}
