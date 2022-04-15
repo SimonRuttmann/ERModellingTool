@@ -1,22 +1,24 @@
-import IdentifyingAttributeDragBarSvg from './Components/DragBarSvgs/Attributes/IdentifyingAttribute.svg'
-import {ReactComponent as WeakIdentifyingAttributeDragBarSvg} from './Components/DragBarSvgs/Attributes/WeakIdentifyingAttribute.svg'
-import {ReactComponent as NormalAttributeDragBarSvg} from './Components/DragBarSvgs/Attributes/NormalAttribute.svg'
-import {ReactComponent as StrongEntityDragBarSvg} from './Components/DragBarSvgs/Entities/StrongEntity.svg'
-import {ReactComponent as WeakEntityDragBarSvg} from './Components/DragBarSvgs/Entities/WeakEntity.svg'
-import {ReactComponent as StrongRelationDragBarSvg} from './Components/DragBarSvgs/Relations/StrongRelation.svg'
-import {ReactComponent as WeakRelationDragBarSvg} from './Components/DragBarSvgs/Relations/WeakRelation.svg'
-import {ReactComponent as IsAStructureDragBarSvg} from './Components/DragBarSvgs/IsAStructure.svg'
+import IdentifyingAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/IdentifyingAttribute.svg'
+import WeakIdentifyingAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/WeakIdentifyingAttribute.svg'
+import NormalAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/NormalAttribute.svg'
+import MultivaluedAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/MultivaluedAttribute.svg'
+import StrongEntityDragBarSvg from './Components/DraggableSvgs/Entities/StrongEntity.svg'
+import WeakEntityDragBarSvg from './Components/DraggableSvgs/Entities/WeakEntity.svg'
+import StrongRelationDragBarSvg from './Components/DraggableSvgs/Relations/StrongRelation.svg'
+import WeakRelationDragBarSvg from './Components/DraggableSvgs/Relations/WeakRelation.svg'
+import IsAStructureDragBarSvg from './Components/DraggableSvgs/IsAStructure.svg'
 
 
 const erTypes = {
-    IdentifyingAttribute: <img src={IdentifyingAttributeDragBarSvg} draggable className="draggableContainer" alt={"IdentifyingAttribute"}/>,
-    NormalAttribute: <WeakIdentifyingAttributeDragBarSvg/>,
-    WeakIdentifyingAttribute: <NormalAttributeDragBarSvg/>,
-    StrongEntity: <StrongEntityDragBarSvg/>,
-    WeakEntity: <WeakEntityDragBarSvg/>,
-    StrongRelation: <StrongRelationDragBarSvg/>,
-    WeakRelation: <WeakRelationDragBarSvg/>,
-    IsAStructure: <IsAStructureDragBarSvg/>
+    IdentifyingAttribute: <img src={IdentifyingAttributeDragBarSvg} draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
+    NormalAttribute: <img src={WeakIdentifyingAttributeDragBarSvg} draggable className="leftSideBarElementImage" alt={"WeakIdentifyingAttributeDragBarSvg"}/>,
+    MultivaluedAttribute: <img src={NormalAttributeDragBarSvg} draggable className="leftSideBarElementImage" alt={"NormalAttributeDragBarSvg"}/>,
+    WeakIdentifyingAttribute: <img src={MultivaluedAttributeDragBarSvg} draggable className="leftSideBarElementImage" alt={"MultivaluedAttributeDragBarSvg"}/>,
+    StrongEntity: <img src={StrongEntityDragBarSvg} draggable className="leftSideBarElementImage" alt={"StrongEntityDragBarSvg"}/>,
+    WeakEntity: <img src={WeakEntityDragBarSvg} draggable className="leftSideBarElementImage" alt={"WeakEntityDragBarSvg"}/>,
+    StrongRelation: <img src={StrongRelationDragBarSvg} draggable className="leftSideBarElementImage" alt={"StrongRelationDragBarSvg"}/>,
+    WeakRelation: <img src={WeakRelationDragBarSvg} draggable className="leftSideBarElementImage" alt={"WeakRelationDragBarSvg"}/>,
+    IsAStructure: <img src={IsAStructureDragBarSvg} draggable className="leftSideBarElementImage" alt={"IsAStructureDragBarSvg"}/>
 };
 
 export default erTypes;

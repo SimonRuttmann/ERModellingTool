@@ -20,10 +20,10 @@ body {
 /* Toolbox left side */
 .leftSidebarContainer {
   position: absolute;
-  width: 30%;
+  width: 300px;
   height: 100%;
   min-height: 100%;
-  background: rgb(107, 75, 75);
+  background: #3c3f41;
   text-align: center;
 }
 
@@ -35,20 +35,57 @@ body {
 
 .leftSidebarSelectionContainer {
   display: block;
-  align-items: center;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 6px 6px 6px 10px;
   height: 100%;
   min-height: 100%;
+  overflow: hidden;
 }
 
 
+.leftSideBarElementContainer {
+  position: relative;
+  cursor: grab;
+  display: inline-block;
+  padding: 1px;
+  overflow: hidden;
+}
+
+.leftSideBarElement {
+  position: relative;
+  display: inline-block;
+  background-size: contain;
+  padding: 1px;
+  margin: 1px;
+  overflow: hidden;
+  width: 120px;
+  height: auto;
+  border: 5px #222222;
+  background-color: grey;
+}
+
+.leftSideBarElementImage {
+  margin: auto;
+  position: relative;
+  cursor: grab;
+  display: inline-block;
+  width: 70%;
+  padding: 10px;
+  height: auto;
+
+}
+
+.leftSideBarElement:hover{
+  background-color: #2b2b2b;
+}
 
 /* The main outer drawboard container */
 .outerDrawboardContainer {
   position: absolute !important;
   display: block;
-  left: 30%;
+  left: 300px;
   height: 100%;
-  width: 70%;
+  width: calc(100% - 300px);
   background-color: white;
   text-align: left;
 }
@@ -81,18 +118,13 @@ body {
 }
 
 
-.draggableContainer {
-  position: relative;
-  cursor: grab;
-}
-
 
 /* Right edit bar */
 
 .rightSidebarContainer {
-  position: absolute;
-  width:30%;
-  left: 70%;
+  position: relative;
+  width: 300px;
+  float: right;
   height: 100%;
   background: rgb(1, 39, 175);
 }
@@ -104,7 +136,7 @@ body {
 .anotherS{
   width:300px;
   background: rgb(220, 240, 250);
-  padding: 0px 20px;
+  padding: 0 20px;
   height: 100%;
   flex-direction: column;
   display: flex;
