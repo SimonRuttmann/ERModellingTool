@@ -4,7 +4,7 @@ import Box from './Components/Box';
 import TopBar from './Components/TopBar';
 import Xarrow from './Components/Xarrow';
 import { Xwrapper } from 'react-xarrows';
-import {erTypesEnum} from './ErTypesEnum';
+import {erTypeCategory, erTypesCategory, erTypesEnum} from './ErTypesEnum';
 import DragBarManager from "./DragBarImageManager";
 /*
   Nächste Todo´s
@@ -21,7 +21,7 @@ import DragBarManager from "./DragBarImageManager";
 
 
 const erTypes = Object.keys(erTypesEnum);
-
+const erTypesValues = Object.values(erTypesCategory)
 
 function getBoundsOfSvg(){
 
@@ -144,6 +144,14 @@ const PlayGround = () => {
 //  console.log(lines)
  // console.log("ALL BOXES: ")
  // console.log(boxes)
+
+  function returnNamesOfCategory(arrayOfTypes, category){
+    let categoryFilted = arrayOfTypes.filter(erType => erType.category === category)
+    let names = categoryFilted.map(e => e.value)
+    console.log("Resolved names: " + names)
+    return names
+  }
+
   return ( 
     <div>
    
@@ -152,9 +160,30 @@ const PlayGround = () => {
         <div className="canvasStyle" id="canvas" onClick={() => handleSelect(null)}>
 
                               {/* Linke Toolbar */}
-          <DragBarManager erTypes={erTypes}/>
+          <div className="leftSidebarContainer">
+              <div className="leftSidebarSelectionContainer">
 
-        
+                <div className="leftSidebarMainTitle">Er Objects</div>
+                <hr className="leftSidebarDivider"/>
+
+                <div className="leftSidebarTitle">Attributes</div>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.Attribute)}/>
+                <hr className="leftSidebarDivider"/>
+
+                <div className="leftSidebarTitle">Entities</div>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.Entity)}/>
+                <hr className="leftSidebarDivider"/>
+
+                <div className="leftSidebarTitle">Relations</div>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.Relation)}/>
+                <hr className="leftSidebarDivider"/>
+
+                <div className="leftSidebarTitle">IsA Structure</div>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.IsAStructure)}/>
+                <hr className="leftSidebarDivider"/>
+            </div>
+        </div>
+
         {/* Zeichenbrett */}
 
 

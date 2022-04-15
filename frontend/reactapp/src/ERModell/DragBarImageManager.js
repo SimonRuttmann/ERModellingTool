@@ -13,14 +13,11 @@ const DragBarManager = ({erTypes}) => {
         return dragEvent.dataTransfer.setData('erType', erType)
     }
 
+    console.log("Creating inside drag bar manager : " + erTypes)
 
     return (
-        <div className="leftSidebarContainer">
-
-
-            <div className="leftSidebarTitle">Drag & drop me!</div> {/* Title */}
-            <hr />
-            <div className="leftSidebarSelectionContainer">         {/* Container */}
+                <React.Fragment>
+                  {/* Container */}
                 {erTypes.map((erType) => (
                     <div
                         className="leftSideBarElement"
@@ -33,16 +30,14 @@ const DragBarManager = ({erTypes}) => {
                         {resolveErType(erType)}
                     </div>
                 ))}
-            </div>
-            {/*
+
+                {/*
             <ReactTooltip id="NormalAttribute" effect="solid" place={"right"}/>
             <ReactTooltip id="IdentifyingAttribute" effect="solid" place={"right"}/>
             <ReactTooltip id="StrongEntity" effect="solid" place={"right"}><p>Hallo Starke ENtittäte</p></ReactTooltip>
 */}
+                </React.Fragment>
 
-
-
-        </div>
     )
 }
 

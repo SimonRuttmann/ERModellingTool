@@ -18,8 +18,30 @@ import WeakEntityDragBarPreviewSvg from './Components/DragBarPreviewSvg/Entities
 import StrongRelationDragBarPreviewSvg from './Components/DragBarPreviewSvg/Relations/StrongRelation.svg'
 import WeakRelationDragBarPreviewSvg from './Components/DragBarPreviewSvg/Relations/WeakRelation.svg'
 import IsAStructureDragBarPreviewSvg from './Components/DragBarPreviewSvg/IsAStructure.svg'
+import Entity from "./Components/Entity";
 
 // TODO Rename to erTypesIcon
+
+export const erTypeCategory = {
+    Attribute: "Attribute",
+    Entity: "Entity",
+    Relation: "Relation",
+    IsAStructure: "IsAStructure"
+}
+
+export const erTypesCategory = {
+    IdentifyingAttribute:       {value: "IdentifyingAttribute", category: erTypeCategory.Attribute},
+    NormalAttribute:            {value: "WeakIdentifyingAttribute", category: erTypeCategory.Attribute},
+    MultivaluedAttribute:       {value: "NormalAttribute", category: erTypeCategory.Attribute},
+    WeakIdentifyingAttribute:   {value: "MultivaluedAttribute", category: erTypeCategory.Attribute},
+    StrongEntity:               {value: "StrongEntity", category: erTypeCategory.Entity},
+    WeakEntity:                 {value: "WeakEntity", category: erTypeCategory.Entity},
+    StrongRelation:             {value: "StrongRelation", category: erTypeCategory.Relation},
+    WeakRelation:               {value: "WeakRelation", category: erTypeCategory.Relation},
+    IsAStructure:               {value: "IsAStructure", category: erTypeCategory.IsAStructure},
+};
+
+
 export const erTypesEnum = {
     IdentifyingAttribute:       <img src={IdentifyingAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
     NormalAttribute:            <img src={WeakIdentifyingAttributeDragBarSvg}   draggable className="leftSideBarElementImage" alt={"WeakIdentifyingAttributeDragBarSvg"}/>,
@@ -69,3 +91,14 @@ export const erTypesName = {
     IsAStructure:               <h1>Is A Structure</h1>
 }
 
+export const erTypesComponents = {
+    IdentifyingAttribute:       <Entity/>,
+    NormalAttribute:            <h1>Normal Attribute</h1>,
+    MultivaluedAttribute:       <h1>Multivalued Attribute</h1>,
+    WeakIdentifyingAttribute:   <h1>Weak identifying Attribute</h1>,
+    StrongEntity:               <h1>Strong Entity</h1>,
+    WeakEntity:                 <h1>Weak Entity</h1>,
+    StrongRelation:             <h1>Strong Relation</h1>,
+    WeakRelation:               <h1>Weak Relation</h1>,
+    IsAStructure:               <h1>Is A Structure</h1>
+}

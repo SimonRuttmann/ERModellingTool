@@ -4,6 +4,7 @@ import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
 import Entity from './Entity';
 import Attribute from './Attribute';
+import {erTypesComponents} from "../ErTypesEnum";
 
 // Auch hier lines.root -> lines.props.start
 // lines.end --> lines.props.end
@@ -102,6 +103,7 @@ const Box = (props) => {
   }
 //bounds={{left: number, top: number, right: number, bottom: number}}
   //Props for svgs: id, displayText, color (highlight), fontFamily, fontSize
+  //TODO Map erComponent with erTypes const erComponent = erTypesComponents["_entityName"];
 
   const offset = 50;
   const elementWidth = 150;
@@ -131,6 +133,8 @@ const Box = (props) => {
            transform="scale(2)"
 
            onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
+
+          {/* TODO map erComponent with erTypes <erComponent/> */}
 
           <StrongEntity id={props.box.id} displayText={"Hasdfdsfsdfsdfdsffdllo"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>
         </g>
