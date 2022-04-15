@@ -4,7 +4,7 @@ import Box from './Components/Box';
 import TopBar from './Components/TopBar';
 import Xarrow from './Components/Xarrow';
 import { Xwrapper } from 'react-xarrows';
-import ErTypesEnum from './ErTypesEnum';
+import {erTypesEnum} from './ErTypesEnum';
 import DragBarManager from "./DragBarImageManager";
 /*
   Nächste Todo´s
@@ -20,7 +20,7 @@ import DragBarManager from "./DragBarImageManager";
  */
 
 
-const erTypes = Object.keys(ErTypesEnum);
+const erTypes = Object.keys(erTypesEnum);
 
 
 function getBoundsOfSvg(){

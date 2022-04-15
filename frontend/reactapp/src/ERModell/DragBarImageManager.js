@@ -1,16 +1,18 @@
 import React from "react";
-import ErTypesEnum from "./ErTypesEnum";
-
+import {erTypesEnum} from "./ErTypesEnum";
+import ReactTooltip from "react-tooltip";
+import ToolTip from "./Tooltip";
 
 const DragBarManager = ({erTypes}) => {
 
     function resolveErType(erType){
-        return ErTypesEnum[erType];
+        return erTypesEnum[erType];
     }
 
     function setDataTransfer(dragEvent, erType){
         return dragEvent.dataTransfer.setData('erType', erType)
     }
+
 
     return (
         <div className="leftSidebarContainer">
@@ -23,12 +25,22 @@ const DragBarManager = ({erTypes}) => {
                     <div
                         className="leftSideBarElement"
                         key={erType+"_draggableContainer"}
+                        data-tip={"Hallo" + erType}
+                        data-for={erType+"toolTip"}
                         onDragStart={(e) => {setDataTransfer(e, erType)}}
                         >
+                        <ReactTooltip id={erType+"toolTip"} effect="solid" place={"right"}><ToolTip erType={erType}/></ReactTooltip>
                         {resolveErType(erType)}
                     </div>
                 ))}
             </div>
+            {/*
+            <ReactTooltip id="NormalAttribute" effect="solid" place={"right"}/>
+            <ReactTooltip id="IdentifyingAttribute" effect="solid" place={"right"}/>
+            <ReactTooltip id="StrongEntity" effect="solid" place={"right"}><p>Hallo Starke ENtittäte</p></ReactTooltip>
+*/}
+
+
 
         </div>
     )

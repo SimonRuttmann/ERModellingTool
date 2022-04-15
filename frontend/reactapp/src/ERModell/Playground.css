@@ -56,12 +56,13 @@ body {
   display: inline-block;
   background-size: contain;
   padding: 1px;
-  margin: 1px;
+  margin: 3px;
   overflow: hidden;
-  width: 120px;
+  width: 100px;
   height: auto;
-  border: 5px #222222;
-  background-color: grey;
+  border: 2px solid #222222;
+  border-radius: 20px;
+  background-color: #323232;
 }
 
 .leftSideBarElementImage {
