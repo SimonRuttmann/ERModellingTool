@@ -24,7 +24,7 @@ import { resolveErComponent } from "../../ErType";
  *
  * @returns An draggable element, displayed inside the draw board
  */
-const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, updateDrawBoardElementPosition }) => {
+const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, updateDrawBoardElementPosition}) => {
 
   const updateXarrow = useXarrow();
   const [isDragging, setDragging] = useState(false)
@@ -57,7 +57,6 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
 
     //Prevent click event, when drag is stopped
     if (isDragging===true) return;
-
     onDrawBoardElementSelected(e, thisObject);
   };
 
@@ -67,6 +66,8 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
     updateXarrow();
   }
 
+  //Question: When the on Drag stop function is executed, there is a "mouseDown" event which will trigger the onClick event.
+  //The timeout here is bad practise, however solutions form stackoverflow did not work
   const PRESS_TIME_UNTIL_DRAG_MS = 250;
   function onStop(e, data) {
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)

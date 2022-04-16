@@ -7,6 +7,7 @@ import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {getBoundsOfSvg} from "./Components/SvgUtil/SvgUtils";
+import {ACTIONSTATE, ACTIONTYPE} from "./ActionState";
 
 
 const PlayGround = () => {
@@ -21,31 +22,70 @@ const PlayGround = () => {
   const [selectedObject, setSelectedObject] = useState(null);
 
   //hier wird verwaltet ob wir in "add connection, normal, remove connection etc sind."
-  const [actionState, setActionState] = useState('Normal');
+  const [actionState, setActionState] = useState(ACTIONSTATE.Default);
 
   //wenn das canvas geklickt wird ist wird die funktion mit "null" aufgerufen. -> action zu normal, clear selected
 
 
+  const onCanvasSelected = (e) => {
+
+    unselectPreviousDrawBoardElement();
+    setSelectedObject(null);
+
+    setActionState(ACTIONSTATE.Default);
+  }
+
   const onDrawBoardElementSelected = (e, selectedElement) => {
-    if (e === null) {
+
+    //click on draw board element
+
+    if( actionState === ACTIONSTATE.Default) {
+
+      unselectPreviousDrawBoardElement();
+      setSelectedObject({id: e.target.id, type: ACTIONTYPE.DrawElement});
+      setDrawBoardElementSelected(e.target.id, true)
+
+    }
+
+
+    if( actionState === ACTIONSTATE.AddConnection) {
+
+      unselectPreviousDrawBoardElement();
+      addConnection(selectedObject.id,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
+      setSelectedObject({id: e.target.id, type: ACTIONTYPE.DrawElement});
+      setDrawBoardElementSelected(e.target.id, true)
+
+    }
+
+    /* Gibts nicht!
+    if(actionState === ACTIONSTATE.RemoveDrawBoardElement) {
+
+      unselectPreviousDrawBoardElement();
       setSelectedObject(null);
-      setActionState('Normal');
+      removeDrawBoardElement(e.target.id)
+
     }
-    else {
-      setSelectedObject({ id: e.target.id, type: 'box' });
-    }
+    */
+
+
   };
 
 
-  const handleSelect = (e) => {
-    if (e === null) {
-      setSelectedObject(null);
-      setActionState('Normal');
+  const onConnectionSelected = (e, selectedElement) => {
+
+    //click on draw board element
+
+    if( actionState === ACTIONSTATE.Default ||
+        actionState === ACTIONSTATE.AddConnection) {
+
+      //TODO 1. Unselected prev. Arrow object 2. set state object selected 3. Select this object e.target.id,
+      unselectPreviousDrawBoardElement();
+      setSelectedObject({id: e.target.id, type: ACTIONTYPE.Connection});
+      setDrawBoardElementSelected(e.target.id, true)
     }
-     else {
-       console.log(e.target.id)
-         setSelectedObject({ id: e.target.id, type: 'box' });
-     }
+
+
+    //Er drückt auf eine assoziation --> assoziation löschen --> im component menu rechts --> removeConnection() --> KEIN actionstate!
   };
 
 
@@ -77,21 +117,16 @@ const PlayGround = () => {
 
   };
 
+  // Question: https://stackoverflow.com/questions/36985738/how-to-unmount-unrender-or-remove-a-component-from-itself-in-a-react-redux-typ
+  // We use mutable state manipulation, but is should be immutable, by doing so i receive an error
   const updateDrawBoardElementPosition = (elementId, x, y) => {
-    //console.log("Received input: " + elementId + " x: " + x + " y: " + y)
+
     let element = drawBoardElements.find(element => element.id === elementId)
-    //console.log("received element: x: " + element.x + ", y: " +element.y +", id: " + element.id +", type: " + element.erType)
+
+    //This is mutable state manipulation
     element.x = x;
     element.y = y;
 
-   // let otherElements = drawBoardElements.filter(element => !(element.id === elementId));
-    // element = Object.assign({}, element)
-
-    // console.log(drawBoardElements)
-    //setDrawBoardElements(prevState => [
-    //  otherElements,
-    //  element
-    //])
   }
 
 
@@ -123,13 +158,37 @@ const PlayGround = () => {
   }
 
 
+  const highlightDrawBoardElements = () => {
+
+  }
+
+  const setDrawBoardElementSelected = (id, isSelected) => {
+
+    let selectedElement = drawBoardElements.find(element => element.id === id)
+    selectedElement.isSelected = isSelected;
+
+    let copy = Object.assign({},selectedElement)
+    console.log(copy)
+    let notSelectedElements = drawBoardElements.filter(element => !(element.id === id))
+
+    setDrawBoardElements([
+        copy,
+        ...notSelectedElements
+    ])
+  }
+
+  const unselectPreviousDrawBoardElement = () => {
+
+    if(selectedObject === null) return;
+
+    setDrawBoardElementSelected(selectedObject.id, false);
+  }
 
 
 
 
   //eine box:
   /*
-
     id:   unique id mit Date.now()
     name: "string" --> displayName
     x: Position am anfang
@@ -141,7 +200,7 @@ const PlayGround = () => {
 
   // eine connection:
   /*
-    id:
+    id: start-ende-date-now
     start: id zu box
     end:  id zu box
 
@@ -155,7 +214,6 @@ const PlayGround = () => {
     boxes: drawBoardElements,  //State Boxes
     setBoxes: setDrawBoardElements, //Set Methode
     selected: selectedObject,
-    handleSelect,
     actionState,
     setActionState,
     lines: connections,
@@ -167,7 +225,7 @@ const PlayGround = () => {
 
 
       <Xwrapper>
-        <div className="canvasStyle" id="canvas" onClick={() => handleSelect(null)}>
+        <div className="canvasStyle" id="canvas" onClick={() => onCanvasSelected(null)}>
 
 
 
@@ -213,7 +271,7 @@ const PlayGround = () => {
             style={{position: "absolute"}}>
 
             {drawBoardElements.map((drawBoardElement) => (
-              <DrawBoardElement  key={drawBoardElement.id + Date.now()}
+              <DrawBoardElement  key={drawBoardElement.id}
 
                                  onDrawBoardElementSelected={onDrawBoardElementSelected}
                                  updateDrawBoardElementPosition={updateDrawBoardElementPosition}
