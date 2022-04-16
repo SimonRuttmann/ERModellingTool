@@ -5,6 +5,7 @@ import { useXarrow } from 'react-xarrows';
 import Entity from './Entity';
 import Attribute from './Attribute';
 import IsAStructure from "./ErObjectComponents/IsAStructure";
+import {erTypesCategory, erTypesComponents, resolveIsAStructure, ResolveIsAStructure} from "../ErTypesEnum";
 
 // Auch hier lines.root -> lines.props.start
 // lines.end --> lines.props.end
@@ -79,7 +80,7 @@ const Box = (props) => {
   }
 
   var erObject = {};
-  // eslint-disable-next-line default-case
+
   switch(props.box.erType){
     case "Entity":    erObject = <Entity    id={props.box.id} highlight={background} />; break;
     case "Attribute": erObject = <Attribute id={props.box.id} highlight={background} />; break;
@@ -103,11 +104,18 @@ const Box = (props) => {
   }
 //bounds={{left: number, top: number, right: number, bottom: number}}
   //Props for svgs: id, displayText, color (highlight), fontFamily, fontSize
-  //TODO Map erComponent with erTypes const erComponent = erTypesComponents["_entityName"];
 
   const offset = 50;
   const elementWidth = 150;
   const elementHeight = 50;
+
+  const propsForErComponent = {
+    id: props.box.id,
+    displayText: "abc",
+    color: "#fff",
+    fontSize: fontSize,
+    fontFamily: fontFamily
+  }
   return (
     <React.Fragment>
      
@@ -134,26 +142,8 @@ const Box = (props) => {
 
            onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
 
-          {/* TODO map erComponent with erTypes <erComponent/> */}
-
-          <IsAStructure id={props.box.id} displayText={"sbd"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>
+          {resolveIsAStructure(props.box.erType, propsForErComponent)}
         </g>
-
-      {/*
-        <div
-          ref={props.box.reference}
-          className={`${props.position} `}
-          style={{
-            left: props.box.x,
-            top: props.box.y
-          }}
-          onClick={handleClick}
-          id={props.box.id}>
-
-          {erObject}
-        </div>
-
-        */}
 
 
 
@@ -178,103 +168,5 @@ function MyWrappedSvg(props){
   )
 }
 
-
-
-function MyWrappedSvg2(props){
-  return (
- 
-    <React.Fragment>
-      <ellipse strokeDasharray="5,5" ry="100" rx="200" id={props.id} cy="300" cx="300" stroke="#000" fill="#fff"/>
-      <text x="400" y="260" font-mily="Verdana" fontSize="35" fill="blue">{props.displayText}</text>
-    </React.Fragment>
-   
-  
-  )
-}
-
-
-
-function StrongEntity({id, displayText, color, fontFamily, fontSize}){
-
-  const x = 0;       const y = 0;
-  var width = 137;   const height= 67;
-
-  //If necessary, increase width to fit text
-  width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
-  
-  return (
-    <React.Fragment>
-
-      <rect 
-        //id
-        id={id} 
-        
-        //position
-        y={y} 
-        x={x} 
-        
-        //display style
-        height={height} 
-        width={width} 
-        stroke="#000" 
-        fill={color}/>
-
-      <text 
-        //id
-        id={id} 
-        
-        //position
-        x={x + width / 2}
-        y={y + height / 2} 
-
-        //alignment
-        dominantBaseline="middle"
-        textAnchor="middle" 
-        
-        //display text style
-        fontFamily={fontFamily}
-        fontSize={fontSize} 
-        
-        //display style
-        stroke="#000" 
-        strokeWidth="0" 
-        fill="#000000"
-        
-        >{displayText}</text>
-
-    </React.Fragment>
-  )
-}
-
-/*
-function WeakEntity(props){
-  return (
-    <React.Fragment>
-      <rect id={props.id} height="67" width="137" y="0" x="0" stroke="#000" fill="#fff"/>
-      <rect id={props.id} height="57" width="127" y="5" x="5" stroke="#000" fill="#fff"/>
-      <text id={props.id} textAnchor="start" fontFamily="Noto Sans JP" fontSize="24" strokeWidth="0" y="42" x="46" stroke="#000" fill="#000000">Text</text>
-    </React.Fragment>
-  )
-}
-*/
-
-
-function resolveRequiredWidth(width, displayText, fontSize, fontFamily){
-
-  var textWidth = getTextWidth(displayText, `${fontSize}pt ${fontFamily}`)
-  
-  if(textWidth > width) return textWidth
-  return width
-}
-
-function getTextWidth(text, font) {
-
-  var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-
-  var context = canvas.getContext("2d");
-  context.font = font;
-
-  return context.measureText(text).width;
-}
 
 export default Box;

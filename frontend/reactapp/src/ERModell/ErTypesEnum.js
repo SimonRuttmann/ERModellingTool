@@ -18,7 +18,17 @@ import WeakEntityDragBarPreviewSvg from './Components/DragBarPreviewSvg/Entities
 import StrongRelationDragBarPreviewSvg from './Components/DragBarPreviewSvg/Relations/StrongRelation.svg'
 import WeakRelationDragBarPreviewSvg from './Components/DragBarPreviewSvg/Relations/WeakRelation.svg'
 import IsAStructureDragBarPreviewSvg from './Components/DragBarPreviewSvg/IsAStructure.svg'
-import Entity from "./Components/Entity";
+
+import IdentifyingAttribute from "./Components/ErObjectComponents/Attributes/IdentifyingAttribute";
+import NormalAttribute from "./Components/ErObjectComponents/Attributes/NormalAttribute";
+import MultivaluedAttribute from "./Components/ErObjectComponents/Attributes/MultivaluedAttribute";
+import WeakIdentifyingAttribute from "./Components/ErObjectComponents/Attributes/WeakIdentifyingAttribute";
+import StrongEntity from "./Components/ErObjectComponents/Entities/StrongEntity";
+import WeakEntity from "./Components/ErObjectComponents/Entities/WeakEntity";
+import StrongRelation from "./Components/ErObjectComponents/Relations/StrongRelation";
+import WeakRelation from "./Components/ErObjectComponents/Relations/WeakRelation";
+import IsAStructure from "./Components/ErObjectComponents/IsAStructure";
+
 
 // TODO Rename to erTypesIcon
 
@@ -92,13 +102,28 @@ export const erTypesName = {
 }
 
 export const erTypesComponents = {
-    IdentifyingAttribute:       <Entity/>,
-    NormalAttribute:            <h1>Normal Attribute</h1>,
-    MultivaluedAttribute:       <h1>Multivalued Attribute</h1>,
-    WeakIdentifyingAttribute:   <h1>Weak identifying Attribute</h1>,
-    StrongEntity:               <h1>Strong Entity</h1>,
-    WeakEntity:                 <h1>Weak Entity</h1>,
-    StrongRelation:             <h1>Strong Relation</h1>,
-    WeakRelation:               <h1>Weak Relation</h1>,
-    IsAStructure:               <h1>Is A Structure</h1>
+    IdentifyingAttribute:       <IdentifyingAttribute/>,
+    NormalAttribute:            <NormalAttribute/>,
+    MultivaluedAttribute:       <MultivaluedAttribute/>,
+    WeakIdentifyingAttribute:   <WeakIdentifyingAttribute/>,
+    StrongEntity:               <StrongEntity/>,
+    WeakEntity:                 <WeakEntity/>,
+    StrongRelation:             <StrongRelation/>,
+    WeakRelation:               <WeakRelation/>,
+    IsAStructure:               <IsAStructure/>
+}
+
+export const resolveIsAStructure = (type, props) => {
+    switch (type) {
+        case erTypesCategory.IdentifyingAttribute.value: return <IdentifyingAttribute {...props}/>
+        case erTypesCategory.NormalAttribute.value: return <NormalAttribute {...props}/>
+        case erTypesCategory.MultivaluedAttribute.value: return <MultivaluedAttribute {...props}/>
+        case erTypesCategory.WeakIdentifyingAttribute.value: return <WeakIdentifyingAttribute {...props}/>
+        case erTypesCategory.StrongEntity.value: return <StrongEntity {...props}/>
+        case erTypesCategory.WeakEntity.value: return <WeakEntity {...props}/>
+        case erTypesCategory.StrongRelation.value: return <StrongRelation {...props}/>
+        case erTypesCategory.WeakRelation.value: return <WeakRelation {...props}/>
+        case erTypesCategory.IsAStructure.value: return <IsAStructure {...props}/>
+        default: return ""
+    }
 }
