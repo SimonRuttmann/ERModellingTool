@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-//Box welche aufgerufen wird, wenn "edit properties" aufgerufen wird.
+//DrawBoardElement welche aufgerufen wird, wenn "edit properties" aufgerufen wird.
 const DialogBox = (props) => {
   return (
     <div>

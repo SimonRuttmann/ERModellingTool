@@ -213,9 +213,9 @@ const TopBar = (props) => {
 
   var returnTopBarApearnce = () => {
     let allowedActions = [];
-    if (props.selected) allowedActions = actions[props.selected.type];      //Wenn selektiert -> Arrow oder Box selektiert?
+    if (props.selected) allowedActions = actions[props.selected.type];      //Wenn selektiert -> Arrow oder DrawBoardElement selektiert?
     switch (props.actionState) {
-      case 'Normal':        //Anfangsansicht -> Add Connections, Remove Conenctions, Delete ODER Edit Properties, Remove Connection (Arrow <-> Box --> allowedActions)
+      case 'Normal':        //Anfangsansicht -> Add Connections, Remove Conenctions, Delete ODER Edit Properties, Remove Connection (Arrow <-> DrawBoardElement --> allowedActions)
         return (
           <React.Fragment>
             {allowedActions.map((action, i) => (

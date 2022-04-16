@@ -7,18 +7,18 @@ import { resolveErComponent } from "../../ErType";
     Props:
     
     Funktionen:
-    HandleSelect = HandleSelect(); Diese methode wird aufgerufen, wenn eine Box selektiert wird
+    HandleSelect = HandleSelect(); Diese methode wird aufgerufen, wenn eine DrawBoardElement selektiert wird
     SetLines = SetLines();  //Werden Lines übergeben, welche wir bereits über Lines erhalten! Hier wird dem Objekt eine Linie hinzugfügt, 
                             wenn wir im "Add Connections" bereich sind, wenn wir im "Remove connections" bereich sind entfernen wir diese
     
     Werte:
     actionState: "Normal" (nichts), "Add Connections", "Remove Connections"
     Lines -> Linien, welche bereits vorhanden sind
-    Box -> id "static1", shape: "interfaceBox", type: "input" (reinziehbar) oder "normal" bzw. undefined, position: "static" oder "absolute"
+    DrawBoardElement -> id "static1", shape: "interfaceBox", type: "input" (reinziehbar) oder "normal" bzw. undefined, position: "static" oder "absolute"
             -> Im Fall von einer im Graph befindlichen box: x: "1666.2" y:"2.23423"
 */
 
-const Box = (props) => {
+const DrawBoardElement = (props) => {
   const updateXarrow = useXarrow();
 
   const fontFamily="arial"
@@ -67,7 +67,7 @@ const Box = (props) => {
   
   //On click on the box
   // -> Wenn im AddConnections Statfus 
-  // Für jede Box gilt jetzt, wenn es eine Linie gibt, die von der Selekteirten ausgeht und hier endet -> Zeige "LemmonChiffron an"
+  // Für jede DrawBoardElement gilt jetzt, wenn es eine Linie gibt, die von der Selekteirten ausgeht und hier endet -> Zeige "LemmonChiffron an"
   // Es werden alle linien durchsucht. Wenn der Linienbegin die selektierte box ist und die Linie hier endet -> LemonChiffron
   else if (
     (props.actionState === 'Add Connections'    && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length === 0) ||
@@ -144,4 +144,4 @@ const Box = (props) => {
 };
 
 
-export default Box;
+export default DrawBoardElement;

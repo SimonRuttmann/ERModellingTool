@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './Playground.css';
-import Box from './Components/DrawBoard/Box';
+import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import TopBar from './Components/RightSideBar/TopBar';
 import Xarrow from './Components/DrawBoard/Xarrow';
 import { Xwrapper } from 'react-xarrows';
@@ -124,7 +124,7 @@ const PlayGround = () => {
             style={{position: "absolute"}}>
 
             {boxes.map((box) => (
-              <Box {...boxProps} key={box.id} box={box} bounds={getBoundsOfSvg()} position="absolute" sidePos="middle" />
+              <DrawBoardElement {...boxProps} key={box.id} box={box} bounds={getBoundsOfSvg()} position="absolute" sidePos="middle" />
             ))}
           
           </svg>
