@@ -43,6 +43,7 @@ const PlayGround = () => {
       setActionState('Normal');
     }
      else {
+       console.log(e.target.id)
          setSelectedObject({ id: e.target.id, type: 'box' });
      }
   };
@@ -58,19 +59,41 @@ const PlayGround = () => {
       let newId = erType + "--" + Date.now();
       let { x, y } = e.target.getBoundingClientRect();
 
-      let newBox = {
+      let newDrawBoardElement = {
         id: newId,
-        name: "new "+ erType + " " + counter,
+        displayName: "new "+ erType + " " + counter,
+        isHighlighted: false,
+        isSelected: false,
         x: e.clientX - x - 50,
         y: e.clientY - y - 50,
         erType: erType
       };
 
-      setDrawBoardElements([...drawBoardElements, newBox]);
+      setDrawBoardElements([
+          ...drawBoardElements,
+        newDrawBoardElement]);
       setCounter(counter+1);
     }
 
   };
+
+  const updateDrawBoardElementPosition = (elementId, x, y) => {
+    //console.log("Received input: " + elementId + " x: " + x + " y: " + y)
+    let element = drawBoardElements.find(element => element.id === elementId)
+    //console.log("received element: x: " + element.x + ", y: " +element.y +", id: " + element.id +", type: " + element.erType)
+    element.x = x;
+    element.y = y;
+
+   // let otherElements = drawBoardElements.filter(element => !(element.id === elementId));
+    // element = Object.assign({}, element)
+
+    // console.log(drawBoardElements)
+    //setDrawBoardElements(prevState => [
+    //  otherElements,
+    //  element
+    //])
+  }
+
 
   const removeDrawBoardElement = (elementId) => {
     console.log("Removing draw board element with id: " + elementId)
@@ -98,7 +121,6 @@ const PlayGround = () => {
       prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
     ])
   }
-
 
 
 
@@ -191,19 +213,14 @@ const PlayGround = () => {
             style={{position: "absolute"}}>
 
             {drawBoardElements.map((drawBoardElement) => (
-              <DrawBoardElement  key={drawBoardElement.id}
+              <DrawBoardElement  key={drawBoardElement.id + Date.now()}
 
-                                 handleSelect={handleSelect}
-                                 addConnection={addConnection}
-                                 removeConnection={removeConnection}
-
-                                 actionState={actionState}
-                                 selectedObject={selectedObject}
+                                 onDrawBoardElementSelected={onDrawBoardElementSelected}
+                                 updateDrawBoardElementPosition={updateDrawBoardElementPosition}
 
                                  thisObject={drawBoardElement}
                                  bounds={getBoundsOfSvg()}
-
-                                  />
+                                 />
             ))}
 
           </svg>
@@ -236,3 +253,62 @@ const PlayGround = () => {
   );
 };
 export default PlayGround;
+/**
+ * @summary Creates an element which can be dragged within the given bounds inside the parent svg element <br>
+ * - Executes the handleSelect method when the object is clicked
+ *
+ * @param handleSelect  Function to handle the selection on this object
+ * @param addConnection Function to add a new connection
+ * @param removeConnection Function to remove a connection
+ * @param actionState The current actionState
+ * @param selectedObject The selectedObject, if a object is selected
+ * @param thisObject The data of this object
+ * @param bounds The bounds, where this object should clip to
+ * @returns An draggable element
+ */
+
+/*
+console.log("Click on " + props.box.id )
+    if (props.actionState === 'Normal') {
+      props.handleSelect(e);
+    }
+
+    else if (props.actionState === 'Add Connections' && props.selected.id !== props.box.id) {
+      console.log("Creating a new line: From: " + props.selected.id + " to: "  + props.box.id)
+      props.setLines((lines) => [
+        ...lines,
+        {
+          props: { start: props.selected.id, end: props.box.id },
+        },
+      ]);
+    }
+    else if (props.actionState === 'Remove Connections') {
+      props.setLines((lines) =>
+        lines.filter((line) => !(line.root === props.selected.id && line.end === props.box.id))
+      );
+    }
+ */
+
+
+/*
+
+
+   //On click on the box
+   // -> A box is selected and the selected box is this box
+  if (props.selected && props.selected.id === props.box.id) {
+    background = 'rgb(200, 200, 200)';
+  }
+
+  //On click on the box
+  // -> Wenn im AddConnections Statfus
+  // Für jede DrawBoardElement gilt jetzt, wenn es eine Linie gibt, die von der Selekteirten ausgeht und hier endet -> Zeige "LemmonChiffron an"
+  // Es werden alle linien durchsucht. Wenn der Linienbegin die selektierte box ist und die Linie hier endet -> LemonChiffron
+  else if (
+    (props.actionState === 'Add Connections'    && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length === 0) ||
+    (props.actionState === 'Remove Connections' && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length > 0)
+  ) //Fix: line.root --> line.props.start  // line.end --> line.props.end
+  {
+    background = 'LemonChiffon';
+  }
+
+ */

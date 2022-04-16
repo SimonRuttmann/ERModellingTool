@@ -2,163 +2,105 @@ import React, {useState} from 'react';
 import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
 import { resolveErComponent } from "../../ErType";
-import {getBoundsOfSvg} from "../SvgUtil/SvgUtils";
-
-/*
-    Props:
-    
-    Funktionen:
-    HandleSelect = HandleSelect(); Diese methode wird aufgerufen, wenn eine DrawBoardElement selektiert wird
-    SetLines = SetLines();  //Werden Lines übergeben, welche wir bereits über Lines erhalten! Hier wird dem Objekt eine Linie hinzugfügt, 
-                            wenn wir im "Add Connections" bereich sind, wenn wir im "Remove connections" bereich sind entfernen wir diese
-    
-    Werte:
-    actionState: "Normal" (nichts), "Add Connections", "Remove Connections"
-    Lines -> Linien, welche bereits vorhanden sind
-    DrawBoardElement -> id "static1", shape: "interfaceBox", type: "input" (reinziehbar) oder "normal" bzw. undefined, position: "static" oder "absolute"
-            -> Im Fall von einer im Graph befindlichen box: x: "1666.2" y:"2.23423"
-*/
-
 
 
 /**
- * @summary Creates an element which can be dragged within the given bounds inside the parent svg element <br>
- * - Executes the handleSelect method when the object is clicked
+ * Creates an element which can be dragged within the given bounds inside the parent svg element <br>
+ * Executes the handleSelect method when the object is selected
  *
- * @param handleSelect  Function to handle the selection on this object
- * @param addConnection Function to add a new connection
- * @param removeConnection Function to remove a connection
- * @param actionState The current actionState
- * @param selectedObject The selectedObject, if a object is selected
- * @param thisObject The data of this object
- * @param bounds The bounds, where this object should clip to
- * @returns An draggable element
+ * <b> Parameter: </b>
+ *
+ * <br> onDrawBoardElementSelected:
+ * <br> Function to handle the selection on this object
+ *
+ * <br> updateDrawBoardElementPosition:
+ * <br> Function to update the position of the element
+ *
+ * <br> thisObject:
+ * <br> The data of this object
+ *
+ * <br> bounds:
+ * <br> The bounds, where this object should clip to
+ *
+ * @returns An draggable element, displayed inside the draw board
  */
-const DrawBoardElement = ({ handleSelect,
-                            addConnection,
-                            removeConnection,
+const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, updateDrawBoardElementPosition }) => {
 
-                            actionState,
-                            selectedObject,
-
-                            thisObject,
-                            bounds }) => {
   const updateXarrow = useXarrow();
-
-  const fontFamily="arial"
-  const fontSize="12"
-  let background = null;
-
   const [isDragging, setDragging] = useState(false)
 
+  //Define properties for er component
+  const fontFamily="arial"
+  const fontSize="12"
 
+  let background = "#fff";
+  if(thisObject.isSelected) background = "#e1b43c"
+  else if(thisObject.isHighlighted) background = "#fffacd"
+
+  const propsForErComponent = {
+    id: thisObject.id,
+    displayText: thisObject.displayName,
+    color: background,
+    fontSize: fontSize,
+    fontFamily: fontFamily
+  }
+
+  //Offsets for bounds
+  const boundsOffset = 50;
+  const boundsElementWidth = 150;
+  const boundsElementHeight = 50;
+
+  //Handles the selection of this component and subcomponents
   const handleClick = (e) => {
 
     e.stopPropagation();
+
+    //Prevent click event, when drag is stopped
     if (isDragging===true) return;
 
-    handleSelect(e, thisObject);
-    console.log("Click on " + props.box.id )
-    if (props.actionState === 'Normal') {
-      props.handleSelect(e);
-    }
-
-    else if (props.actionState === 'Add Connections' && props.selected.id !== props.box.id) {
-      console.log("Creating a new line: From: " + props.selected.id + " to: "  + props.box.id)
-      props.setLines((lines) => [
-        ...lines,
-        {
-          props: { start: props.selected.id, end: props.box.id },
-        },
-      ]);
-    }
-    else if (props.actionState === 'Remove Connections') {
-      props.setLines((lines) =>
-        lines.filter((line) => !(line.root === props.selected.id && line.end === props.box.id))
-      );
-    }
+    onDrawBoardElementSelected(e, thisObject);
   };
 
-
-
-
-
-   //On click on the box
-   // -> A box is selected and the selected box is this box
-  if (props.selected && props.selected.id === props.box.id) {
-    background = 'rgb(200, 200, 200)';
-  }
-
-  //On click on the box
-  // -> Wenn im AddConnections Statfus
-  // Für jede DrawBoardElement gilt jetzt, wenn es eine Linie gibt, die von der Selekteirten ausgeht und hier endet -> Zeige "LemmonChiffron an"
-  // Es werden alle linien durchsucht. Wenn der Linienbegin die selektierte box ist und die Linie hier endet -> LemonChiffron
-  else if (
-    (props.actionState === 'Add Connections'    && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length === 0) ||
-    (props.actionState === 'Remove Connections' && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length > 0)
-  ) //Fix: line.root --> line.props.start  // line.end --> line.props.end
-  {
-    background = 'LemonChiffon';
-  }
-
-
-
-
-
+  //Handle drag and drop
   function onDrag() {
     setDragging(true)
     updateXarrow();
   }
 
   const PRESS_TIME_UNTIL_DRAG_MS = 250;
-  function onStop() {
-
+  function onStop(e, data) {
+    updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
     setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
-  }
-
-
-  const offset = 50;
-  const elementWidth = 150;
-  const elementHeight = 50;
-
-  const propsForErComponent = {
-    id: props.box.id,
-    displayText: "abc",
-    color: "#fff",
-    fontSize: fontSize,
-    fontFamily: fontFamily
   }
 
   return (
     <React.Fragment>
 
       <Draggable
-         bounds={props.bounds ? {
-               left: offset,
-               top: props.bounds.top + offset ,
-               right: props.bounds.right-props.bounds.left - elementWidth - offset ,
-               bottom: props.bounds.bottom -elementHeight - offset}
-               : undefined}
+         bounds={
+                  bounds ? {
+                        left: boundsOffset,
+                        top: bounds.top + boundsOffset ,
+                        right: bounds.right-bounds.left - boundsElementWidth - boundsOffset ,
+                        bottom: bounds.bottom -boundsElementHeight - boundsOffset}
+                    : undefined}
 
          onDrag={onDrag}
          onStop ={onStop}
          grid={[1, 1]}
          scale={1}
-         defaultPosition={{x: props.box.x, y: props.box.y}}>
+         defaultPosition={{x: thisObject.x, y: thisObject.y}}>
 
-
-        <g ref={props.box.reference}
-           id={props.box.id}
+        <g
+           id={thisObject.id}
            cursor="pointer"
            fill="#61DAFB"
            transform="scale(2)"
 
-           onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
+           onClick={handleClick}>
 
-          {resolveErComponent(props.box.erType, propsForErComponent)}
+          {resolveErComponent(thisObject.erType, propsForErComponent)}
         </g>
-
-
 
       </Draggable>
 
