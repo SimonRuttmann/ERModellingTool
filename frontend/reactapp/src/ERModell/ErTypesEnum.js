@@ -39,11 +39,12 @@ export const erTypeCategory = {
     IsAStructure: "IsAStructure"
 }
 
+
 export const erTypesCategory = {
     IdentifyingAttribute:       {value: "IdentifyingAttribute", category: erTypeCategory.Attribute},
-    NormalAttribute:            {value: "WeakIdentifyingAttribute", category: erTypeCategory.Attribute},
-    MultivaluedAttribute:       {value: "NormalAttribute", category: erTypeCategory.Attribute},
-    WeakIdentifyingAttribute:   {value: "MultivaluedAttribute", category: erTypeCategory.Attribute},
+    NormalAttribute:            {value: "NormalAttribute", category: erTypeCategory.Attribute},
+    MultivaluedAttribute:       {value: "MultivaluedAttribute", category: erTypeCategory.Attribute},
+    WeakIdentifyingAttribute:   {value: "WeakIdentifyingAttribute", category: erTypeCategory.Attribute},
     StrongEntity:               {value: "StrongEntity", category: erTypeCategory.Entity},
     WeakEntity:                 {value: "WeakEntity", category: erTypeCategory.Entity},
     StrongRelation:             {value: "StrongRelation", category: erTypeCategory.Relation},
@@ -54,39 +55,39 @@ export const erTypesCategory = {
 
 export const erTypesEnum = {
     IdentifyingAttribute:       <img src={IdentifyingAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
-    NormalAttribute:            <img src={WeakIdentifyingAttributeDragBarSvg}   draggable className="leftSideBarElementImage" alt={"WeakIdentifyingAttributeDragBarSvg"}/>,
-    MultivaluedAttribute:       <img src={NormalAttributeDragBarSvg}            draggable className="leftSideBarElementImage" alt={"NormalAttributeDragBarSvg"}/>,
-    WeakIdentifyingAttribute:   <img src={MultivaluedAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"MultivaluedAttributeDragBarSvg"}/>,
-    StrongEntity:               <img src={StrongEntityDragBarSvg}               draggable className="leftSideBarElementImage" alt={"StrongEntityDragBarSvg"}/>,
-    WeakEntity:                 <img src={WeakEntityDragBarSvg}                 draggable className="leftSideBarElementImage" alt={"WeakEntityDragBarSvg"}/>,
-    StrongRelation:             <img src={StrongRelationDragBarSvg}             draggable className="leftSideBarElementImage" alt={"StrongRelationDragBarSvg"}/>,
-    WeakRelation:               <img src={WeakRelationDragBarSvg}               draggable className="leftSideBarElementImage" alt={"WeakRelationDragBarSvg"}/>,
-    IsAStructure:               <img src={IsAStructureDragBarSvg}               draggable className="leftSideBarElementImage" alt={"IsAStructureDragBarSvg"}/>
+    NormalAttribute:            <img src={NormalAttributeDragBarSvg}            draggable className="leftSideBarElementImage" alt={"NormalAttribute"}/>,
+    MultivaluedAttribute:       <img src={MultivaluedAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"MultivaluedAttribute"}/>,
+    WeakIdentifyingAttribute:   <img src={WeakIdentifyingAttributeDragBarSvg}   draggable className="leftSideBarElementImage" alt={"WeakIdentifyingAttribute"}/>,
+    StrongEntity:               <img src={StrongEntityDragBarSvg}               draggable className="leftSideBarElementImage" alt={"StrongEntity"}/>,
+    WeakEntity:                 <img src={WeakEntityDragBarSvg}                 draggable className="leftSideBarElementImage" alt={"WeakEntity"}/>,
+    StrongRelation:             <img src={StrongRelationDragBarSvg}             draggable className="leftSideBarElementImage" alt={"StrongRelation"}/>,
+    WeakRelation:               <img src={WeakRelationDragBarSvg}               draggable className="leftSideBarElementImage" alt={"WeakRelation"}/>,
+    IsAStructure:               <img src={IsAStructureDragBarSvg}               draggable className="leftSideBarElementImage" alt={"IsAStructure"}/>
 };
 
 
 export const erTypesPreview = {
     IdentifyingAttribute:       <img src={IdentifyingAttributeDragBarPreviewSvg}       draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
-    NormalAttribute:            <img src={WeakIdentifyingAttributeDragBarPreviewSvg}   draggable className="leftSideBarElementImage" alt={"WeakIdentifyingAttributeDragBarSvg"}/>,
-    MultivaluedAttribute:       <img src={NormalAttributeDragBarPreviewSvg}            draggable className="leftSideBarElementImage" alt={"NormalAttributeDragBarSvg"}/>,
-    WeakIdentifyingAttribute:   <img src={MultivaluedAttributeDragBarPreviewSvg}       draggable className="leftSideBarElementImage" alt={"MultivaluedAttributeDragBarSvg"}/>,
-    StrongEntity:               <img src={StrongEntityDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"StrongEntityDragBarSvg"}/>,
-    WeakEntity:                 <img src={WeakEntityDragBarPreviewSvg}                 draggable className="leftSideBarElementImage" alt={"WeakEntityDragBarSvg"}/>,
-    StrongRelation:             <img src={StrongRelationDragBarPreviewSvg}             draggable className="leftSideBarElementImage" alt={"StrongRelationDragBarSvg"}/>,
-    WeakRelation:               <img src={WeakRelationDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"WeakRelationDragBarSvg"}/>,
-    IsAStructure:               <img src={IsAStructureDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"IsAStructureDragBarSvg"}/>
+    NormalAttribute:            <img src={NormalAttributeDragBarPreviewSvg}            draggable className="leftSideBarElementImage" alt={"NormalAttribute"}/>,
+    MultivaluedAttribute:       <img src={MultivaluedAttributeDragBarPreviewSvg}       draggable className="leftSideBarElementImage" alt={"MultivaluedAttribute"}/>,
+    WeakIdentifyingAttribute:   <img src={WeakIdentifyingAttributeDragBarPreviewSvg}   draggable className="leftSideBarElementImage" alt={"WeakIdentifyingAttribute"}/>,
+    StrongEntity:               <img src={StrongEntityDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"StrongEntity"}/>,
+    WeakEntity:                 <img src={WeakEntityDragBarPreviewSvg}                 draggable className="leftSideBarElementImage" alt={"WeakEntity"}/>,
+    StrongRelation:             <img src={StrongRelationDragBarPreviewSvg}             draggable className="leftSideBarElementImage" alt={"StrongRelation"}/>,
+    WeakRelation:               <img src={WeakRelationDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"WeakRelation"}/>,
+    IsAStructure:               <img src={IsAStructureDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"IsAStructure"}/>
 }
 
 export const erTypesDescription = {
     IdentifyingAttribute:       <p>This is the description for a Identifying Attribute</p>,
-    NormalAttribute:            <p>This is the description for a Identifying Attribute</p>,
-    MultivaluedAttribute:       <p>This is the description for a Identifying Attribute</p>,
-    WeakIdentifyingAttribute:   <p>This is the description for a Identifying Attribute</p>,
-    StrongEntity:               <p>This is the description for a Identifying Attribute</p>,
-    WeakEntity:                 <p>This is the description for a Identifying Attribute</p>,
-    StrongRelation:             <p>This is the description for a Identifying Attribute</p>,
-    WeakRelation:               <p>This is the description for a Identifying Attribute</p>,
-    IsAStructure:               <p>This is the description for a Identifying Attribute</p>
+    NormalAttribute:            <p>This is the description for a Normal Attribute</p>,
+    MultivaluedAttribute:       <p>This is the description for a Multivalued Attribute</p>,
+    WeakIdentifyingAttribute:   <p>This is the description for a Weak identifying Attribute</p>,
+    StrongEntity:               <p>This is the description for a Strong Entity</p>,
+    WeakEntity:                 <p>This is the description for a Weak Entity</p>,
+    StrongRelation:             <p>This is the description for a Strong Relation</p>,
+    WeakRelation:               <p>This is the description for a Weak Relation</p>,
+    IsAStructure:               <p>This is the description for a IsA Structure</p>
 }
 
 export const erTypesName = {
