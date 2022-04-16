@@ -27,9 +27,6 @@ export default ({ setSelected, selected, line, lines}) => {
 
 
 
-  const myCustomArrow = {
-
-  }
 
   let color = state.color;
 

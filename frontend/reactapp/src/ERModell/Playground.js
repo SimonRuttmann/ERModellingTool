@@ -12,29 +12,45 @@ import {getBoundsOfSvg} from "./Components/SvgUtil/SvgUtils";
 const PlayGround = () => {
 
   //Der state verwaltet die boxen und die lines
-  const [boxes, setBoxes] = useState([]);
-  const [lines, setLines] = useState([]);
+  const [drawBoardElements, setDrawBoardElements] = useState([]);
+  const [connections, setConnections] = useState([]);
   const [counter, setCounter] = useState(0);
 
   // selected:{id:string,type:"arrow"|"box"}
   //hier wird die aktuelle box oder der pfeil gespeichert
-  const [selected, setSelected] = useState(null);
+  const [selectedObject, setSelectedObject] = useState(null);
 
   //hier wird verwaltet ob wir in "add connection, normal, remove connection etc sind."
   const [actionState, setActionState] = useState('Normal');
 
   //wenn das canvas geklickt wird ist wird die funktion mit "null" aufgerufen. -> action zu normal, clear selected
+
+
+  const onDrawBoardElementSelected = (e, selectedElement) => {
+    if (e === null) {
+      setSelectedObject(null);
+      setActionState('Normal');
+    }
+    else {
+      setSelectedObject({ id: e.target.id, type: 'box' });
+    }
+  };
+
+
   const handleSelect = (e) => {
     if (e === null) {
-      setSelected(null);
+      setSelectedObject(null);
       setActionState('Normal');
     }
      else {
-         setSelected({ id: e.target.id, type: 'box' });
+         setSelectedObject({ id: e.target.id, type: 'box' });
      }
   };
 
-  const createNewElement = (e) => {
+
+  const addDrawBoardElement = (e) => {
+    console.log("Add a new draw board element")
+
     let erType = e.dataTransfer.getData('erType');
 
     if (Object.keys(ERTYPE).includes(erType)){
@@ -42,40 +58,91 @@ const PlayGround = () => {
       let newId = erType + "--" + Date.now();
       let { x, y } = e.target.getBoundingClientRect();
 
-      let newBox = { id: newId, name: "new "+ erType + " " + counter, x: e.clientX - x - 50, y: e.clientY - y - 50, erType: erType };
+      let newBox = {
+        id: newId,
+        name: "new "+ erType + " " + counter,
+        x: e.clientX - x - 50,
+        y: e.clientY - y - 50,
+        erType: erType
+      };
 
-      setBoxes([...boxes, newBox]);
+      setDrawBoardElements([...drawBoardElements, newBox]);
       setCounter(counter+1);
     }
 
   };
 
+  const removeDrawBoardElement = (elementId) => {
+    console.log("Removing draw board element with id: " + elementId)
+
+    setDrawBoardElements((prevState => [
+      prevState.filter((element) => !(element.id === elementId))
+    ]))
+  }
+
+  const addConnection = (idStart, idEnd) => {
+    console.log("Creating a new connection from: " + idStart + " to " + idEnd)
+
+    let newConnection = {start: idStart, end: idEnd}
+
+    setConnections((prevState) => [
+      ...prevState,
+      newConnection
+    ])
+  }
+
+  const removeConnection = (idStart, idEnd) => {
+    console.log("Removing a connection from: " + idStart + " to " + idEnd)
+
+    setConnections((prevState) => [
+      prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
+    ])
+  }
+
+
+
+
+
+
+
+  //eine box:
+  /*
+
+    id:   unique id mit Date.now()
+    name: "string" --> displayName
+    x: Position am anfang
+    y: Position am anfang
+    erType: Type des Elements
+
+   */
+
+
+  // eine connection:
+  /*
+    id:
+    start: id zu box
+    end:  id zu box
+
+
+   */
+
+
+
+
   const props = {
-    boxes,
-    setBoxes,
-    selected,
+    boxes: drawBoardElements,  //State Boxes
+    setBoxes: setDrawBoardElements, //Set Methode
+    selected: selectedObject,
     handleSelect,
     actionState,
     setActionState,
-    lines,
-    setLines,
+    lines: connections,
+    setLines: setConnections,
   };
 
-  const boxProps = {
-    boxes,
-    setBoxes,
-    selected,
-    handleSelect,
-    actionState,
-    setLines,
-    lines,
-  };
-
-
-
-  return ( 
+  return (
     <div>
-   
+
 
       <Xwrapper>
         <div className="canvasStyle" id="canvas" onClick={() => handleSelect(null)}>
@@ -120,37 +187,49 @@ const PlayGround = () => {
             id="boxesContainer"
             className="drawboardDragArea"
             onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => createNewElement(e)}
+            onDrop={(e) => addDrawBoardElement(e)}
             style={{position: "absolute"}}>
 
-            {boxes.map((box) => (
-              <DrawBoardElement {...boxProps} key={box.id} box={box} bounds={getBoundsOfSvg()} position="absolute" sidePos="middle" />
+            {drawBoardElements.map((drawBoardElement) => (
+              <DrawBoardElement  key={drawBoardElement.id}
+
+                                 handleSelect={handleSelect}
+                                 addConnection={addConnection}
+                                 removeConnection={removeConnection}
+
+                                 actionState={actionState}
+                                 selectedObject={selectedObject}
+
+                                 thisObject={drawBoardElement}
+                                 bounds={getBoundsOfSvg()}
+
+                                  />
             ))}
-          
+
           </svg>
 
         </div>
-        
+
 
 
           {/* The right bar, used for editing the elements in the draw board */}
 
-          <TopBar {...props} />    
+          <TopBar {...props} />
 
 
 
           {/* The connections of the elements inside the draw board */}
 
-          {lines.map((line, i) => (
+          {connections.map((line, i) => (
             <Xarrow
               key={line.props.root + '-' + line.props.end + i}
-              lines={lines}
+              lines={connections}
               line={line}
-              selected={selected}
-              setSelected={setSelected}
+              selected={selectedObject}
+              setSelected={setSelectedObject}
             />
           ))}
-      
+
         </div>
       </Xwrapper>
     </div>

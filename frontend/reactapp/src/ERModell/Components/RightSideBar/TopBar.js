@@ -80,7 +80,7 @@ const TopBar = (props) => {
 
       <React.Fragment>
 
-        <h1>{props.selected.type}</h1>
+        <h1>{props.selected.type}: {}</h1>
         <p> Name: <input/></p>
 
         <button>Assoziation hinzufügen</button>

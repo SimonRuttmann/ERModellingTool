@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
 import { resolveErComponent } from "../../ErType";
+import {getBoundsOfSvg} from "../SvgUtil/SvgUtils";
 
 /*
     Props:
@@ -18,7 +19,30 @@ import { resolveErComponent } from "../../ErType";
             -> Im Fall von einer im Graph befindlichen box: x: "1666.2" y:"2.23423"
 */
 
-const DrawBoardElement = (props) => {
+
+
+/**
+ * @summary Creates an element which can be dragged within the given bounds inside the parent svg element <br>
+ * - Executes the handleSelect method when the object is clicked
+ *
+ * @param handleSelect  Function to handle the selection on this object
+ * @param addConnection Function to add a new connection
+ * @param removeConnection Function to remove a connection
+ * @param actionState The current actionState
+ * @param selectedObject The selectedObject, if a object is selected
+ * @param thisObject The data of this object
+ * @param bounds The bounds, where this object should clip to
+ * @returns An draggable element
+ */
+const DrawBoardElement = ({ handleSelect,
+                            addConnection,
+                            removeConnection,
+
+                            actionState,
+                            selectedObject,
+
+                            thisObject,
+                            bounds }) => {
   const updateXarrow = useXarrow();
 
   const fontFamily="arial"
@@ -33,10 +57,11 @@ const DrawBoardElement = (props) => {
     e.stopPropagation();
     if (isDragging===true) return;
 
+    handleSelect(e, thisObject);
     console.log("Click on " + props.box.id )
     if (props.actionState === 'Normal') {
       props.handleSelect(e);
-    } 
+    }
 
     else if (props.actionState === 'Add Connections' && props.selected.id !== props.box.id) {
       console.log("Creating a new line: From: " + props.selected.id + " to: "  + props.box.id)
@@ -44,10 +69,9 @@ const DrawBoardElement = (props) => {
         ...lines,
         {
           props: { start: props.selected.id, end: props.box.id },
-          menuWindowOpened: false,
         },
       ]);
-    } 
+    }
     else if (props.actionState === 'Remove Connections') {
       props.setLines((lines) =>
         lines.filter((line) => !(line.root === props.selected.id && line.end === props.box.id))
@@ -63,10 +87,10 @@ const DrawBoardElement = (props) => {
    // -> A box is selected and the selected box is this box
   if (props.selected && props.selected.id === props.box.id) {
     background = 'rgb(200, 200, 200)';
-  } 
-  
+  }
+
   //On click on the box
-  // -> Wenn im AddConnections Statfus 
+  // -> Wenn im AddConnections Statfus
   // Für jede DrawBoardElement gilt jetzt, wenn es eine Linie gibt, die von der Selekteirten ausgeht und hier endet -> Zeige "LemmonChiffron an"
   // Es werden alle linien durchsucht. Wenn der Linienbegin die selektierte box ist und die Linie hier endet -> LemonChiffron
   else if (
@@ -88,11 +112,10 @@ const DrawBoardElement = (props) => {
 
   const PRESS_TIME_UNTIL_DRAG_MS = 250;
   function onStop() {
+
     setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
   }
 
-//bounds={{left: number, top: number, right: number, bottom: number}}
-  //Props for svgs: id, displayText, color (highlight), fontFamily, fontSize
 
   const offset = 50;
   const elementWidth = 150;
@@ -108,7 +131,7 @@ const DrawBoardElement = (props) => {
 
   return (
     <React.Fragment>
-     
+
       <Draggable
          bounds={props.bounds ? {
                left: offset,
@@ -119,15 +142,15 @@ const DrawBoardElement = (props) => {
 
          onDrag={onDrag}
          onStop ={onStop}
-         grid={[1, 1]} 
-         scale={1} 
-         defaultPosition={{x: props.box.x, y: props.box.y}}> 
+         grid={[1, 1]}
+         scale={1}
+         defaultPosition={{x: props.box.x, y: props.box.y}}>
 
 
-        <g ref={props.box.reference} 
-           id={props.box.id} 
-           cursor="pointer" 
-           fill="#61DAFB" 
+        <g ref={props.box.reference}
+           id={props.box.id}
+           cursor="pointer"
+           fill="#61DAFB"
            transform="scale(2)"
 
            onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
@@ -138,7 +161,7 @@ const DrawBoardElement = (props) => {
 
 
       </Draggable>
-      
+
     </React.Fragment>
   );
 };
