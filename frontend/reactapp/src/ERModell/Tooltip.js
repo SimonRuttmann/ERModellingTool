@@ -1,18 +1,14 @@
 import React from 'react'
-import {erTypesDescription, erTypesName, erTypesPreview} from "./ErTypesEnum";
+import {erType_TooltipDescription, erType_TooltipTitle, erType_TooltipImage} from "./ErTypesEnum";
 
 const ToolTip = ({erType}) => {
     return (
         <div>
-            {erTypesName[erType]}
-            {erTypesDescription[erType]}
-            {erTypesPreview[erType]}
+            {erType_TooltipTitle[erType]}
+            {erType_TooltipDescription[erType]}
+            {erType_TooltipImage[erType]}
         </div>
     )
 }
 
 export default ToolTip
-
-// Image
-
-// Beschreibung

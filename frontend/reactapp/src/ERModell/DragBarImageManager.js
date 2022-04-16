@@ -1,12 +1,12 @@
 import React from "react";
-import {erTypesEnum} from "./ErTypesEnum";
+import {erType_DraggableIcon} from "./ErTypesEnum";
 import ReactTooltip from "react-tooltip";
 import ToolTip from "./Tooltip";
 
 const DragBarManager = ({erTypes}) => {
 
     function resolveErType(erType){
-        return erTypesEnum[erType];
+        return erType_DraggableIcon[erType];
     }
 
     function setDataTransfer(dragEvent, erType){

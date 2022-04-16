@@ -1,3 +1,4 @@
+//Import draggable icons
 import IdentifyingAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/IdentifyingAttribute.svg'
 import WeakIdentifyingAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/WeakIdentifyingAttribute.svg'
 import NormalAttributeDragBarSvg from './Components/DraggableSvgs/Attributes/NormalAttribute.svg'
@@ -8,7 +9,7 @@ import StrongRelationDragBarSvg from './Components/DraggableSvgs/Relations/Stron
 import WeakRelationDragBarSvg from './Components/DraggableSvgs/Relations/WeakRelation.svg'
 import IsAStructureDragBarSvg from './Components/DraggableSvgs/IsAStructure.svg'
 
-
+//Import tooltip images
 import IdentifyingAttributeDragBarPreviewSvg from './Components/DragBarPreviewSvg/Attributes/IdentifyingAttribute.svg'
 import WeakIdentifyingAttributeDragBarPreviewSvg from './Components/DragBarPreviewSvg/Attributes/WeakIdentifyingAttribute.svg'
 import NormalAttributeDragBarPreviewSvg from './Components/DragBarPreviewSvg/Attributes/NormalAttribute.svg'
@@ -19,6 +20,7 @@ import StrongRelationDragBarPreviewSvg from './Components/DragBarPreviewSvg/Rela
 import WeakRelationDragBarPreviewSvg from './Components/DragBarPreviewSvg/Relations/WeakRelation.svg'
 import IsAStructureDragBarPreviewSvg from './Components/DragBarPreviewSvg/IsAStructure.svg'
 
+//Import components
 import IdentifyingAttribute from "./Components/ErObjectComponents/Attributes/IdentifyingAttribute";
 import NormalAttribute from "./Components/ErObjectComponents/Attributes/NormalAttribute";
 import MultivaluedAttribute from "./Components/ErObjectComponents/Attributes/MultivaluedAttribute";
@@ -30,9 +32,13 @@ import WeakRelation from "./Components/ErObjectComponents/Relations/WeakRelation
 import IsAStructure from "./Components/ErObjectComponents/IsAStructure";
 
 
-// TODO Rename to erTypesIcon
-
-export const erTypeCategory = {
+/**
+ * Holds all types of categories and contains the equivalent string value
+ * @example
+ * ERTYPECATEGORY.Attribute
+ * returns "Attribute"
+ */
+export const ERTYPECATEGORY = {
     Attribute: "Attribute",
     Entity: "Entity",
     Relation: "Relation",
@@ -40,20 +46,26 @@ export const erTypeCategory = {
 }
 
 
-export const erTypesCategory = {
-    IdentifyingAttribute:       {value: "IdentifyingAttribute", category: erTypeCategory.Attribute},
-    NormalAttribute:            {value: "NormalAttribute", category: erTypeCategory.Attribute},
-    MultivaluedAttribute:       {value: "MultivaluedAttribute", category: erTypeCategory.Attribute},
-    WeakIdentifyingAttribute:   {value: "WeakIdentifyingAttribute", category: erTypeCategory.Attribute},
-    StrongEntity:               {value: "StrongEntity", category: erTypeCategory.Entity},
-    WeakEntity:                 {value: "WeakEntity", category: erTypeCategory.Entity},
-    StrongRelation:             {value: "StrongRelation", category: erTypeCategory.Relation},
-    WeakRelation:               {value: "WeakRelation", category: erTypeCategory.Relation},
-    IsAStructure:               {value: "IsAStructure", category: erTypeCategory.IsAStructure},
+/**
+ * Holds all entity relationship types and contains the equivalent string value
+ * @example
+ * ERTYPENAME.NormalAttribute
+ * returns "NormalAttribute"
+ */
+export const ERTYPENAME = {
+    IdentifyingAttribute:       "IdentifyingAttribute",
+    NormalAttribute:            "NormalAttribute",
+    MultivaluedAttribute:       "MultivaluedAttribute",
+    WeakIdentifyingAttribute:   "WeakIdentifyingAttribute",
+    StrongEntity:               "StrongEntity",
+    WeakEntity:                 "WeakEntity",
+    StrongRelation:             "StrongRelation",
+    WeakRelation:               "WeakRelation",
+    IsAStructure:               "IsAStructure"
 };
 
 
-export const erTypesEnum = {
+const erType_DraggableIcon = {
     IdentifyingAttribute:       <img src={IdentifyingAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
     NormalAttribute:            <img src={NormalAttributeDragBarSvg}            draggable className="leftSideBarElementImage" alt={"NormalAttribute"}/>,
     MultivaluedAttribute:       <img src={MultivaluedAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"MultivaluedAttribute"}/>,
@@ -66,7 +78,7 @@ export const erTypesEnum = {
 };
 
 
-export const erTypesPreview = {
+const erType_TooltipImage = {
     IdentifyingAttribute:       <img src={IdentifyingAttributeDragBarPreviewSvg}       draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
     NormalAttribute:            <img src={NormalAttributeDragBarPreviewSvg}            draggable className="leftSideBarElementImage" alt={"NormalAttribute"}/>,
     MultivaluedAttribute:       <img src={MultivaluedAttributeDragBarPreviewSvg}       draggable className="leftSideBarElementImage" alt={"MultivaluedAttribute"}/>,
@@ -78,7 +90,8 @@ export const erTypesPreview = {
     IsAStructure:               <img src={IsAStructureDragBarPreviewSvg}               draggable className="leftSideBarElementImage" alt={"IsAStructure"}/>
 }
 
-export const erTypesDescription = {
+
+const erType_TooltipDescription = {
     IdentifyingAttribute:       <p>This is the description for a Identifying Attribute</p>,
     NormalAttribute:            <p>This is the description for a Normal Attribute</p>,
     MultivaluedAttribute:       <p>This is the description for a Multivalued Attribute</p>,
@@ -90,7 +103,8 @@ export const erTypesDescription = {
     IsAStructure:               <p>This is the description for a IsA Structure</p>
 }
 
-export const erTypesName = {
+
+const erType_TooltipTitle = {
     IdentifyingAttribute:       <h1>Identifying Attribute</h1>,
     NormalAttribute:            <h1>Normal Attribute</h1>,
     MultivaluedAttribute:       <h1>Multivalued Attribute</h1>,
@@ -102,29 +116,131 @@ export const erTypesName = {
     IsAStructure:               <h1>Is A Structure</h1>
 }
 
-export const erTypesComponents = {
-    IdentifyingAttribute:       <IdentifyingAttribute/>,
-    NormalAttribute:            <NormalAttribute/>,
-    MultivaluedAttribute:       <MultivaluedAttribute/>,
-    WeakIdentifyingAttribute:   <WeakIdentifyingAttribute/>,
-    StrongEntity:               <StrongEntity/>,
-    WeakEntity:                 <WeakEntity/>,
-    StrongRelation:             <StrongRelation/>,
-    WeakRelation:               <WeakRelation/>,
-    IsAStructure:               <IsAStructure/>
+/**
+ * @summary Use this method to receive the component for a corresponding erType
+ * @see ERTYPENAME
+ * @see ERTYPE
+ * @param type The string representation of the erType
+ * @param props The props, which will be forwarded to the component
+ * @returns {JSX.Element} The component based on the given erType
+ */
+export const resolveErComponent = (type, props) => {
+    switch (type) {
+        case ERTYPENAME.IdentifyingAttribute: return <IdentifyingAttribute {...props}/>
+        case ERTYPENAME.NormalAttribute: return <NormalAttribute {...props}/>
+        case ERTYPENAME.MultivaluedAttribute: return <MultivaluedAttribute {...props}/>
+        case ERTYPENAME.WeakIdentifyingAttribute: return <WeakIdentifyingAttribute {...props}/>
+        case ERTYPENAME.StrongEntity: return <StrongEntity {...props}/>
+        case ERTYPENAME.WeakEntity: return <WeakEntity {...props}/>
+        case ERTYPENAME.StrongRelation: return <StrongRelation {...props}/>
+        case ERTYPENAME.WeakRelation: return <WeakRelation {...props}/>
+        case ERTYPENAME.IsAStructure: return <IsAStructure {...props}/>
+        default: return <div/>
+    }
 }
 
-export const resolveIsAStructure = (type, props) => {
-    switch (type) {
-        case erTypesCategory.IdentifyingAttribute.value: return <IdentifyingAttribute {...props}/>
-        case erTypesCategory.NormalAttribute.value: return <NormalAttribute {...props}/>
-        case erTypesCategory.MultivaluedAttribute.value: return <MultivaluedAttribute {...props}/>
-        case erTypesCategory.WeakIdentifyingAttribute.value: return <WeakIdentifyingAttribute {...props}/>
-        case erTypesCategory.StrongEntity.value: return <StrongEntity {...props}/>
-        case erTypesCategory.WeakEntity.value: return <WeakEntity {...props}/>
-        case erTypesCategory.StrongRelation.value: return <StrongRelation {...props}/>
-        case erTypesCategory.WeakRelation.value: return <WeakRelation {...props}/>
-        case erTypesCategory.IsAStructure.value: return <IsAStructure {...props}/>
-        default: return ""
-    }
+/**
+ * Holds all data for a entity relationship type <br>
+ * The following entries are avaiable for each entity relationship type: <br>
+ * - name: String
+ * - category: String
+ * - icon: Image
+ * - toolTipTitle: JSXElement
+ * - toolTipDescription: JSXElement
+ * - toolTipImage: Image
+ *
+ * @see ERTYPENAME
+ * @see ERTYPE
+ */
+export const ERTYPE = {
+
+    IdentifyingAttribute:
+        {
+            name: ERTYPENAME.IdentifyingAttribute,
+            category: ERTYPECATEGORY.Attribute,
+            icon: erType_DraggableIcon.IdentifyingAttribute,
+            toolTipTitle: erType_TooltipTitle.IdentifyingAttribute,
+            toolTipDescription: erType_TooltipDescription.IdentifyingAttribute,
+            toolTipImage: erType_TooltipImage.IdentifyingAttribute,
+        },
+
+    NormalAttribute:
+        {
+            name: ERTYPENAME.NormalAttribute,
+            category: ERTYPECATEGORY.Attribute,
+            icon: erType_DraggableIcon.NormalAttribute,
+            toolTipTitle: erType_TooltipTitle.NormalAttribute,
+            toolTipDescription: erType_TooltipDescription.NormalAttribute,
+            toolTipImage: erType_TooltipImage.NormalAttribute,
+        },
+
+    MultivaluedAttribute:
+        {
+            name: ERTYPENAME.MultivaluedAttribute,
+            category: ERTYPECATEGORY.Attribute,
+            icon: erType_DraggableIcon.MultivaluedAttribute,
+            toolTipTitle: erType_TooltipTitle.MultivaluedAttribute,
+            toolTipDescription: erType_TooltipDescription.MultivaluedAttribute,
+            toolTipImage: erType_TooltipImage.MultivaluedAttribute,
+        },
+
+    WeakIdentifyingAttribute:
+        {
+            name: ERTYPENAME.WeakIdentifyingAttribute,
+            category: ERTYPECATEGORY.Attribute,
+            icon: erType_DraggableIcon.WeakIdentifyingAttribute,
+            toolTipTitle: erType_TooltipTitle.WeakIdentifyingAttribute,
+            toolTipDescription: erType_TooltipDescription.WeakIdentifyingAttribute,
+            toolTipImage: erType_TooltipImage.WeakIdentifyingAttribute,
+        },
+
+    StrongEntity:
+        {
+            name: ERTYPENAME.StrongEntity,
+            category: ERTYPECATEGORY.Entity,
+            icon: erType_DraggableIcon.StrongEntity,
+            toolTipTitle: erType_TooltipTitle.StrongEntity,
+            toolTipDescription: erType_TooltipDescription.StrongEntity,
+            toolTipImage: erType_TooltipImage.StrongEntity,
+        },
+
+    WeakEntity:
+        {
+            name: ERTYPENAME.WeakEntity,
+            category: ERTYPECATEGORY.Entity,
+            icon: erType_DraggableIcon.WeakEntity,
+            toolTipTitle: erType_TooltipTitle.WeakEntity,
+            toolTipDescription: erType_TooltipDescription.WeakEntity,
+            toolTipImage: erType_TooltipImage.WeakEntity,
+        },
+
+    StrongRelation:
+        {
+            name: ERTYPENAME.StrongRelation,
+            category: ERTYPECATEGORY.Relation,
+            icon: erType_DraggableIcon.StrongRelation,
+            toolTipTitle: erType_TooltipTitle.StrongRelation,
+            toolTipDescription: erType_TooltipDescription.StrongRelation,
+            toolTipImage: erType_TooltipImage.StrongRelation,
+        },
+
+    WeakRelation:
+        {
+            name: ERTYPENAME.WeakRelation,
+            category: ERTYPECATEGORY.Relation,
+            icon: erType_DraggableIcon.WeakRelation,
+            toolTipTitle: erType_TooltipTitle.WeakRelation,
+            toolTipDescription: erType_TooltipDescription.WeakRelation,
+            toolTipImage: erType_TooltipImage.WeakRelation,
+        },
+
+    IsAStructure:
+        {
+            name: ERTYPENAME.IsAStructure,
+            category: ERTYPECATEGORY.IsAStructure,
+            icon: erType_DraggableIcon.IsAStructure,
+            toolTipTitle: erType_TooltipTitle.IsAStructure,
+            toolTipDescription: erType_TooltipDescription.IsAStructure,
+            toolTipImage: erType_TooltipImage.IsAStructure,
+        }
 }

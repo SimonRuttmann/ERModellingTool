@@ -5,7 +5,7 @@ import { useXarrow } from 'react-xarrows';
 import Entity from './Entity';
 import Attribute from './Attribute';
 import IsAStructure from "./ErObjectComponents/IsAStructure";
-import {erTypesCategory, erTypesComponents, resolveIsAStructure, ResolveIsAStructure} from "../ErTypesEnum";
+import {erType_Category, erTypesComponents, resolveErComponent, ResolveIsAStructure} from "../ErTypesEnum";
 
 // Auch hier lines.root -> lines.props.start
 // lines.end --> lines.props.end
@@ -142,7 +142,7 @@ const Box = (props) => {
 
            onClick={handleClick}>  {/* style={{ transformOrigin: 'center'}} */}
 
-          {resolveIsAStructure(props.box.erType, propsForErComponent)}
+          {resolveErComponent(props.box.erType, propsForErComponent)}
         </g>
 
 

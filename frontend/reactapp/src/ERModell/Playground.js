@@ -4,7 +4,7 @@ import Box from './Components/Box';
 import TopBar from './Components/TopBar';
 import Xarrow from './Components/Xarrow';
 import { Xwrapper } from 'react-xarrows';
-import {erTypeCategory, erTypesCategory, erTypesEnum} from './ErTypesEnum';
+import {ERTYPECATEGORY, erType_Category, erType_DraggableIcon} from './ErTypesEnum';
 import DragBarManager from "./DragBarImageManager";
 /*
   Nächste Todo´s
@@ -20,8 +20,8 @@ import DragBarManager from "./DragBarImageManager";
  */
 
 
-const erTypes = Object.keys(erTypesEnum);
-const erTypesValues = Object.values(erTypesCategory)
+const erTypes = Object.keys(erType_DraggableIcon);
+const erTypesValues = Object.values(erType_Category)
 
 function getBoundsOfSvg(){
 
@@ -167,19 +167,19 @@ const PlayGround = () => {
                 <hr className="leftSidebarDivider"/>
 
                 <div className="leftSidebarTitle">Attributes</div>
-                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.Attribute)}/>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, ERTYPECATEGORY.Attribute)}/>
                 <hr className="leftSidebarDivider"/>
 
                 <div className="leftSidebarTitle">Entities</div>
-                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.Entity)}/>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, ERTYPECATEGORY.Entity)}/>
                 <hr className="leftSidebarDivider"/>
 
                 <div className="leftSidebarTitle">Relations</div>
-                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.Relation)}/>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, ERTYPECATEGORY.Relation)}/>
                 <hr className="leftSidebarDivider"/>
 
                 <div className="leftSidebarTitle">IsA Structure</div>
-                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, erTypeCategory.IsAStructure)}/>
+                <DragBarManager erTypes={returnNamesOfCategory(erTypesValues, ERTYPECATEGORY.IsAStructure)}/>
                 <hr className="leftSidebarDivider"/>
             </div>
         </div>
