@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
-import './Box.css';
 import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
-import Entity from './Entity';
-import Attribute from './Attribute';
-import {erType_Category, erTypesComponents, resolveErComponent, ResolveIsAStructure} from "../ErType";
+import { resolveErComponent } from "../../ErType";
 
 /*
     Props:
@@ -84,13 +81,13 @@ const Box = (props) => {
 
 
 
-  function onDrag(e) {
+  function onDrag() {
     setDragging(true)
     updateXarrow();
   }
 
   const PRESS_TIME_UNTIL_DRAG_MS = 250;
-  function onStop(e) {
+  function onStop() {
     setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
   }
 

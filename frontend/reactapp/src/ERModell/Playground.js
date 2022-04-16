@@ -1,26 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './Playground.css';
-import Box from './Components/Box';
-import TopBar from './Components/TopBar';
-import Xarrow from './Components/Xarrow';
+import Box from './Components/DrawBoard/Box';
+import TopBar from './Components/RightSideBar/TopBar';
+import Xarrow from './Components/DrawBoard/Xarrow';
 import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
-import DragBarManager from "./DragBarImageManager";
+import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
+import {getBoundsOfSvg} from "./Components/SvgUtil/SvgUtils";
 
-
-function getBoundsOfSvg(){
-
-  let svgContainer = document.getElementById("boxesContainer");
-  if(svgContainer === null) return;
-  let bounds = svgContainer.getBoundingClientRect();
-
-  return {
-    right: bounds.right,
-    left: bounds.left,
-    top: bounds.top,
-    bottom: bounds.bottom}
-
-}
 
 const PlayGround = () => {
 

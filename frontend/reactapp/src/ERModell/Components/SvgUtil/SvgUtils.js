@@ -1,4 +1,6 @@
-function resolveRequiredWidth(width, displayText, fontSize, fontFamily){
+
+
+export const resolveRequiredWidth = (width, displayText, fontSize, fontFamily) => {
 
     let textWidth = getTextWidth(displayText, `${fontSize}pt ${fontFamily}`);
 
@@ -16,4 +18,17 @@ function getTextWidth(text, font) {
     return context.measureText(text).width;
 }
 
-export default resolveRequiredWidth
+
+export const getBoundsOfSvg = () => {
+
+    let svgContainer = document.getElementById("boxesContainer");
+    if(svgContainer === null) return;
+    let bounds = svgContainer.getBoundingClientRect();
+
+    return {
+        right: bounds.right,
+        left: bounds.left,
+        top: bounds.top,
+        bottom: bounds.bottom}
+
+}
