@@ -140,6 +140,20 @@ export const resolveErComponent = (type, props) => {
 }
 
 /**
+ * @summary Filters the erTypes for a given category
+ * @param category The category, which will be filtered after
+ * @returns {*[]} An array of erType names as strings
+ */
+export const returnNamesOfCategory = (category) => {
+
+    let arrayOfTypes = Object.values(ERTYPE)
+    let categoryFiltered = arrayOfTypes.filter(erType => erType.category === category)
+
+    return categoryFiltered.map(er => er.name)
+}
+
+
+/**
  * Holds all data for a entity relationship type <br>
  * The following entries are avaiable for each entity relationship type: <br>
  * - name: String

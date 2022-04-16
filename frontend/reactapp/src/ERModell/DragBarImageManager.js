@@ -1,5 +1,5 @@
 import React from "react";
-import {ERTYPE} from "./ErTypesEnum";
+import {ERTYPE} from "./ErType";
 import ReactTooltip from "react-tooltip";
 import ToolTip from "./Tooltip";
 
@@ -13,12 +13,11 @@ const DragBarManager = ({erTypes}) => {
         return dragEvent.dataTransfer.setData('erType', erType)
     }
 
-    console.log("Creating inside drag bar manager : " + erTypes)
-
     return (
-                <React.Fragment>
-                  {/* Container */}
+            <React.Fragment>
+
                 {erTypes.map((erType) => (
+
                     <div
                         className="leftSideBarElement"
                         key={erType+"_draggableContainer"}
@@ -26,12 +25,15 @@ const DragBarManager = ({erTypes}) => {
                         data-for={erType+"toolTip"}
                         onDragStart={(e) => {setDataTransfer(e, erType)}}
                         >
+
                         <ReactTooltip id={erType+"toolTip"} effect="solid" place={"right"}><ToolTip erType={erType}/></ReactTooltip>
+
                         {resolveErType(erType)}
+
                     </div>
                 ))}
 
-                </React.Fragment>
+            </React.Fragment>
 
     )
 }

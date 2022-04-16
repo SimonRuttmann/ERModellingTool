@@ -4,7 +4,7 @@ import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
 import Entity from './Entity';
 import Attribute from './Attribute';
-import {erType_Category, erTypesComponents, resolveErComponent, ResolveIsAStructure} from "../ErTypesEnum";
+import {erType_Category, erTypesComponents, resolveErComponent, ResolveIsAStructure} from "../ErType";
 
 /*
     Props:

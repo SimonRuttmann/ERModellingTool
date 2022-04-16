@@ -4,7 +4,7 @@ import Box from './Components/Box';
 import TopBar from './Components/TopBar';
 import Xarrow from './Components/Xarrow';
 import { Xwrapper } from 'react-xarrows';
-import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErTypesEnum';
+import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./DragBarImageManager";
 
 
