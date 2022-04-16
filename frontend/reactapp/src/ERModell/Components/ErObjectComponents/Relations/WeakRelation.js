@@ -1,8 +1,8 @@
 import React from "react";
-import resolveRequiredWidth from "../SvgUtil/SvgUtils"
+import resolveRequiredWidth from "../../SvgUtil/SvgUtils"
 
 
-function StrongRelation({id, displayText, color, fontFamily, fontSize}){
+function WeakRelation({id, displayText, color, fontFamily, fontSize}){
 
     let width = 150;
     const widthHeightRatio = (2/3);
@@ -19,9 +19,14 @@ function StrongRelation({id, displayText, color, fontFamily, fontSize}){
     let pointRight =  {x: width,    y: height/2}
     let pointBottom = {x: width/2,  y: height}
 
-
-    let path = `M ${pointLeft.x} ${pointLeft.y} L ${pointTop.x} ${pointTop.y}` +
+    let path = `M ${pointLeft.x} ${pointLeft.y}   L ${pointTop.x} ${pointTop.y}` +
                `L ${pointRight.x} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y} Z`
+
+    const offsetX = 10;
+    const offsetY = 10 * widthHeightRatio;
+
+    let innerPath = `M ${pointLeft.x + offsetX} ${pointLeft.y}   L ${pointTop.x} ${pointTop.y + offsetY}` +
+        `            L ${pointRight.x - offsetX} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y - offsetY} Z`
 
 
     return (
@@ -33,6 +38,15 @@ function StrongRelation({id, displayText, color, fontFamily, fontSize}){
 
                 //display style
                 d={path}
+                stroke="#000"
+                fill={color} />
+
+            <path
+                //id
+                id={id}
+
+                //display style
+                d={innerPath}
                 stroke="#000"
                 fill={color} />
 
@@ -63,4 +77,4 @@ function StrongRelation({id, displayText, color, fontFamily, fontSize}){
     )
 }
 
-export default StrongRelation
+export default WeakRelation

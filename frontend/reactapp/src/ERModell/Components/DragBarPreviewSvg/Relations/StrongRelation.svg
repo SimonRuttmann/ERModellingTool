@@ -1,7 +1,6 @@
 <svg width="160" height="120" xmlns="http://www.w3.org/2000/svg">
  <g>
   <title>Layer 1</title>
-  <path fill="#000000" stroke="#000" stroke-width="0" opacity="NaN" d="m106.89446,250.34259" id="svg_10"/>
   <path fill="#ffffff" stroke="#000" d="m3.86238,60l74.13762,-57.93079l74.13762,57.93079l-74.13762,57.93079l-74.13762,-57.93079z" id="svg_11"/>
   <text transform="matrix(1 0 0 1 0 0)" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="24" stroke-width="0" id="svg_6" y="68.93098" x="37" stroke="#000" fill="#000000" font-weight="normal" font-style="normal">Relation</text>
  </g>

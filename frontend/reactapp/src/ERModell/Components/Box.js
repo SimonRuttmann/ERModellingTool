@@ -4,7 +4,7 @@ import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
 import Entity from './Entity';
 import Attribute from './Attribute';
-import {erTypesComponents} from "../ErTypesEnum";
+import IsAStructure from "./ErObjectComponents/IsAStructure";
 
 // Auch hier lines.root -> lines.props.start
 // lines.end --> lines.props.end
@@ -136,7 +136,7 @@ const Box = (props) => {
 
           {/* TODO map erComponent with erTypes <erComponent/> */}
 
-          <StrongEntity id={props.box.id} displayText={"Hasdfdsfsdfsdfdsffdllo"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>
+          <IsAStructure id={props.box.id} displayText={"sbd"} color={"#fff"} fontSize={fontSize} fontFamily={fontFamily}/>
         </g>
 
       {/*
@@ -199,7 +199,7 @@ function StrongEntity({id, displayText, color, fontFamily, fontSize}){
   const x = 0;       const y = 0;
   var width = 137;   const height= 67;
 
-  //If necesarry, increase width to fit text
+  //If necessary, increase width to fit text
   width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
   
   return (
@@ -246,7 +246,7 @@ function StrongEntity({id, displayText, color, fontFamily, fontSize}){
   )
 }
 
-
+/*
 function WeakEntity(props){
   return (
     <React.Fragment>
@@ -256,65 +256,8 @@ function WeakEntity(props){
     </React.Fragment>
   )
 }
+*/
 
-function normalAttribute(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-function composedAttribute(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-function multivaluedAttribute(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-function identifyingAttribute(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-function weadIdentifiyingAttribute(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-function strongRelation(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-
-function weakRelation(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
-
-
-
-function isAStructure(props){
-  return (
-    <React.Fragment>
-    </React.Fragment>
-  )
-}
 
 function resolveRequiredWidth(width, displayText, fontSize, fontFamily){
 

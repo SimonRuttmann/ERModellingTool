@@ -1,5 +1,5 @@
 import React from "react";
-import resolveRequiredWidth from "../SvgUtil/SvgUtils"
+import resolveRequiredWidth from "../../SvgUtil/SvgUtils"
 
 
 function StrongEntity({id, displayText, color, fontFamily, fontSize}){
@@ -9,6 +9,7 @@ function StrongEntity({id, displayText, color, fontFamily, fontSize}){
 
     //If necessary, increase width to fit text
     width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
+
 
     return (
         <React.Fragment>
