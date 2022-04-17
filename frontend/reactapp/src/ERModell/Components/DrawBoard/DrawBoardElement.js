@@ -78,6 +78,8 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
     <React.Fragment>
 
       <Draggable
+          onMouseDown={(e => e.stopPropagation())}
+
          bounds={
                   bounds ? {
                         left: boundsOffset,

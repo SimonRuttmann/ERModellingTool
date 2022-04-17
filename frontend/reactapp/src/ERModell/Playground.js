@@ -220,6 +220,70 @@ const PlayGround = () => {
     setLines: setConnections,
   };
 
+  //Canvas moving by transforming the svg !
+  const [canvasPosition, setCanvasPosition] = useState( {
+    startPosition: {x: 0, y: 0},
+    relativePosition: {x: 0, y: 0}
+  })
+
+  const [rotateCanvas, setRotateCanvas] = useState(false)
+
+  function OnMouseDown(mouseEvent){
+
+    console.log("ON MOUSE DOWN")
+
+    console.log(mouseEvent.clientX)
+    console.log(mouseEvent.clientY)
+
+    setRotateCanvas(true)
+
+    setCanvasPosition({
+      startPosition: {x: mouseEvent.clientX, y: mouseEvent.clientY},
+      relativePosition: {...canvasPosition.relativePosition}
+    })
+  }
+
+  function OnMouseMove(mouseEvent){
+
+    if(!rotateCanvas) return false;
+
+    console.log("ON MOUSE MOVE")
+
+
+    let startX = canvasPosition.startPosition.x;
+    let startY = canvasPosition.startPosition.y;
+
+    let relativePositionX = canvasPosition.relativePosition.x + mouseEvent.clientX - startX;
+    let relativePositionY = canvasPosition.relativePosition.y + mouseEvent.clientY - startY;
+
+    console.log(relativePositionX)
+    console.log(relativePositionY)
+    setCanvasPosition((prevState) => ({
+      startPosition:  {x: mouseEvent.clientX, y: mouseEvent.clientY},
+      relativePosition: {x: relativePositionX, y: relativePositionY}
+    }))
+
+    mouseEvent.stopPropagation();
+
+  }
+
+  //logic fehler!
+  function OnMouseUp(mouseEvent){
+
+    if(!rotateCanvas) return false;
+
+    setRotateCanvas(false)
+
+    mouseEvent.stopPropagation();
+
+    // We do net set the canvas position, as the relative position is correct and
+    // the start position will be overwritten by the next on mouse down event
+  }
+
+  let relativePositionX = canvasPosition.relativePosition.x
+  let relativePositionY = canvasPosition.relativePosition.y
+
+
   return (
     <div>
 
@@ -259,7 +323,7 @@ const PlayGround = () => {
 
         {/* The draw board */}
 
-        <div id="mostouter" className="outerDrawboardContainer scrollAble">
+        <div id="mostouter" className="outerDrawboardContainer scrollAble" onMouseDown={OnMouseDown} onMouseMove={OnMouseMove} onMouseUp={OnMouseUp}>
 
           <div className="drawboardBackgroundPage"/>
 
@@ -268,7 +332,7 @@ const PlayGround = () => {
             className="drawboardDragArea"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => addDrawBoardElement(e)}
-            style={{position: "absolute"}}>
+            style={{position: "absolute", transform: `translate(${relativePositionX}px, ${relativePositionY}px)`}}>
 
             {drawBoardElements.map((drawBoardElement) => (
               <DrawBoardElement  key={drawBoardElement.id}
