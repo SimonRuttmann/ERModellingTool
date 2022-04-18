@@ -135,6 +135,8 @@ evlt benötigt: Element.scrollIntoView()
   height: 3000px;
   width: 4000px;
   border: #363636 30px solid;
+  border-bottom: #363636 900px solid;
+  border-right: #363636 640px solid;
   background-color: white;
 
   background-image:

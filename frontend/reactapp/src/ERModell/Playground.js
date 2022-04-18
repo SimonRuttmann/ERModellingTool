@@ -229,7 +229,7 @@ const PlayGround = () => {
 
 
   const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-  const oneBackgroundPageVertical = 880;
+  const oneBackgroundPageVertical = 900;
   const oneBackgroundPageHorizontal = 640;
 
   const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
@@ -414,12 +414,12 @@ const PlayGround = () => {
     let svgWidth = `calc(100% - ${drawBoardBorderOffset}px)`;
     let svgHeight = `calc(100% - ${drawBoardBorderOffset}px)`;
     
-    if(width > width2){
-      svgWidth = `${oneBackgroundPageHorizontal * amountBackgroundPages.horizontal}px`
+    if(width + oneBackgroundPageHorizontal > width2){
+      svgWidth = `${oneBackgroundPageHorizontal * amountBackgroundPages.horizontal + + oneBackgroundPageHorizontal}px`
     }
     
-    if(height > height2){
-      svgHeight = `${oneBackgroundPageVertical * amountBackgroundPages.vertical}px`
+    if(height + oneBackgroundPageVertical > height2){
+      svgHeight = `${oneBackgroundPageVertical * amountBackgroundPages.vertical + oneBackgroundPageVertical}px`
     }
     
     
