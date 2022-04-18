@@ -455,8 +455,6 @@ const PlayGround = () => {
 
                                  thisObject={drawBoardElement}
 
-                                 getBackgroundPageBounds={getBackgroundPageBounds}
-                                 setAmountBackgroundPages={setAmountBackgroundPages}
                                  adjustBounds={adjustBounds}
 
                                  bounds={getBoundsOfSvg()}
