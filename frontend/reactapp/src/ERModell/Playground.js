@@ -104,6 +104,8 @@ const PlayGround = () => {
         isSelected: false,
         x: e.clientX - x - 50,
         y: e.clientY - y - 50,
+        width: 150,
+        height: 100,
         erType: erType
       };
 
@@ -121,6 +123,13 @@ const PlayGround = () => {
 
   // Question: https://stackoverflow.com/questions/36985738/how-to-unmount-unrender-or-remove-a-component-from-itself-in-a-react-redux-typ
   // We use mutable state manipulation, but is should be immutable, by doing so i receive an error
+  /**
+   * Function given to DrawBoardElement to update the position in the state
+   * @param elementId The id of the element
+   * @param x The x coordinate of the element
+   * @param y The y coordinate of the element
+   * @see DrawBoardElement
+   */
   const updateDrawBoardElementPosition = (elementId, x, y) => {
 
     let element = drawBoardElements.find(element => element.id === elementId)
@@ -129,6 +138,38 @@ const PlayGround = () => {
     element.x = x;
     element.y = y;
 
+  }
+
+  // Question: https://stackoverflow.com/questions/36985738/how-to-unmount-unrender-or-remove-a-component-from-itself-in-a-react-redux-typ
+  // We use mutable state manipulation, but is should be immutable, by doing so i receive an error
+
+  //here:
+  // Warning: Each child in a list should have a unique "key" prop.
+  /**
+   * Function given to the concrete implementations of DrawBoardElement to update the size in the state
+   * @param elementId The id of the element
+   * @param width The width of the element
+   * @param height The height of the element
+   * @see DrawBoardElement
+   * @see resolveErComponent
+   */
+  const updateDrawBoardElementSize = (elementId, width, height) => {
+    let element = drawBoardElements.find(element => element.id === elementId)
+
+    //This is mutable state manipulation
+    element.width = width;
+    element.height = height;
+
+    //let otherElement = drawBoardElements.filter(element => !(element.id === elementId))
+
+    //let clone = Object.assign({}, element)
+    //clone.width = width;
+    //clone.height = height;
+
+    //setDrawBoardElements( ()=> [
+    //  {...otherElement},
+    //  clone
+    //])
   }
 
 
@@ -197,6 +238,8 @@ const PlayGround = () => {
     name: "string" --> displayName
     x: Position am anfang
     y: Position am anfang
+    width: Die breite des elements
+    height: Die höhe des elements
     erType: Type des Elements
 
    */
@@ -533,6 +576,7 @@ const PlayGround = () => {
                                  updateDrawBoardElementPosition={updateDrawBoardElementPosition}
 
                                  thisObject={drawBoardElement}
+                                 updateDrawBoardElementSize = {updateDrawBoardElementSize}
 
                                  adjustBounds={adjustBounds}
 

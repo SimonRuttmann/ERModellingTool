@@ -25,11 +25,14 @@ import { resolveErComponent } from "../../ErType";
  * <br> svgBounds:
  * <br> The bounds, where this object should be constraint to (left and top margin to the svg)
  *
+ * <br> updateDrawBoardElementSize:
+ * <br> Function to update the size of the element
+ *
  * @returns An draggable element, displayed inside the draw board
  */
 
 
-const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, adjustBounds}) => {
+const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, adjustBounds, updateDrawBoardElementSize}) => {
 
   const updateXarrow = useXarrow();
   const [isDragging, setDragging] = useState(false)
@@ -47,7 +50,8 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, svgBounds, u
     displayText: thisObject.displayName,
     color: background,
     fontSize: fontSize,
-    fontFamily: fontFamily
+    fontFamily: fontFamily,
+    updateDrawBoardElementSize: updateDrawBoardElementSize
   }
 
   //Handles the selection of this component and subcomponents
