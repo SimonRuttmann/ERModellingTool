@@ -308,37 +308,16 @@ const PlayGround = () => {
     let currentPagesHorizontal = amountBackgroundPages.horizontal;
     let currentPagesVertical = amountBackgroundPages.vertical;
 
-    //console.log("Current horizontal pages: " + currentPagesHorizontal)
-    //console.log("Current vertical pages: " + currentPagesHorizontal)
-
     let updatedIncreasedPages = checkIncreaseBounds(x, y, currentPagesHorizontal, currentPagesVertical)
-
-    //console.log("Increased horizontal pages: " + updatedIncreasedPages.horizontal)
-    //console.log("Increased vertical pages: " + updatedIncreasedPages.vertical)
-
-    if(updatedIncreasedPages.vertical === 0 || updatedIncreasedPages.horizontal === 0){
-      console.log("Increased horizontal pages: ")
-      console.log(updatedIncreasedPages.horizontal)
-      console.log("Increased vertical pages: ")
-      console.log(updatedIncreasedPages.vertical)
-
-    }
 
     let updatedPages = checkDecreaseBounds(updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
 
-    //   console.log("Decreased horizontal pages: " + updatedPages.horizontal)
-    //   console.log("Decreased vertical pages: " + updatedPages.vertical)
 
-
-    if(updatedPages.vertical === 0) return;
-
-    if(updatedPages.vertical === 0 || updatedPages.horizontal === 0){
-      console.log("Decreased horizontal pages: ")
+    if(updatedPages.horizontal !== updatedIncreasedPages.horizontal){
+      console.log("Decrase horizontal")
       console.log(updatedPages.horizontal)
-      console.log("Decreased vertical pages: ")
-      console.log(updatedPages.vertical)
-
     }
+
     setAmountBackgroundPages(prevState => ({
       horizontal: updatedPages.horizontal,
       vertical: updatedPages.vertical
@@ -373,7 +352,7 @@ const PlayGround = () => {
 
   function checkDecreaseBounds(pagesHorizontal, pagesVertical){
 
-    //Get highest x and hightest y
+    //Get highest x and highest y, which are required to fit within the pages
 
     let maxX = 0;
     let maxY = 0;
@@ -386,61 +365,43 @@ const PlayGround = () => {
     return reducePageSize(maxX, maxY, pagesHorizontal, pagesVertical)
   }
 
-  //932 y und 463 x
 
-  //   const offset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-  //   const oneBackgroundPageHeight = 900;
-  //   const oneBackgroundPageWidth = 640;
-
-  //1 und 2
   function reducePageSize(x, y, pagesHorizontal, pagesVertical){
 
-    const offset = 100;
-    if(x === 0 || y === 0){
-      console.log("ERROR")
-    }
     let bounds = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
-    // horizontal = x => bounds.x = 640 + 30 = 670
-    // vertical = y => 900 + 900 + 30 = 1830
 
     let amountDecreaseVerticalPages = 0;
+    let reducedVertical = bounds.y;
 
-    //Condition: At least 1 pages needs to be remaining
+
     while(pagesVertical > amountDecreaseVerticalPages){
 
-      // bounds.y = 1830, BackgroundPageVertical = 900
-      // 930
-      let reducedVertical = bounds.y - oneBackgroundPageVertical;
+      reducedVertical = reducedVertical - oneBackgroundPageVertical;
 
-      //Reduce page by 1
-      //930 > 932 ? --> nein --> break
       if(reducedVertical > y - offset) {
-
         amountDecreaseVerticalPages++;
       }
-      //No further reduction possible, due to element
+
       else break;
     }
 
-
     let amountDecreaseHorizontalPages = 0;
+    let reducedHorizontal = bounds.x;
 
     //Condition: At least 1 pages needs to be remaining
     while(pagesHorizontal > amountDecreaseHorizontalPages){
-      let reducedHorizontal = bounds.x - oneBackgroundPageHorizontal;
+
+      reducedHorizontal = reducedHorizontal - oneBackgroundPageHorizontal;
 
       //Reduce page by 1
-      if(reducedHorizontal > x + offset) {
+      if(reducedHorizontal > x) {
         amountDecreaseHorizontalPages++;
       }
       //No further reduction possible, due to element
       else break;
     }
 
-    if(pagesHorizontal === 0 || pagesVertical === 0||pagesHorizontal === amountDecreaseHorizontalPages || pagesVertical === amountDecreaseVerticalPages){
 
-      console.log("ERRRRROR")
-    }
     return {
       horizontal: pagesHorizontal - amountDecreaseHorizontalPages,
       vertical: pagesVertical - amountDecreaseVerticalPages
