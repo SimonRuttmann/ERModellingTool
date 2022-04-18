@@ -303,20 +303,14 @@ const PlayGround = () => {
     }
   }
 
-  function adjustBounds(x,y){
+  function adjustBounds(elementX, elementY){
 
     let currentPagesHorizontal = amountBackgroundPages.horizontal;
     let currentPagesVertical = amountBackgroundPages.vertical;
 
-    let updatedIncreasedPages = checkIncreaseBounds(x, y, currentPagesHorizontal, currentPagesVertical)
+    let updatedIncreasedPages = increasePageIfNecessary(elementX, elementY, currentPagesHorizontal, currentPagesVertical)
 
-    let updatedPages = checkDecreaseBounds(updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
-
-
-    if(updatedPages.horizontal !== updatedIncreasedPages.horizontal){
-      console.log("Decrase horizontal")
-      console.log(updatedPages.horizontal)
-    }
+    let updatedPages = decreasePageIfNecessary(updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
 
     setAmountBackgroundPages(prevState => ({
       horizontal: updatedPages.horizontal,
@@ -325,7 +319,7 @@ const PlayGround = () => {
 
   }
 
-  function checkIncreaseBounds(x, y, pagesHorizontal, pagesVertical){
+  function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical){
     let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
 
     if(x > page.x && y > page.y) return {
@@ -350,7 +344,7 @@ const PlayGround = () => {
 
   }
 
-  function checkDecreaseBounds(pagesHorizontal, pagesVertical){
+  function decreasePageIfNecessary(pagesHorizontal, pagesVertical){
 
     //Get highest x and highest y, which are required to fit within the pages
 
@@ -362,54 +356,42 @@ const PlayGround = () => {
       if(element.y>maxY) maxY = element.y
     })
 
-    return reducePageSize(maxX, maxY, pagesHorizontal, pagesVertical)
+    return getPageReductionForPosition(maxX, maxY, pagesHorizontal, pagesVertical)
   }
 
 
-  function reducePageSize(x, y, pagesHorizontal, pagesVertical){
+  function getPageReductionForPosition(x, y, pagesHorizontal, pagesVertical){
 
     let bounds = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
 
-    let amountDecreaseVerticalPages = 0;
-    let reducedVertical = bounds.y;
+    let newHorizontalPages = getPageReductionForAxis(x, bounds.x, pagesHorizontal, oneBackgroundPageHorizontal)
+    let newVerticalPages = getPageReductionForAxis(y, bounds.y, pagesVertical, oneBackgroundPageVertical)
 
-
-    while(pagesVertical > amountDecreaseVerticalPages){
-
-      reducedVertical = reducedVertical - oneBackgroundPageVertical;
-
-      if(reducedVertical > y - offset) {
-        amountDecreaseVerticalPages++;
-      }
-
-      else break;
+    return {
+      horizontal: newHorizontalPages,
+      vertical: newVerticalPages
     }
+  }
 
-    let amountDecreaseHorizontalPages = 0;
-    let reducedHorizontal = bounds.x;
+  function getPageReductionForAxis(elementPos, pagePos, amountPages, pageSize){
+
+    let amountDecreaseOfPages = 0;
+    let reducedSize = pagePos;
 
     //Condition: At least 1 pages needs to be remaining
-    while(pagesHorizontal > amountDecreaseHorizontalPages){
+    while(amountPages > amountDecreaseOfPages){
 
-      reducedHorizontal = reducedHorizontal - oneBackgroundPageHorizontal;
+      reducedSize = reducedSize - pageSize;
 
       //Reduce page by 1
-      if(reducedHorizontal > x) {
-        amountDecreaseHorizontalPages++;
-      }
+      if(reducedSize > elementPos) amountDecreaseOfPages++;
+
       //No further reduction possible, due to element
       else break;
     }
 
-
-    return {
-      horizontal: pagesHorizontal - amountDecreaseHorizontalPages,
-      vertical: pagesVertical - amountDecreaseVerticalPages
-    }
-
+    return amountPages - amountDecreaseOfPages
   }
-
-
 
   return (
     <div>
