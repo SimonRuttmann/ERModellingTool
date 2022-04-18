@@ -107,6 +107,7 @@ body {
   width: calc(100% - 300px);
   background-color: white;
   text-align: left;
+  background-color: #363636;
 }
 
 .scrollAble {
@@ -116,15 +117,40 @@ body {
 
 
 /* The background page / grid showed inside the drawable area*/
+
+/**
+Idee 1 Grr mauszeiger
+Wenn nach oben ein element verschoben wird, dann werden alle elemente direkt um die größe einer "ursprünglichen" background page nach unten verschoben
+
+Idee 2
+Nach oben ist immer die größe einer BackgroundPage frei, wenn die aktuelle page nach oben überschritten wird, dann wird oben eine neue seite erstellt.
+
+evlt benötigt: Element.scrollIntoView()
+ */
+
+/* DIN-A4 Verhältnis 21 cm zu 29,7 cm*/
+/* height applied: height = 900 * amount of pages from top to bot    */
+/* width  applied: width  = 640 * amount of pages from left to right */
 .drawboardBackgroundPage {
   position: absolute !important;
-  height: 100%;
-  width: 100%;
+  height: 4000px;
+  width: 4000px;
+  border: #363636 30px solid;
+  background-color: white;
+
   background-image:
-          /* from left to right,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
-          repeating-linear-gradient(0deg, transparent 0px, transparent 30px, #efeded 30px, #efeded 31px),
-          /* from top to bot,       from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
-          repeating-linear-gradient(-90deg, transparent 0px, transparent 30px, #efeded 30px, #efeded 31px);
+
+          /* the pages from left to right */
+          repeating-linear-gradient(0deg, transparent 0px, transparent 900px, rgba(54, 54, 54, 0.75) 900px, rgba(54, 54, 54, 0.75) 903px),
+
+          /* the pages from top to bot */
+          repeating-linear-gradient(-90deg, transparent 0px, transparent 640px, rgba(54, 54, 54, 0.75) 640px, rgba(54, 54, 54, 0.75) 643px),
+
+          /* grid from left to right,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
+          repeating-linear-gradient(0deg, transparent 1px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px),
+          /* grid from top to bot,       from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
+          repeating-linear-gradient(-90deg, transparent 0px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px);
+
 }
 
 

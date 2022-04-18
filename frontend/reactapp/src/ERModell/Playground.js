@@ -220,6 +220,10 @@ const PlayGround = () => {
     setLines: setConnections,
   };
 
+/*
+  //Diese Idee funktioniert (es muss allerdings der transform zu den subelementen gesetzt werden, eine andere idee ist es, durch das verschieben eines objektes die background page zu
+  // vergrößern, dadurch entsteht eine scrollbar wenn overflow = scroll ist!
+
   //Canvas moving by transforming the svg !
   const [canvasPosition, setCanvasPosition] = useState( {
     startPosition: {x: 0, y: 0},
@@ -267,7 +271,7 @@ const PlayGround = () => {
 
   }
 
-  //logic fehler!
+
   function OnMouseUp(mouseEvent){
 
     if(!rotateCanvas) return false;
@@ -282,8 +286,9 @@ const PlayGround = () => {
 
   let relativePositionX = canvasPosition.relativePosition.x
   let relativePositionY = canvasPosition.relativePosition.y
-
-
+  on most outer: onMouseDown={OnMouseDown} onMouseMove={OnMouseMove} onMouseUp={OnMouseUp}
+ in svg:  style={{position: "absolute", transform: `translate(${relativePositionX}px, ${relativePositionY}px)`}}>
+*/
   return (
     <div>
 
@@ -321,9 +326,9 @@ const PlayGround = () => {
 
 
 
-        {/* The draw board */}
+        {/* The draw board   style={{height: "4000px", width: "4000px"}}*/}
 
-        <div id="mostouter" className="outerDrawboardContainer scrollAble" onMouseDown={OnMouseDown} onMouseMove={OnMouseMove} onMouseUp={OnMouseUp}>
+        <div id="mostouter" className="outerDrawboardContainer scrollAble">
 
           <div className="drawboardBackgroundPage"/>
 
@@ -332,7 +337,7 @@ const PlayGround = () => {
             className="drawboardDragArea"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => addDrawBoardElement(e)}
-            style={{position: "absolute", transform: `translate(${relativePositionX}px, ${relativePositionY}px)`}}>
+            style={{position: "absolute"}}>
 
             {drawBoardElements.map((drawBoardElement) => (
               <DrawBoardElement  key={drawBoardElement.id}
