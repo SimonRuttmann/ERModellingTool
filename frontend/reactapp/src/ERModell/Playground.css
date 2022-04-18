@@ -133,23 +133,23 @@ evlt benötigt: Element.scrollIntoView()
 /* width  applied: width  = 640 * amount of pages from left to right */
 .drawboardBackgroundPage {
   position: absolute !important;
-  height: 4000px;
+  height: 3000px;
   width: 4000px;
   border: #363636 30px solid;
   background-color: white;
 
   background-image:
 
-          /* the pages from left to right */
-          repeating-linear-gradient(0deg, transparent 0px, transparent 900px, rgba(54, 54, 54, 0.75) 900px, rgba(54, 54, 54, 0.75) 903px),
-
           /* the pages from top to bot */
-          repeating-linear-gradient(-90deg, transparent 0px, transparent 640px, rgba(54, 54, 54, 0.75) 640px, rgba(54, 54, 54, 0.75) 643px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 900px, rgba(54, 54, 54, 0.75) 900px, rgba(54, 54, 54, 0.75) 904px),
 
-          /* grid from left to right,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
-          repeating-linear-gradient(0deg, transparent 1px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px),
-          /* grid from top to bot,       from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
-          repeating-linear-gradient(-90deg, transparent 0px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px);
+          /* the pages from left to right */
+          repeating-linear-gradient(to right, transparent 0px, transparent 640px, rgba(54, 54, 54, 0.75) 640px, rgba(54, 54, 54, 0.75) 644px),
+
+          /* grid from top to bottom,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
+          repeating-linear-gradient(to bottom, transparent 1px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px),
+          /* grid from left to right,     from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
+          repeating-linear-gradient(to right, transparent 0px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px);
 
 }
 

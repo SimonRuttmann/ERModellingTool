@@ -24,7 +24,10 @@ import { resolveErComponent } from "../../ErType";
  *
  * @returns An draggable element, displayed inside the draw board
  */
-const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, updateDrawBoardElementPosition}) => {
+
+
+const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, updateDrawBoardElementPosition,
+                            getBackgroundPageBounds, setAmountBackgroundPages, adjustBounds}) => {
 
   const updateXarrow = useXarrow();
   const [isDragging, setDragging] = useState(false)
@@ -61,8 +64,36 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
   };
 
   //Handle drag and drop
-  function onDrag() {
+  function onDrag(dragEvent, data) {
     setDragging(true)
+
+    let x = dragEvent.x;
+    let y = dragEvent.y;
+    updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
+
+    //We increase x and y by 100 as offset. So that the page increases before the element reaches the position
+    adjustBounds(thisObject.x + 150, thisObject.y +75)
+
+    /*
+    let xBounds = getBackgroundPageBounds().x;
+    let yBounds = getBackgroundPageBounds().y;
+
+    let increaseRight = 0;
+    let increaseBottom = 0;
+
+    if(x > xBounds) increaseRight = 1;
+    if(y > yBounds) increaseBottom = 1;
+
+    if(increaseRight !== 0 || increaseBottom !== 0){
+
+      setAmountBackgroundPages( (prevState) =>({
+        horizontal: prevState.horizontal + increaseRight,
+        vertical: prevState.vertical + increaseBottom
+      }))
+
+    }
+    */
+
     updateXarrow();
   }
 
