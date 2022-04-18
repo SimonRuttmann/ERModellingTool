@@ -111,8 +111,12 @@ const PlayGround = () => {
       setDrawBoardElements([
           ...drawBoardElements,
         newDrawBoardElement]);
+
       setCounter(counter+1);
+
+      increaseBounds(newDrawBoardElement.x, newDrawBoardElement.y)
     }
+
 
   };
 
@@ -135,6 +139,8 @@ const PlayGround = () => {
     setDrawBoardElements((prevState => [
       prevState.filter((element) => !(element.id === elementId))
     ]))
+
+    decreaseBounds()
   }
 
   const addConnection = (idStart, idEnd) => {
@@ -219,76 +225,8 @@ const PlayGround = () => {
     setLines: setConnections,
   };
 
-/*
-  //Diese Idee funktioniert (es muss allerdings der transform zu den subelementen gesetzt werden, eine andere idee ist es, durch das verschieben eines objektes die background page zu
-  // vergrößern, dadurch entsteht eine scrollbar wenn overflow = scroll ist!
-
-  //Canvas moving by transforming the svg !
-  const [canvasPosition, setCanvasPosition] = useState( {
-    startPosition: {x: 0, y: 0},
-    relativePosition: {x: 0, y: 0}
-  })
-
-  const [rotateCanvas, setRotateCanvas] = useState(false)
-
-  function OnMouseDown(mouseEvent){
-
-    console.log("ON MOUSE DOWN")
-
-    console.log(mouseEvent.clientX)
-    console.log(mouseEvent.clientY)
-
-    setRotateCanvas(true)
-
-    setCanvasPosition({
-      startPosition: {x: mouseEvent.clientX, y: mouseEvent.clientY},
-      relativePosition: {...canvasPosition.relativePosition}
-    })
-  }
-
-  function OnMouseMove(mouseEvent){
-
-    if(!rotateCanvas) return false;
-
-    console.log("ON MOUSE MOVE")
 
 
-    let startX = canvasPosition.startPosition.x;
-    let startY = canvasPosition.startPosition.y;
-
-    let relativePositionX = canvasPosition.relativePosition.x + mouseEvent.clientX - startX;
-    let relativePositionY = canvasPosition.relativePosition.y + mouseEvent.clientY - startY;
-
-    console.log(relativePositionX)
-    console.log(relativePositionY)
-    setCanvasPosition((prevState) => ({
-      startPosition:  {x: mouseEvent.clientX, y: mouseEvent.clientY},
-      relativePosition: {x: relativePositionX, y: relativePositionY}
-    }))
-
-    mouseEvent.stopPropagation();
-
-  }
-
-
-  function OnMouseUp(mouseEvent){
-
-    if(!rotateCanvas) return false;
-
-    setRotateCanvas(false)
-
-    mouseEvent.stopPropagation();
-
-    // We do net set the canvas position, as the relative position is correct and
-    // the start position will be overwritten by the next on mouse down event
-  }
-
-  let relativePositionX = canvasPosition.relativePosition.x
-  let relativePositionY = canvasPosition.relativePosition.y
-  on most outer: onMouseDown={OnMouseDown} onMouseMove={OnMouseMove} onMouseUp={OnMouseUp}
- in svg:  style={{position: "absolute", transform: `translate(${relativePositionX}px, ${relativePositionY}px)`}}>
-*/
-//TODO logik einbauen, wenn parent nach oben oder unten dann x und y nicht adjusten
 
   const offset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
   const oneBackgroundPageVertical = 900;
@@ -303,6 +241,51 @@ const PlayGround = () => {
     }
   }
 
+  /**
+   * Standalone function to decrease the bounds,
+   * e.g. minimize the amount of pages displayed, if possible
+   * @required drawBoardElements elements inside the draw board need to be added to the state
+   * @see drawBoardElements
+   * @see setDrawBoardElements
+   */
+  function decreaseBounds(){
+
+    let updatedPages = decreasePageIfNecessary(amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
+
+    setAmountBackgroundPages(prevState => ({
+      horizontal: updatedPages.horizontal,
+      vertical: updatedPages.vertical
+    }))
+  }
+
+
+  /**
+   * Standalone function to increase the bounds,
+   * e.g. increase the amount of pages displayed,
+   * when the given coordinates are outside of displayed pages
+   * The element does not need to be added to the state already
+   * @param elementX The x-Coordinate of the element
+   * @param elementY The y-Coordinate of the element
+   */
+  function increaseBounds(elementX, elementY){
+    let updatedPages = increasePageIfNecessary(elementX, elementY, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
+
+    setAmountBackgroundPages(prevState => ({
+      horizontal: updatedPages.horizontal,
+      vertical: updatedPages.vertical
+    }))
+
+  }
+
+  /**
+   * Function to increase or decrease the amount of pages
+   * displayed depending on the elements within the draw board
+   * @param elementX The x-Coordinate of the element
+   * @param elementY The y-Coordinate of the element
+   * @required drawBoardElements elements inside the draw board need to be added to the state
+   * @see drawBoardElements
+   * @see setDrawBoardElements
+   */
   function adjustBounds(elementX, elementY){
 
     let currentPagesHorizontal = amountBackgroundPages.horizontal;
@@ -318,6 +301,7 @@ const PlayGround = () => {
     }))
 
   }
+
 
   function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical){
     let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
@@ -550,3 +534,75 @@ console.log("Click on " + props.box.id )
   }
 
  */
+
+
+
+/*
+  //Diese Idee funktioniert (es muss allerdings der transform zu den subelementen gesetzt werden, eine andere idee ist es, durch das verschieben eines objektes die background page zu
+  // vergrößern, dadurch entsteht eine scrollbar wenn overflow = scroll ist!
+
+  //Canvas moving by transforming the svg !
+  const [canvasPosition, setCanvasPosition] = useState( {
+    startPosition: {x: 0, y: 0},
+    relativePosition: {x: 0, y: 0}
+  })
+
+  const [rotateCanvas, setRotateCanvas] = useState(false)
+
+  function OnMouseDown(mouseEvent){
+
+    console.log("ON MOUSE DOWN")
+
+    console.log(mouseEvent.clientX)
+    console.log(mouseEvent.clientY)
+
+    setRotateCanvas(true)
+
+    setCanvasPosition({
+      startPosition: {x: mouseEvent.clientX, y: mouseEvent.clientY},
+      relativePosition: {...canvasPosition.relativePosition}
+    })
+  }
+
+  function OnMouseMove(mouseEvent){
+
+    if(!rotateCanvas) return false;
+
+    console.log("ON MOUSE MOVE")
+
+
+    let startX = canvasPosition.startPosition.x;
+    let startY = canvasPosition.startPosition.y;
+
+    let relativePositionX = canvasPosition.relativePosition.x + mouseEvent.clientX - startX;
+    let relativePositionY = canvasPosition.relativePosition.y + mouseEvent.clientY - startY;
+
+    console.log(relativePositionX)
+    console.log(relativePositionY)
+    setCanvasPosition((prevState) => ({
+      startPosition:  {x: mouseEvent.clientX, y: mouseEvent.clientY},
+      relativePosition: {x: relativePositionX, y: relativePositionY}
+    }))
+
+    mouseEvent.stopPropagation();
+
+  }
+
+
+  function OnMouseUp(mouseEvent){
+
+    if(!rotateCanvas) return false;
+
+    setRotateCanvas(false)
+
+    mouseEvent.stopPropagation();
+
+    // We do net set the canvas position, as the relative position is correct and
+    // the start position will be overwritten by the next on mouse down event
+  }
+
+  let relativePositionX = canvasPosition.relativePosition.x
+  let relativePositionY = canvasPosition.relativePosition.y
+  on most outer: onMouseDown={OnMouseDown} onMouseMove={OnMouseMove} onMouseUp={OnMouseUp}
+ in svg:  style={{position: "absolute", transform: `translate(${relativePositionX}px, ${relativePositionY}px)`}}>
+*/
