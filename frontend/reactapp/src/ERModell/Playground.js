@@ -226,6 +226,15 @@ const PlayGround = () => {
   };
 
 
+  // *****************************  Handle page increment/decrement  *****************************
+
+  //TODO replace with correct values of er elements
+  //Work:
+  // 1. Add with and height properties to "drawBoardElement" (depending on text, width is dynamic),
+  // 2. resolve elements instead of positions,
+  // 3. apply offsets
+  const elementWidthOffset = 150;
+  const elementHeightOffset = 75;
 
 
   const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
@@ -252,7 +261,7 @@ const PlayGround = () => {
 
     let updatedPages = decreasePageIfNecessary(amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
 
-    setAmountBackgroundPages(prevState => ({
+    setAmountBackgroundPages(() => ({
       horizontal: updatedPages.horizontal,
       vertical: updatedPages.vertical
     }))
@@ -270,7 +279,7 @@ const PlayGround = () => {
   function increaseBounds(elementX, elementY){
     let updatedPages = increasePageIfNecessary(elementX, elementY, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
 
-    setAmountBackgroundPages(prevState => ({
+    setAmountBackgroundPages(() => ({
       horizontal: updatedPages.horizontal,
       vertical: updatedPages.vertical
     }))
@@ -295,20 +304,13 @@ const PlayGround = () => {
 
     let updatedPages = decreasePageIfNecessary(updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
 
-    setAmountBackgroundPages(prevState => ({
+    setAmountBackgroundPages(() => ({
       horizontal: updatedPages.horizontal,
       vertical: updatedPages.vertical
     }))
 
   }
 
-  //TODO replace with correct values of er elements
-  //Work:
-  // 1. Add with and height properties to "drawBoardElement" (depending on text, width is dynamic),
-  // 2. resolve elements instead of positions,
-  // 3. apply offsets
-  const elementWidthOffset = 150;
-  const elementHeightOffset = 75;
 
   function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical){
     let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
@@ -393,36 +395,67 @@ const PlayGround = () => {
     return amountPages - amountDecreaseOfPages
   }
 
-//SVG size 
+
+
+  // *****************************  Handle svg size  *****************************
+
+  /**
+   * The svg size must be adjusted depending on the size of the area covered by the background pages
+   * The size itself is stored within this state
+   */
   const [svgSize, setSvgSize] = useState({
     width: `calc(100% - ${drawBoardBorderOffset}px)`,
     height: `calc(100% - ${drawBoardBorderOffset}px)`
   })
 
-  const ref = useRef(null)
-  const ref2 = useRef(null)
+  /**
+   * reference to the background pages
+   * @type {React.MutableRefObject<null>}
+   */
+  const backgroundPageRef = useRef(null)
 
+  /**
+   * reference to the most outer div of the draw board element
+   * @type {React.MutableRefObject<null>}
+   */
+  const mostOuterDiagramDivRef = useRef(null)
+
+  /**
+   * If the background pages are not greater than the viewport, the svg area is set
+   * to a 100% - the offset of the svg on the top and left
+   *
+   * If the background pages increase and create an overflow in the parent element
+   * the svg is increased to the size of the area, provided by the
+   * background pages (with the border of the page area)
+   */
   useLayoutEffect( () => {
     //BackgroundPage
-    let width = ref.current.offsetWidth;
-    let height = ref.current.offsetHeight;
 
-    //mostouter
-    let width2 = ref2.current.offsetWidth;
-    let height2 = ref2.current.offsetHeight;
+    //noinspection JSUnresolvedVariable Justification, variable is resolved
+    let withPage = backgroundPageRef.current.offsetWidth;
+    //noinspection JSUnresolvedVariable
+    let heightPage = backgroundPageRef.current.offsetHeight;
 
+    //The most outer div
+
+    //noinspection JSUnresolvedVariable Justification, variable is resolved
+    let mostOuterWidth = mostOuterDiagramDivRef.current.offsetWidth;
+    //noinspection JSUnresolvedVariable Justification, variable is resolved
+    let mostOuterHeight = mostOuterDiagramDivRef.current.offsetHeight;
+
+    //Set the size to 100% - the offset of the svg to the left and top
     let svgWidth = `calc(100% - ${drawBoardBorderOffset}px)`;
     let svgHeight = `calc(100% - ${drawBoardBorderOffset}px)`;
-    
-    if(width + oneBackgroundPageHorizontal > width2){
+
+    //Override the size, if the background page is greater than the 100% - offset (== pages overflow)
+    if(withPage + oneBackgroundPageHorizontal > mostOuterWidth){
       svgWidth = `${oneBackgroundPageHorizontal * amountBackgroundPages.horizontal + + oneBackgroundPageHorizontal}px`
     }
     
-    if(height + oneBackgroundPageVertical > height2){
+    if(heightPage + oneBackgroundPageVertical > mostOuterHeight){
       svgHeight = `${oneBackgroundPageVertical * amountBackgroundPages.vertical + oneBackgroundPageVertical}px`
     }
-    
-    
+
     setSvgSize(()=> ({
         height: svgHeight, 
         width: svgWidth
@@ -430,7 +463,7 @@ const PlayGround = () => {
     
     }, [amountBackgroundPages.horizontal, amountBackgroundPages.vertical])
   
-  
+  console.log(getBoundsOfSvg())
   return (
     <div>
 
@@ -470,10 +503,10 @@ const PlayGround = () => {
 
         {/* The draw board   */}
 
-        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={ref2}>
+        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef}>
 
           <div className="drawboardBackgroundPage"
-               ref={ref}
+               ref={backgroundPageRef}
                style={{
                     height: `${oneBackgroundPageVertical * amountBackgroundPages.vertical}px`,
                     width:  `${oneBackgroundPageHorizontal *  amountBackgroundPages.horizontal}px`
@@ -504,7 +537,7 @@ const PlayGround = () => {
 
                                  adjustBounds={adjustBounds}
 
-                                 bounds={getBoundsOfSvg()}
+                                 svgBounds={drawBoardBorderOffset}
                                  />
             ))}
 

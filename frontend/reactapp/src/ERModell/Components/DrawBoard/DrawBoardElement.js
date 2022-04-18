@@ -19,17 +19,17 @@ import { resolveErComponent } from "../../ErType";
  * <br> thisObject:
  * <br> The data of this object
  *
- * <br> bounds:
+ * <br> adjustBounds:
  * <br> Function to increase or decrease the amount of pages displayed in the canvas
  *
- * <br> bounds:
- * <br> The bounds, where this object should clip to
+ * <br> svgBounds:
+ * <br> The bounds, where this object should be constraint to (left and top margin to the svg)
  *
  * @returns An draggable element, displayed inside the draw board
  */
 
 
-const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, updateDrawBoardElementPosition, adjustBounds}) => {
+const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, adjustBounds}) => {
 
   const updateXarrow = useXarrow();
   const [isDragging, setDragging] = useState(false)
@@ -49,11 +49,6 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
     fontSize: fontSize,
     fontFamily: fontFamily
   }
-
-  //Offsets for bounds
-  const boundsOffset = 50;
-  const boundsElementWidth = 150;
-  const boundsElementHeight = 50;
 
   //Handles the selection of this component and subcomponents
   const handleClick = (e) => {
@@ -91,9 +86,9 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
           onMouseDown={(e => e.stopPropagation())}
 
          bounds={
-                  bounds ? {
-                        left: boundsOffset,
-                        top: bounds.top + boundsOffset}
+                  svgBounds ? {
+                        left: svgBounds,
+                        top: svgBounds}
                     : undefined}
 
          onDrag={onDrag}
