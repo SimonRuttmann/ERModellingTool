@@ -6,7 +6,6 @@ import Xarrow from './Components/DrawBoard/Xarrow';
 import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
-import {getBoundsOfSvg} from "./Components/SvgUtil/SvgUtils";
 import {ACTIONSTATE, ACTIONTYPE} from "./ActionState";
 
 const PlayGround = () => {
@@ -463,7 +462,7 @@ const PlayGround = () => {
     
     }, [amountBackgroundPages.horizontal, amountBackgroundPages.vertical])
   
-  console.log(getBoundsOfSvg())
+
   return (
     <div>
 

@@ -109,9 +109,37 @@ body {
   background-color: #363636;
 }
 
+/* Scrollbar*/
 .scrollAble {
   overflow-y: scroll;
   overflow-x: scroll;
+  scroll-behavior: smooth;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+/* background */
+::-webkit-scrollbar-track {
+  color: transparent;
+}
+
+/* the clickable scroll thing */
+::-webkit-scrollbar-thumb {
+  background: #656565;
+  border-radius: 6px;
+}
+
+/* hover event on the clickable scroll thing */
+::-webkit-scrollbar-thumb:hover {
+  background: #d0d0d0;
+}
+
+::-webkit-scrollbar-corner {
+  color: transparent;
 }
 
 
