@@ -71,8 +71,7 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
 
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
 
-    //We increase x and y by 100 as offset. So that the page increases before the element reaches the position
-    adjustBounds(thisObject.x + 150, thisObject.y +75)
+    adjustBounds(thisObject.x, thisObject.y)
 
     updateXarrow();
   }
@@ -94,9 +93,7 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
          bounds={
                   bounds ? {
                         left: boundsOffset,
-                        top: bounds.top + boundsOffset ,
-                        right: bounds.right-bounds.left - boundsElementWidth - boundsOffset ,
-                        bottom: bounds.bottom -boundsElementHeight - boundsOffset}
+                        top: bounds.top + boundsOffset}
                     : undefined}
 
          onDrag={onDrag}
@@ -124,3 +121,13 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, bounds, upda
 
 
 export default DrawBoardElement;
+
+/**
+ *          bounds={
+ *                   bounds ? {
+ *                         left: boundsOffset,
+ *                         top: bounds.top + boundsOffset ,
+ *                         right: bounds.right-bounds.left - boundsElementWidth - boundsOffset ,
+ *                         bottom: bounds.bottom -boundsElementHeight - boundsOffset}
+ *                     : undefined}
+ */

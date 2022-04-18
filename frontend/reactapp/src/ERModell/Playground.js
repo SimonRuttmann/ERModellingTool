@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useRef, useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import TopBar from './Components/RightSideBar/TopBar';
@@ -228,16 +228,16 @@ const PlayGround = () => {
 
 
 
-  const offset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-  const oneBackgroundPageVertical = 900;
+  const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
+  const oneBackgroundPageVertical = 880;
   const oneBackgroundPageHorizontal = 640;
 
   const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
 
   function getBackgroundPageBounds(pagesHorizontal, pagesVertical) {
     return {
-      x: offset + pagesHorizontal * oneBackgroundPageHorizontal,
-      y: offset + pagesVertical * oneBackgroundPageVertical
+      x: drawBoardBorderOffset + pagesHorizontal * oneBackgroundPageHorizontal,
+      y: drawBoardBorderOffset + pagesVertical * oneBackgroundPageVertical
     }
   }
 
@@ -302,9 +302,21 @@ const PlayGround = () => {
 
   }
 
+  //TODO replace with correct values of er elements
+  //Work:
+  // 1. Add with and height properties to "drawBoardElement" (depending on text, width is dynamic),
+  // 2. resolve elements instead of positions,
+  // 3. apply offsets
+  const elementWidthOffset = 150;
+  const elementHeightOffset = 75;
 
   function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical){
     let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
+
+
+    x = x + elementWidthOffset;
+    y = y + elementHeightOffset;
+
 
     if(x > page.x && y > page.y) return {
         horizontal: pagesHorizontal + 1,
@@ -339,6 +351,10 @@ const PlayGround = () => {
       if(element.x>maxX) maxX = element.x
       if(element.y>maxY) maxY = element.y
     })
+
+
+    maxX = maxX + elementWidthOffset;
+    maxY = maxY + elementHeightOffset;
 
     return getPageReductionForPosition(maxX, maxY, pagesHorizontal, pagesVertical)
   }
@@ -377,6 +393,44 @@ const PlayGround = () => {
     return amountPages - amountDecreaseOfPages
   }
 
+//SVG size 
+  const [svgSize, setSvgSize] = useState({
+    width: `calc(100% - ${drawBoardBorderOffset}px)`,
+    height: `calc(100% - ${drawBoardBorderOffset}px)`
+  })
+
+  const ref = useRef(null)
+  const ref2 = useRef(null)
+
+  useLayoutEffect( () => {
+    //BackgroundPage
+    let width = ref.current.offsetWidth;
+    let height = ref.current.offsetHeight;
+
+    //mostouter
+    let width2 = ref2.current.offsetWidth;
+    let height2 = ref2.current.offsetHeight;
+
+    let svgWidth = `calc(100% - ${drawBoardBorderOffset}px)`;
+    let svgHeight = `calc(100% - ${drawBoardBorderOffset}px)`;
+    
+    if(width > width2){
+      svgWidth = `${oneBackgroundPageHorizontal * amountBackgroundPages.horizontal}px`
+    }
+    
+    if(height > height2){
+      svgHeight = `${oneBackgroundPageVertical * amountBackgroundPages.vertical}px`
+    }
+    
+    
+    setSvgSize(()=> ({
+        height: svgHeight, 
+        width: svgWidth
+      }))
+    
+    }, [amountBackgroundPages.horizontal, amountBackgroundPages.vertical])
+  
+  
   return (
     <div>
 
@@ -416,9 +470,10 @@ const PlayGround = () => {
 
         {/* The draw board   */}
 
-        <div id="mostouter" className="outerDrawboardContainer scrollAble">
+        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={ref2}>
 
           <div className="drawboardBackgroundPage"
+               ref={ref}
                style={{
                     height: `${oneBackgroundPageVertical * amountBackgroundPages.vertical}px`,
                     width:  `${oneBackgroundPageHorizontal *  amountBackgroundPages.horizontal}px`
@@ -429,7 +484,15 @@ const PlayGround = () => {
             className="drawboardDragArea"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => addDrawBoardElement(e)}
-            style={{position: "absolute"}}>
+            style={{
+              position: "absolute",
+              left: `${drawBoardBorderOffset}px`,
+              top: `${drawBoardBorderOffset}px`,
+              height: svgSize.height,
+              width:  svgSize.width
+            }}
+
+          >
 
             {drawBoardElements.map((drawBoardElement) => (
               <DrawBoardElement  key={drawBoardElement.id}
