@@ -1,28 +1,29 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
-import TopBar from './Components/RightSideBar/TopBar';
+import RightBar from './Components/RightSideBar/RightBar';
 import Xarrow from './Components/DrawBoard/Xarrow';
 import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
-import {ACTIONSTATE, ACTIONTYPE} from "./ActionState";
+import {ACTIONSTATE, ACTIONTYPE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 
 const PlayGround = () => {
 
-  //Der state verwaltet die boxen und die lines
+  //Elements on the field
   const [drawBoardElements, setDrawBoardElements] = useState([]);
   const [connections, setConnections] = useState([]);
+
+  //Adding the default display name based on this counter
   const [counter, setCounter] = useState(0);
 
-  // selected:{id:string,type:"arrow"|"box"}
-  //hier wird die aktuelle box oder der pfeil gespeichert
+  //The currently selected object, or null
   const [selectedObject, setSelectedObject] = useState(null);
 
-  //hier wird verwaltet ob wir in "add connection, normal, remove connection etc sind."
+  //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
 
-  //wenn das canvas geklickt wird ist wird die funktion mit "null" aufgerufen. -> action zu normal, clear selected
+
 
 
   const onCanvasSelected = (e) => {
@@ -55,17 +56,6 @@ const PlayGround = () => {
 
     }
 
-    /* Gibts nicht!
-    if(actionState === ACTIONSTATE.RemoveDrawBoardElement) {
-
-      unselectPreviousDrawBoardElement();
-      setSelectedObject(null);
-      removeDrawBoardElement(e.target.id)
-
-    }
-    */
-
-
   };
 
 
@@ -82,8 +72,6 @@ const PlayGround = () => {
       setDrawBoardElementSelected(e.target.id, true)
     }
 
-
-    //Er drückt auf eine assoziation --> assoziation löschen --> im component menu rechts --> removeConnection() --> KEIN actionstate!
   };
 
 
@@ -106,6 +94,7 @@ const PlayGround = () => {
         y: e.clientY - y - 50,
         width: 150,
         height: 100,
+        objectType: OBJECTTYPE.DrawBoardElement,
         erType: erType
       };
 
@@ -176,17 +165,34 @@ const PlayGround = () => {
   const removeDrawBoardElement = (elementId) => {
     console.log("Removing draw board element with id: " + elementId)
 
+    setConnections((prevState => [
+      prevState.filter(connection => connection.start === elementId || connection.end === elementId)
+    ]))
+
     setDrawBoardElements((prevState => [
       prevState.filter((element) => !(element.id === elementId))
     ]))
 
+    setSelectedObject(null)
+
     decreaseBounds()
   }
 
+
+
   const addConnection = (idStart, idEnd) => {
+
     console.log("Creating a new connection from: " + idStart + " to " + idEnd)
 
-    let newConnection = {start: idStart, end: idEnd}
+    let newConnection =
+        {
+          id: `${idStart} --> ${idEnd} - ${Date.now()}`,
+          start: idStart,
+          end: idEnd,
+          min: 1,
+          max: 1,
+          objectType: OBJECTTYPE.Connection
+        }
 
     setConnections((prevState) => [
       ...prevState,
@@ -194,12 +200,18 @@ const PlayGround = () => {
     ])
   }
 
-  const removeConnection = (idStart, idEnd) => {
+  const removeConnectionByObjectIds = (idStart, idEnd) => {
     console.log("Removing a connection from: " + idStart + " to " + idEnd)
 
     setConnections((prevState) => [
       prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
     ])
+  }
+
+  const removeConnectionDirect = (connectionId) => {
+    setConnections( (prevState => [
+      prevState.filter((connection)=>!(connectionId === connection.id))
+    ]))
   }
 
 
@@ -229,8 +241,34 @@ const PlayGround = () => {
     setDrawBoardElementSelected(selectedObject.id, false);
   }
 
+  const setDisplayName = (elementId, value) => {
 
+    let changedElement = drawBoardElements.find(element => element.id === elementId)
 
+    changedElement.display = value;
+
+    let clone = Object.assign({}, changedElement)
+    setConnections((prevState => [
+      drawBoardElements.filter(element => !(element.id === elementId)),
+      clone
+    ]))
+
+  }
+
+  const editConnectionNotation = (connectionId, minMax, notation) => {
+
+    let changedConnection = connections.find(connection => connection.id === connectionId)
+
+    if(minMax === ConnectionCardinality.Min) changedConnection.min = notation;
+    if(minMax === ConnectionCardinality.Max) changedConnection.max = notation;
+
+    let clone = Object.assign({}, changedConnection)
+    setConnections((prevState => [
+        connections.filter(connection => !(connection.id === connectionId)),
+        clone
+    ]))
+
+  }
 
   //eine box:
   /*
@@ -240,6 +278,7 @@ const PlayGround = () => {
     y: Position am anfang
     width: Die breite des elements
     height: Die höhe des elements
+    objectType: OBJECTTYPE.DrawBoardElement
     erType: Type des Elements
 
    */
@@ -250,22 +289,25 @@ const PlayGround = () => {
     id: start-ende-date-now
     start: id zu box
     end:  id zu box
-
+    min:
+    max:
+    objectType: OBJECTTYPE.Connection,
 
    */
 
 
 
-
-  const props = {
-    boxes: drawBoardElements,  //State Boxes
-    setBoxes: setDrawBoardElements, //Set Methode
-    selected: selectedObject,
-    actionState,
-    setActionState,
-    lines: connections,
-    setLines: setConnections,
-  };
+  const rightBarProps = {
+    selectedObject: selectedObject,
+    connections: connections,
+    drawBoardElements: drawBoardElements,
+    removeDrawBoardElement: removeDrawBoardElement,
+    removeConnection: removeConnectionDirect,
+    setDisplayName: setDisplayName,
+    editConnectionNotation: editConnectionNotation,
+    setActionState: setActionState,
+    actionState: actionState
+  }
 
 
   // *****************************  Handle page increment/decrement  *****************************
@@ -592,7 +634,7 @@ const PlayGround = () => {
 
           {/* The right bar, used for editing the elements in the draw board */}
 
-          <TopBar {...props} />
+          <RightBar {...rightBarProps} />
 
 
 
@@ -614,134 +656,3 @@ const PlayGround = () => {
   );
 };
 export default PlayGround;
-/**
- * @summary Creates an element which can be dragged within the given bounds inside the parent svg element <br>
- * - Executes the handleSelect method when the object is clicked
- *
- * @param handleSelect  Function to handle the selection on this object
- * @param addConnection Function to add a new connection
- * @param removeConnection Function to remove a connection
- * @param actionState The current actionState
- * @param selectedObject The selectedObject, if a object is selected
- * @param thisObject The data of this object
- * @param bounds The bounds, where this object should clip to
- * @returns An draggable element
- */
-
-/*
-console.log("Click on " + props.box.id )
-    if (props.actionState === 'Normal') {
-      props.handleSelect(e);
-    }
-
-    else if (props.actionState === 'Add Connections' && props.selected.id !== props.box.id) {
-      console.log("Creating a new line: From: " + props.selected.id + " to: "  + props.box.id)
-      props.setLines((lines) => [
-        ...lines,
-        {
-          props: { start: props.selected.id, end: props.box.id },
-        },
-      ]);
-    }
-    else if (props.actionState === 'Remove Connections') {
-      props.setLines((lines) =>
-        lines.filter((line) => !(line.root === props.selected.id && line.end === props.box.id))
-      );
-    }
- */
-
-
-/*
-
-
-   //On click on the box
-   // -> A box is selected and the selected box is this box
-  if (props.selected && props.selected.id === props.box.id) {
-    background = 'rgb(200, 200, 200)';
-  }
-
-  //On click on the box
-  // -> Wenn im AddConnections Statfus
-  // Für jede DrawBoardElement gilt jetzt, wenn es eine Linie gibt, die von der Selekteirten ausgeht und hier endet -> Zeige "LemmonChiffron an"
-  // Es werden alle linien durchsucht. Wenn der Linienbegin die selektierte box ist und die Linie hier endet -> LemonChiffron
-  else if (
-    (props.actionState === 'Add Connections'    && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length === 0) ||
-    (props.actionState === 'Remove Connections' && props.lines.filter((line) => line.root === props.selected.id && line.end === props.box.id).length > 0)
-  ) //Fix: line.root --> line.props.start  // line.end --> line.props.end
-  {
-    background = 'LemonChiffon';
-  }
-
- */
-
-
-
-/*
-  //Diese Idee funktioniert (es muss allerdings der transform zu den subelementen gesetzt werden, eine andere idee ist es, durch das verschieben eines objektes die background page zu
-  // vergrößern, dadurch entsteht eine scrollbar wenn overflow = scroll ist!
-
-  //Canvas moving by transforming the svg !
-  const [canvasPosition, setCanvasPosition] = useState( {
-    startPosition: {x: 0, y: 0},
-    relativePosition: {x: 0, y: 0}
-  })
-
-  const [rotateCanvas, setRotateCanvas] = useState(false)
-
-  function OnMouseDown(mouseEvent){
-
-    console.log("ON MOUSE DOWN")
-
-    console.log(mouseEvent.clientX)
-    console.log(mouseEvent.clientY)
-
-    setRotateCanvas(true)
-
-    setCanvasPosition({
-      startPosition: {x: mouseEvent.clientX, y: mouseEvent.clientY},
-      relativePosition: {...canvasPosition.relativePosition}
-    })
-  }
-
-  function OnMouseMove(mouseEvent){
-
-    if(!rotateCanvas) return false;
-
-    console.log("ON MOUSE MOVE")
-
-
-    let startX = canvasPosition.startPosition.x;
-    let startY = canvasPosition.startPosition.y;
-
-    let relativePositionX = canvasPosition.relativePosition.x + mouseEvent.clientX - startX;
-    let relativePositionY = canvasPosition.relativePosition.y + mouseEvent.clientY - startY;
-
-    console.log(relativePositionX)
-    console.log(relativePositionY)
-    setCanvasPosition((prevState) => ({
-      startPosition:  {x: mouseEvent.clientX, y: mouseEvent.clientY},
-      relativePosition: {x: relativePositionX, y: relativePositionY}
-    }))
-
-    mouseEvent.stopPropagation();
-
-  }
-
-
-  function OnMouseUp(mouseEvent){
-
-    if(!rotateCanvas) return false;
-
-    setRotateCanvas(false)
-
-    mouseEvent.stopPropagation();
-
-    // We do net set the canvas position, as the relative position is correct and
-    // the start position will be overwritten by the next on mouse down event
-  }
-
-  let relativePositionX = canvasPosition.relativePosition.x
-  let relativePositionY = canvasPosition.relativePosition.y
-  on most outer: onMouseDown={OnMouseDown} onMouseMove={OnMouseMove} onMouseUp={OnMouseUp}
- in svg:  style={{position: "absolute", transform: `translate(${relativePositionX}px, ${relativePositionY}px)`}}>
-*/
