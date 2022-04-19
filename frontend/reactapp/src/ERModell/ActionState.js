@@ -3,11 +3,6 @@ export const ACTIONSTATE = {
     AddConnection: "AddConnection",
 }
 
-export const ACTIONTYPE = {
-    Connection: "Connection",
-    DrawElement: "DrawBoardElement"
-}
-
 export const ConnectionCardinality = {
     Min: "Min",
     Max: "Max"

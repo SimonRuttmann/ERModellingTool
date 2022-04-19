@@ -70,6 +70,7 @@ body {
 }
 
 .leftSideBarElement {
+  cursor: grab;
   position: relative;
   display: inline-block;
   background-size: contain;

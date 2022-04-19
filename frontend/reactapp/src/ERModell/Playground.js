@@ -6,7 +6,7 @@ import Xarrow from './Components/DrawBoard/Xarrow';
 import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
-import {ACTIONSTATE, ACTIONTYPE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
+import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 
 const PlayGround = () => {
 
@@ -37,11 +37,11 @@ const PlayGround = () => {
   const onDrawBoardElementSelected = (e, selectedElement) => {
 
     //click on draw board element
-
+    let selectedObject = drawBoardElements.find(element => element.id === e.target.id)
     if( actionState === ACTIONSTATE.Default) {
 
       unselectPreviousDrawBoardElement();
-      setSelectedObject({id: e.target.id, type: ACTIONTYPE.DrawElement});
+      setSelectedObject(selectedObject);
       setDrawBoardElementSelected(e.target.id, true)
 
     }
@@ -51,7 +51,7 @@ const PlayGround = () => {
 
       unselectPreviousDrawBoardElement();
       addConnection(selectedObject.id,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
-      setSelectedObject({id: e.target.id, type: ACTIONTYPE.DrawElement});
+      setSelectedObject(selectedObject);
       setDrawBoardElementSelected(e.target.id, true)
 
     }
@@ -61,14 +61,13 @@ const PlayGround = () => {
 
   const onConnectionSelected = (e, selectedElement) => {
 
-    //click on draw board element
-
     if( actionState === ACTIONSTATE.Default ||
         actionState === ACTIONSTATE.AddConnection) {
 
       //TODO 1. Unselected prev. Arrow object 2. set state object selected 3. Select this object e.target.id,
       unselectPreviousDrawBoardElement();
-      setSelectedObject({id: e.target.id, type: ACTIONTYPE.Connection});
+      let connection = connections.find(connection => connection.id === e.target.id)
+      setSelectedObject(connection);
       setDrawBoardElementSelected(e.target.id, true)
     }
 
@@ -161,6 +160,11 @@ const PlayGround = () => {
     //])
   }
 
+  const removeElement = () => {
+    if(selectedObject.objectType === OBJECTTYPE.Connection) removeConnectionDirect(selectedObject)
+    if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement) removeDrawBoardElement(selectedObject.id)
+    setSelectedObject(null)
+  }
 
   const removeDrawBoardElement = (elementId) => {
     console.log("Removing draw board element with id: " + elementId)
@@ -219,6 +223,11 @@ const PlayGround = () => {
 
   }
 
+  const setConnectionSelected = (id, isSelected) => {
+
+  }
+
+  //TODO renaming pls ?
   const setDrawBoardElementSelected = (id, isSelected) => {
 
     let selectedElement = drawBoardElements.find(element => element.id === id)
@@ -243,12 +252,15 @@ const PlayGround = () => {
 
   const setDisplayName = (elementId, value) => {
 
+
+    console.log("ElementID: " + elementId + " Value: " + value)
     let changedElement = drawBoardElements.find(element => element.id === elementId)
 
-    changedElement.display = value;
+    console.log(changedElement)
+    changedElement.displayName = value;
 
     let clone = Object.assign({}, changedElement)
-    setConnections((prevState => [
+    setDrawBoardElements((prevState => [
       drawBoardElements.filter(element => !(element.id === elementId)),
       clone
     ]))
@@ -301,8 +313,7 @@ const PlayGround = () => {
     selectedObject: selectedObject,
     connections: connections,
     drawBoardElements: drawBoardElements,
-    removeDrawBoardElement: removeDrawBoardElement,
-    removeConnection: removeConnectionDirect,
+    removeElement: removeElement,
     setDisplayName: setDisplayName,
     editConnectionNotation: editConnectionNotation,
     setActionState: setActionState,
