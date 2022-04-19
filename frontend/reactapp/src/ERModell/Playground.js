@@ -144,23 +144,28 @@ const PlayGround = () => {
   const updateDrawBoardElementSize = (elementId, width, height) => {
     let element = drawBoardElements.find(element => element.id === elementId)
 
+    console.log("works?")
+
     //This is mutable state manipulation
     element.width = width;
     element.height = height;
 
-    //let otherElement = drawBoardElements.filter(element => !(element.id === elementId))
+    let otherElement = drawBoardElements.filter(element => !(element.id === elementId))
 
-    //let clone = Object.assign({}, element)
-    //clone.width = width;
-    //clone.height = height;
+    let clone = Object.assign({}, element)
+    clone.width = width;
+    clone.height = height;
 
-    //setDrawBoardElements( ()=> [
-    //  {...otherElement},
-    //  clone
-    //])
+    setDrawBoardElements( ()=> [
+      ...otherElement,
+      clone
+    ])
+
+    console.log("works?")
   }
 
   const removeElement = () => {
+    console.log("remove")
     if(selectedObject.objectType === OBJECTTYPE.Connection) removeConnectionDirect(selectedObject)
     if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement) removeDrawBoardElement(selectedObject.id)
     setSelectedObject(null)
@@ -227,6 +232,7 @@ const PlayGround = () => {
 
   }
 
+
   //TODO renaming pls ?
   const setDrawBoardElementSelected = (id, isSelected) => {
 
@@ -252,17 +258,15 @@ const PlayGround = () => {
 
   const setDisplayName = (elementId, value) => {
 
+    let changedElements = drawBoardElements.map( (element) =>  {
+      if(element.id === elementId)
+        return {...element, displayName: value};
+        return element;
+    } )
 
-    console.log("ElementID: " + elementId + " Value: " + value)
-    let changedElement = drawBoardElements.find(element => element.id === elementId)
 
-    console.log(changedElement)
-    changedElement.displayName = value;
-
-    let clone = Object.assign({}, changedElement)
-    setDrawBoardElements((prevState => [
-      drawBoardElements.filter(element => !(element.id === elementId)),
-      clone
+    setDrawBoardElements(( () => [
+      ...changedElements
     ]))
 
   }
@@ -306,8 +310,6 @@ const PlayGround = () => {
     objectType: OBJECTTYPE.Connection,
 
    */
-
-
 
   const rightBarProps = {
     selectedObject: selectedObject,

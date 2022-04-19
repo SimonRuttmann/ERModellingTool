@@ -5,6 +5,8 @@ import {ERTYPE} from "../../ErType";
 
 export const Header = ({selectedObject, setDisplayName}) => {
 
+    if(selectedObject == null) return null;
+
     const isConnection = selectedObject.type === OBJECTTYPE.Connection
     const isIsAStructure = selectedObject.erType ? selectedObject.erType === ERTYPE.IsAStructure : false;
 
@@ -31,6 +33,8 @@ export const Header = ({selectedObject, setDisplayName}) => {
 
 export const Footer = ({selectedObject, removeElement, setActionState}) => {
 
+    if(selectedObject == null) return null;
+
     if(selectedObject.objectType === OBJECTTYPE.Connection){
         return ( <FooterDelete removeElement={removeElement} />)
     }
@@ -47,7 +51,7 @@ export const Footer = ({selectedObject, removeElement, setActionState}) => {
 
 const FooterDelete = ({removeElement}) => {
     return(
-        <button onClick={(e) => removeElement}>Delete</button>
+        <button onClick={(e) => removeElement()}>Delete</button>
     )
 };
 

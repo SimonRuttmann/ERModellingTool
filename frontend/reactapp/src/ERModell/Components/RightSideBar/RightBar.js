@@ -34,7 +34,7 @@ const RightBar = ({selectedObject, connections, removeElement, setDisplayName, e
 
                 {connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id).map(connection => (
                     <div>
-                        {getDisplayNameAndType().type} : {getDisplayNameAndType().displayName} <br/>
+                        {getDisplayNameAndType(connection).type} : {getDisplayNameAndType(connection).displayName} <br/>
                         Min: <input
                                 defaultValue={connection.min}
                                 onChange={e => editConnectionNotation(connection.id, ConnectionCardinality.Min, e.target.value)}/>
@@ -78,14 +78,14 @@ const RightBar = ({selectedObject, connections, removeElement, setDisplayName, e
                 <div>Inheritors to:</div>
                 {connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id).map(connection => (
                     <div>
-                        {getDisplayNameAndType().type} : {getDisplayNameAndType().displayName} <br/>
+                        {getDisplayNameAndType(connection).type} : {getDisplayNameAndType(connection).displayName} <br/>
                     </div>
                 ))}
 
                 <p>Parent:</p>
                 {connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id).map(connection => (
                     <div>
-                        {getDisplayNameAndType().type} : {getDisplayNameAndType().displayName} <br/>
+                        {getDisplayNameAndType(connection).type} : {getDisplayNameAndType(connection).displayName} <br/>
                     </div>
                 ))}
 
