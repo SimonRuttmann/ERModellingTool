@@ -109,8 +109,7 @@ const PlayGround = () => {
 
   };
 
-  // Question: https://stackoverflow.com/questions/36985738/how-to-unmount-unrender-or-remove-a-component-from-itself-in-a-react-redux-typ
-  // We use mutable state manipulation, but is should be immutable, by doing so i receive an error
+
   /**
    * Function given to DrawBoardElement to update the position in the state
    * @param elementId The id of the element
@@ -122,17 +121,21 @@ const PlayGround = () => {
 
     let element = drawBoardElements.find(element => element.id === elementId)
 
-    //This is mutable state manipulation
-    element.x = x;
-    element.y = y;
+    let otherElements = drawBoardElements.filter(element => !(element.id === elementId))
+
+    let clone = Object.assign({}, element)
+    clone.x = x;
+    clone.y = y;
+
+    setDrawBoardElements( ()=> [
+      ...otherElements,
+      clone
+    ])
+
 
   }
 
-  // Question: https://stackoverflow.com/questions/36985738/how-to-unmount-unrender-or-remove-a-component-from-itself-in-a-react-redux-typ
-  // We use mutable state manipulation, but is should be immutable, by doing so i receive an error
 
-  //here:
-  // Warning: Each child in a list should have a unique "key" prop.
   /**
    * Function given to the concrete implementations of DrawBoardElement to update the size in the state
    * @param elementId The id of the element
@@ -142,26 +145,20 @@ const PlayGround = () => {
    * @see resolveErComponent
    */
   const updateDrawBoardElementSize = (elementId, width, height) => {
+
     let element = drawBoardElements.find(element => element.id === elementId)
 
-    console.log("works?")
-
-    //This is mutable state manipulation
-    element.width = width;
-    element.height = height;
-
-    let otherElement = drawBoardElements.filter(element => !(element.id === elementId))
+    let otherElements = drawBoardElements.filter(element => !(element.id === elementId))
 
     let clone = Object.assign({}, element)
     clone.width = width;
     clone.height = height;
 
     setDrawBoardElements( ()=> [
-      ...otherElement,
+      ...otherElements,
       clone
     ])
 
-    console.log("works?")
   }
 
   const removeElement = () => {

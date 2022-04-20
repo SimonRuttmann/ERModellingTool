@@ -57,6 +57,7 @@ function WeakIdentifyingAttribute({id, displayText, color, fontFamily, fontSize}
             >{displayText}</text>
 
             <line
+                id={id}
                 x1={xLinePositionStart} y1={yLinePosition}
                 x2={xLinePositionEnd}   y2={yLinePosition}
                 stroke="black"

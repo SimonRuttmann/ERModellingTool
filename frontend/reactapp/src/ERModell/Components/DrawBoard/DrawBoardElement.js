@@ -66,6 +66,7 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, svgBounds, u
 
   //Handle drag and drop
   function onDrag(dragEvent, data) {
+
     setDragging(true)
 
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
