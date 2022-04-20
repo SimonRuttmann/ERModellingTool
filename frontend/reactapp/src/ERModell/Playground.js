@@ -356,7 +356,6 @@ const PlayGround = () => {
     editConnectionNotation: editConnectionNotation,
     toAddConnectionState: toAddConnectionState,
     setActionState: setActionState,
-    actionState: actionState
   }
 
 

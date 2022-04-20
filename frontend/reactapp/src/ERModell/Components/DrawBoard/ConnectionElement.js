@@ -1,31 +1,5 @@
 import React, { useState } from 'react';
 import Xarrow from 'react-xarrows';
-import {OBJECTTYPE} from "../../ActionState";
-import DrawBoardElement from "./DrawBoardElement";
-
-//Wrapper für Arrows. Damit kann man diese Klicken
-
-//{props: {line, setSelected, selected}}
-/*
-let newConnection =
-    {
-        id: `${idStart} --> ${idEnd} - ${Date.now()}`,
-        start: idStart,
-        end: idEnd,
-        min: 1,
-        max: 1,
-        objectType: OBJECTTYPE.Connection,
-        isSelected: false,
-        withArrow: false
-    }
-
-
-connections={connections}
-thisConnectionId={connection}
-onConnectionSelected={onConnectionSelected}
-
-*/
-
 
 /**
  * Wrapps the XArrow to add listener and additional logic
@@ -36,64 +10,78 @@ onConnectionSelected={onConnectionSelected}
  */
 const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) => {
 
-  const [state, setState] = useState({ color: 'black' });
-  const defProps = {
-    passProps: {
-      className: 'xarrow',
-      onMouseEnter: () => setState({ color: 'green' }),
-      onMouseLeave: () => setState({ color: 'black' }),
-      onClick: (e) => {
-                          e.stopPropagation(); //so only the click event on the box will fire on not on the container itself
-                          setSelected({
-                            id: { start: line.props.start, end: line.props.end },
-                            type: 'arrow',
-                          });
-                          
-                      },
-      cursor: 'pointer',
 
-    },
-  };
+    let arrowColor = "black"
+    if(thisConnection.isSelected) arrowColor="red"
 
+    //Color setting for on mouse enter, on mouse leave
+    const [, setState] = useState({ color: 'black' });
 
-
-
-  let color = state.color;
-
-  //console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-  if (selected && selected.type === 'arrow' && selected.id.start === line.props.start && selected.id.end === line.props.end)
-    color = 'green';
-
-
-    //add offset if line already exists
-    var offsetValue = 0;
-    
-    //console.log("BBBBBBBBBBBBBB")
-   if(lines != undefined || lines != null){ 
-    //console.log("Not undefined")
-    var filterd = lines.filter( Oneline => 
-       line.props.end == Oneline.props.end   && line.props.start == Oneline.props.start //|| 
-    //   line.props.end == Oneline.props.start && line.props.start == Oneline.props.end
-    )
-
-   // console.log("after filter")
-
-    if(filterd.length > 1){
-     // console.log("!!!!!")
-    //  console.log("filter length is: " + filterd.length)
-      offsetValue = -20 * filterd.length - 1;
+    const setColorIfNotSelected = (color) => {
+        if(!thisConnection.isSelected)
+            setState({ color: color })
     }
-  }
 
 
-  const offset = {
-    endAnchor: 
-    [{position: "left",  offset:{y: offsetValue} },  
-     {position: "right", offset:{y: offsetValue} },  
-     {position: "top",   offset:{x: offsetValue} },
-     {position: "bottom",offset:{x: offsetValue} }] }
+    //Create offset, if there is already a line
+    let offsetValue = 0;
+    let connectionSameDestinations = connections.filter(
+     connection =>
+        connection.id !== thisConnection &&
+        ( ( connection.start === thisConnection.start && connection.end === thisConnection.end ) ||
+          ( connection.start === thisConnection.end || connection.end === thisConnection.start )
+        ) )
 
-  return <Xarrow {...{ ...defProps, ...line.props, ...state, ...offset, color, path: "straight", showHead: false, showTail: false, strokeWidth: 7}} />;
+
+    if(connectionSameDestinations.length > 1){
+        offsetValue = -20 * connectionSameDestinations.length - 1;
+    }
+
+
+
+    const offset = {
+        endAnchor:
+            [{position: "left",  offset:{y: offsetValue} },
+                {position: "right", offset:{y: offsetValue} },
+                {position: "top",   offset:{x: offsetValue} },
+                {position: "bottom",offset:{x: offsetValue} }] }
+
+
+    const minMaxLabels = {
+        middle: (
+            <div
+                contentEditable
+                suppressContentEditableWarning={true}
+                style={{ font: 'italic 1.5em serif', color: 'purple' }}>
+                ( Min: {thisConnection.min} | Max: {thisConnection.max} )
+            </div>
+        )
+    }
+
+
+    const ConnectionProps = {
+        className: "xarrow",
+        onMouseEnter: () => setColorIfNotSelected("green"),
+        onMouseLeave: () => setColorIfNotSelected("black"),
+        onClick: (e) => {
+            e.stopPropagation();
+            onConnectionSelected(thisConnection.id);
+        },
+        cursor: 'pointer',
+        root: thisConnection.start,
+        end: thisConnection.end,
+        showHead: thisConnection.withArrow,
+        showTail: false,
+        strokeWidth: 5,
+        endAnchor: offset,
+        path: "straight",
+        color: arrowColor,
+        labels: minMaxLabels
+
+    }
+
+
+  return <Xarrow {...ConnectionProps} />;
 };
 
 export default ConnectionElement;

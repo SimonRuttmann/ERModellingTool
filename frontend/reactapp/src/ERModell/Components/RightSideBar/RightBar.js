@@ -1,11 +1,11 @@
 import React from 'react';
 import '../../Playground.css';
-import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "../../ActionState";
+import {ConnectionCardinality, OBJECTTYPE} from "../../ActionState";
 import {ERTYPE, ERTYPECATEGORY} from "../../ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../../Util";
 
-const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, setActionState, actionState, drawBoardElements, toAddConnectionState}) => {
+const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, setActionState, drawBoardElements, toAddConnectionState}) => {
 
     if(selectedObjectId == null) return null;
 
@@ -121,7 +121,6 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
       return displayMenu;
     }
 
-  if(selectedObject == null) return null
 
   return (
 
