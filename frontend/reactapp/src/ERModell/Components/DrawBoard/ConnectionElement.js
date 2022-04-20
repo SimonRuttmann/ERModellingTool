@@ -1,10 +1,40 @@
 import React, { useState } from 'react';
 import Xarrow from 'react-xarrows';
+import {OBJECTTYPE} from "../../ActionState";
+import DrawBoardElement from "./DrawBoardElement";
 
 //Wrapper für Arrows. Damit kann man diese Klicken
 
 //{props: {line, setSelected, selected}}
-export default ({ setSelected, selected, line, lines}) => {
+/*
+let newConnection =
+    {
+        id: `${idStart} --> ${idEnd} - ${Date.now()}`,
+        start: idStart,
+        end: idEnd,
+        min: 1,
+        max: 1,
+        objectType: OBJECTTYPE.Connection,
+        isSelected: false,
+        withArrow: false
+    }
+
+
+connections={connections}
+thisConnectionId={connection}
+onConnectionSelected={onConnectionSelected}
+
+*/
+
+
+/**
+ * Wrapps the XArrow to add listener and additional logic
+ * @param connections An array of all connections in the field (required for offset)
+ * @param thisConnection The data of this connection
+ * @param onConnectionSelected A function, called when the arrow is selected
+ * @returns {JSX.Element}
+ */
+const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) => {
 
   const [state, setState] = useState({ color: 'black' });
   const defProps = {
@@ -65,3 +95,5 @@ export default ({ setSelected, selected, line, lines}) => {
 
   return <Xarrow {...{ ...defProps, ...line.props, ...state, ...offset, color, path: "straight", showHead: false, showTail: false, strokeWidth: 7}} />;
 };
+
+export default ConnectionElement;

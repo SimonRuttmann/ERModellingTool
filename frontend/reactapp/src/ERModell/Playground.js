@@ -2,7 +2,7 @@ import React, {useLayoutEffect, useRef, useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
-import Xarrow from './Components/DrawBoard/Xarrow';
+import ConnectionElement from './Components/DrawBoard/ConnectionElement';
 import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
@@ -11,8 +11,33 @@ import {resolveObjectById} from "./Util";
 
 const PlayGround = () => {
 
-  //Elements on the field
+
+  /**
+   * Schema for drawBoardElements
+   * id: newId,
+   * displayName: "new "+ erType + " " + counter,
+   * isHighlighted: false,
+   * isSelected: false,
+   * x: e.clientX - x - 50,
+   * y: e.clientY - y - 50,
+   * width: 150,
+   * height: 100,
+   * objectType: OBJECTTYPE.DrawBoardElement,
+   * erType: erType
+   */
   const [drawBoardElements, setDrawBoardElements] = useState([]);
+
+  /**
+   * Schema for connections
+   * id: `${idStart} --> ${idEnd} - ${Date.now()}`,
+   * start: idStart,
+   * end: idEnd,
+   * min: 1,
+   * max: 1,
+   * objectType: OBJECTTYPE.Connection,
+   * isSelected: false,
+   * withArrow: false
+   */
   const [connections, setConnections] = useState([]);
 
   //Adding the default display name based on this counter
@@ -27,7 +52,7 @@ const PlayGround = () => {
 
 
 
-  const onCanvasSelected = (e) => {
+  const onCanvasSelected = () => {
 
     unselectPreviousDrawBoardElement();
     setSelectedObjectId(null);
@@ -202,7 +227,9 @@ const PlayGround = () => {
           end: idEnd,
           min: 1,
           max: 1,
-          objectType: OBJECTTYPE.Connection
+          objectType: OBJECTTYPE.Connection,
+          isSelected: false,
+          withArrow: false,
         }
 
     setConnections((prevState) => [
@@ -215,7 +242,7 @@ const PlayGround = () => {
     console.log("Removing a connection from: " + idStart + " to " + idEnd)
 
     setConnections((prevState) => [
-      prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
+        ...prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
     ])
   }
 
@@ -223,7 +250,7 @@ const PlayGround = () => {
     console.log("Removing a connection with id: " + connectionId)
 
     setConnections( (prevState => [
-      prevState.filter((connection)=>!(connectionId === connection.id))
+        ...prevState.filter((connection)=>!(connectionId === connection.id))
     ]))
   }
 
@@ -295,7 +322,7 @@ const PlayGround = () => {
     if(minMax === ConnectionCardinality.Max) changedConnection.max = notation;
 
     let clone = Object.assign({}, changedConnection)
-    setConnections((prevState => [
+    setConnections(( () => [
         ...connections.filter(connection => !(connection.id === connectionId)),
         clone
     ]))
@@ -319,30 +346,6 @@ const PlayGround = () => {
 
   }
 
-  //eine box:
-  /*
-    id:   unique id mit Date.now()
-    name: "string" --> displayName
-    x: Position am anfang
-    y: Position am anfang
-    width: Die breite des elements
-    height: Die höhe des elements
-    objectType: OBJECTTYPE.DrawBoardElement
-    erType: Type des Elements
-
-   */
-
-
-  // eine connection:
-  /*
-    id: start-ende-date-now
-    start: id zu box
-    end:  id zu box
-    min:
-    max:
-    objectType: OBJECTTYPE.Connection,
-
-   */
 
   const rightBarProps = {
     selectedObjectId: selectedObjectId,
@@ -687,13 +690,14 @@ const PlayGround = () => {
 
           {/* The connections of the elements inside the draw board */}
 
-          {connections.map((line, i) => (
-            <Xarrow
-              key={line.props.root + '-' + line.props.end + i}
-              lines={connections}
-              line={line}
-              selected={selectedObjectId}
-              setSelected={setSelectedObjectId}
+          {connections.map((connection, i) => (
+            <ConnectionElement
+              key={connection.id + " -- " + i}
+
+              connections={connections}
+              thisConnection={connection}
+              onConnectionSelected={onConnectionSelected}
+
             />
           ))}
 
