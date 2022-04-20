@@ -7,6 +7,7 @@ import { Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
+import {resolveObjectById} from "./Util";
 
 const PlayGround = () => {
 
@@ -17,8 +18,8 @@ const PlayGround = () => {
   //Adding the default display name based on this counter
   const [counter, setCounter] = useState(0);
 
-  //The currently selected object, or null
-  const [selectedObject, setSelectedObject] = useState(null);
+  //The currently selected object id, or null
+  const [selectedObjectId, setSelectedObjectId] = useState(null);
 
   //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
@@ -29,7 +30,7 @@ const PlayGround = () => {
   const onCanvasSelected = (e) => {
 
     unselectPreviousDrawBoardElement();
-    setSelectedObject(null);
+    setSelectedObjectId(null);
 
     setActionState(ACTIONSTATE.Default);
   }
@@ -41,8 +42,8 @@ const PlayGround = () => {
     if( actionState === ACTIONSTATE.Default) {
 
       unselectPreviousDrawBoardElement();
-      setSelectedObject(selectedObject);
-      setDrawBoardElementSelected(e.target.id, true)
+      setSelectedObjectId(selectedObject.id);
+      setDrawBoardElementSelected(e.target.id)
 
     }
 
@@ -51,8 +52,8 @@ const PlayGround = () => {
 
       unselectPreviousDrawBoardElement();
       addConnection(selectedObject.id,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
-      setSelectedObject(selectedObject);
-      setDrawBoardElementSelected(e.target.id, true)
+      setSelectedObjectId(selectedObject.id);
+      setDrawBoardElementSelected(e.target.id)
 
     }
 
@@ -67,8 +68,8 @@ const PlayGround = () => {
       //TODO 1. Unselected prev. Arrow object 2. set state object selected 3. Select this object e.target.id,
       unselectPreviousDrawBoardElement();
       let connection = connections.find(connection => connection.id === e.target.id)
-      setSelectedObject(connection);
-      setDrawBoardElementSelected(e.target.id, true)
+      setSelectedObjectId(connection.id);
+      setDrawBoardElementSelected(e.target.id)
     }
 
   };
@@ -161,11 +162,15 @@ const PlayGround = () => {
 
   }
 
-  const removeElement = () => {
+  const removeElement = (id) => {
+
     console.log("remove")
+
+    let selectedObject = resolveObjectById(id, drawBoardElements, connections)
+
     if(selectedObject.objectType === OBJECTTYPE.Connection) removeConnectionDirect(selectedObject)
     if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement) removeDrawBoardElement(selectedObject.id)
-    setSelectedObject(null)
+    setSelectedObjectId(null)
   }
 
   const removeDrawBoardElement = (elementId) => {
@@ -179,7 +184,7 @@ const PlayGround = () => {
       prevState.filter((element) => !(element.id === elementId))
     ]))
 
-    setSelectedObject(null)
+    setSelectedObjectId(null)
 
     decreaseBounds()
   }
@@ -215,42 +220,56 @@ const PlayGround = () => {
   }
 
   const removeConnectionDirect = (connectionId) => {
+    console.log("Removing a connection with id: " + connectionId)
+
     setConnections( (prevState => [
       prevState.filter((connection)=>!(connectionId === connection.id))
     ]))
   }
 
 
-  const highlightDrawBoardElements = () => {
-
-  }
 
   const setConnectionSelected = (id, isSelected) => {
 
   }
 
 
-  //TODO renaming pls ?
-  const setDrawBoardElementSelected = (id, isSelected) => {
+
+  const unselectPreviousDrawBoardElement = () => {
+
+    if(selectedObjectId == null) return;
+
+    setDrawBoardElementNotSelectedNotHighlighted(selectedObjectId)
+    //setDrawBoardElementSelected(object.id, false);
+
+  }
+
+  const setDrawBoardElementNotSelectedNotHighlighted = (id) => {
+
+    let changedElements = drawBoardElements.map( element => {
+      if(element.id === id) return {...element, isSelected: false, isHighlighted: false}
+      return {...element, isHighlighted: false}
+    })
+
+    setDrawBoardElements(( () => [
+      ...changedElements
+    ]))
+  }
+
+
+  const setDrawBoardElementSelected = (id) => {
 
     let selectedElement = drawBoardElements.find(element => element.id === id)
-    selectedElement.isSelected = isSelected;
+    selectedElement.isSelected = true;
 
     let copy = Object.assign({},selectedElement)
 
     let notSelectedElements = drawBoardElements.filter(element => !(element.id === id))
 
     setDrawBoardElements([
-        copy,
-        ...notSelectedElements
+      copy,
+      ...notSelectedElements
     ])
-  }
-
-  const unselectPreviousDrawBoardElement = () => {
-
-    if(selectedObject === null) return;
-
-    setDrawBoardElementSelected(selectedObject.id, false);
   }
 
   const setDisplayName = (elementId, value) => {
@@ -277,8 +296,25 @@ const PlayGround = () => {
 
     let clone = Object.assign({}, changedConnection)
     setConnections((prevState => [
-        connections.filter(connection => !(connection.id === connectionId)),
+        ...connections.filter(connection => !(connection.id === connectionId)),
         clone
+    ]))
+
+  }
+
+  console.log(drawBoardElements)
+  const toAddConnectionState = (id) => {
+    console.log("hi")
+    setActionState(ACTIONSTATE.AddConnection)
+    let selectedObject = resolveObjectById(id, drawBoardElements, connections)
+    //TODO Some logic regarding the selected object, what will be seletected etc
+
+    let changedElements = drawBoardElements.map( (element) =>  {
+        return {...element, isHighlighted: true};
+    } )
+
+    setDrawBoardElements(( () => [
+      ...changedElements
     ]))
 
   }
@@ -309,12 +345,13 @@ const PlayGround = () => {
    */
 
   const rightBarProps = {
-    selectedObject: selectedObject,
+    selectedObjectId: selectedObjectId,
     connections: connections,
     drawBoardElements: drawBoardElements,
     removeElement: removeElement,
     setDisplayName: setDisplayName,
     editConnectionNotation: editConnectionNotation,
+    toAddConnectionState: toAddConnectionState,
     setActionState: setActionState,
     actionState: actionState
   }
@@ -655,8 +692,8 @@ const PlayGround = () => {
               key={line.props.root + '-' + line.props.end + i}
               lines={connections}
               line={line}
-              selected={selectedObject}
-              setSelected={setSelectedObject}
+              selected={selectedObjectId}
+              setSelected={setSelectedObjectId}
             />
           ))}
 

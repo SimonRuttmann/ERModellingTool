@@ -3,9 +3,14 @@ import '../../Playground.css';
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "../../ActionState";
 import {ERTYPE, ERTYPECATEGORY} from "../../ErType";
 import {Footer, Header} from "./ObjectView";
+import {resolveObjectById} from "../../Util";
 
-const RightBar = ({selectedObject, connections, removeElement, setDisplayName, editConnectionNotation, setActionState, actionState, drawBoardElements}) => {
+const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, setActionState, actionState, drawBoardElements, toAddConnectionState}) => {
 
+    if(selectedObjectId == null) return null;
+
+    let selectedObject = resolveObjectById(selectedObjectId, drawBoardElements, connections)
+    if (selectedObject == null) return null;
 
 
     function getDisplayNameAndType(connection){
@@ -125,11 +130,19 @@ const RightBar = ({selectedObject, connections, removeElement, setDisplayName, e
       onClick={(e) => e.stopPropagation()}>
 
 
-        <Header selectedObject={selectedObject} setDisplayName={setDisplayName}/>
+        <Header selectedObjectId={selectedObjectId}
+                setDisplayName={setDisplayName}
+                drawBoardElements={drawBoardElements}
+                connections={connections}/>
 
         {getDisplayMenu()}
 
-        <Footer selectedObject={selectedObject} removeElement={removeElement} setActionState={setActionState}/>
+        <Footer selectedObjectId={selectedObjectId}
+                removeElement={removeElement}
+                setActionState={setActionState}
+                drawBoardElements={drawBoardElements}
+                connections={connections}
+                toAddConnectionState={toAddConnectionState}/>
 
 
     </div>
