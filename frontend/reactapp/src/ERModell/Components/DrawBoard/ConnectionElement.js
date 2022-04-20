@@ -10,6 +10,7 @@ import Xarrow from 'react-xarrows';
  */
 const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) => {
 
+    console.log("update")
 
     let arrowColor = "black"
     if(thisConnection.isSelected) arrowColor="red"
@@ -68,12 +69,12 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
             onConnectionSelected(thisConnection.id);
         },
         cursor: 'pointer',
-        root: thisConnection.start,
+        start: thisConnection.start,
         end: thisConnection.end,
         showHead: thisConnection.withArrow,
         showTail: false,
         strokeWidth: 5,
-        endAnchor: offset,
+        //endAnchor: offset,
         path: "straight",
         color: arrowColor,
         labels: minMaxLabels

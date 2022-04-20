@@ -3,14 +3,14 @@ import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
-import { Xwrapper } from 'react-xarrows';
+import { useXarrow, Xwrapper } from 'react-xarrows';
 import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
 
 const PlayGround = () => {
-
+  const updateConnections = useXarrow();
 
   /**
    * Schema for drawBoardElements
@@ -76,9 +76,10 @@ const PlayGround = () => {
     if( actionState === ACTIONSTATE.AddConnection) {
 
       unselectPreviousDrawBoardElement();
-      addConnection(selectedObject.id,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
-      setSelectedObjectId(selectedObject.id);
-      setDrawBoardElementSelected(e.target.id)
+      //Selected Object ID is the previously selected element
+      addConnection(selectedObjectId,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
+      setSelectedObjectId(null);
+      //setDrawBoardElementSelected(e.target.id)
 
     }
 
@@ -329,9 +330,9 @@ const PlayGround = () => {
 
   }
 
-  console.log(drawBoardElements)
+
   const toAddConnectionState = (id) => {
-    console.log("hi")
+
     setActionState(ACTIONSTATE.AddConnection)
     let selectedObject = resolveObjectById(id, drawBoardElements, connections)
     //TODO Some logic regarding the selected object, what will be seletected etc
@@ -636,7 +637,7 @@ const PlayGround = () => {
 
         {/* The draw board   */}
 
-        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef}>
+        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef} onScroll={updateConnections}>
 
           <div className="drawboardBackgroundPage"
                ref={backgroundPageRef}
