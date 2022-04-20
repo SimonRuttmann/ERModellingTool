@@ -80,6 +80,9 @@ const DrawBoardElement = ({ onDrawBoardElementSelected, thisObject, svgBounds, u
   //The timeout here is bad practise, however solutions form stackoverflow did not work
   const PRESS_TIME_UNTIL_DRAG_MS = 250;
   function onStop(e, data) {
+
+    if(!isDragging) return;
+
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
     setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
   }
