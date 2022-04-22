@@ -9,8 +9,9 @@ import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
 
-const PlayGround = () => {
+const PlayGround = ({sendDrawBoardData, importedContent}) => {
   const updateConnections = useXarrow();
+
 
   /**
    * Schema for drawBoardElements
@@ -49,8 +50,17 @@ const PlayGround = () => {
   //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
 
+//TODO Test import, export
+  if(importedContent.drawBoardContent != null && connections.length === 0){
+    console.log("importing:..")
+    setConnections(prevState => [
+      ...importedContent.drawBoardContent.connections
+    ])
 
-
+    setDrawBoardElements(prevState => [
+      ...importedContent.drawBoardContent.elements
+    ])
+  }
 
   const onCanvasSelected = () => {
 
@@ -79,6 +89,7 @@ const PlayGround = () => {
       //Selected Object ID is the previously selected element
       addConnection(selectedObjectId,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
       setSelectedObjectId(null);
+      setActionState(ACTIONSTATE.Default)
       //setDrawBoardElementSelected(e.target.id)
 
     }
@@ -610,6 +621,7 @@ const PlayGround = () => {
           {/* The left toolbar, containing the elements to drag into the draw board  */}
 
           <div className="leftSidebarContainer">
+            <button onClick={e => sendDrawBoardData(drawBoardElements, connections )}>Upload</button>
               <div className="leftSidebarSelectionContainer">
 
                 <div className="leftSidebarMainTitle">Er Objects</div>
