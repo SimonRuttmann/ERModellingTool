@@ -44,7 +44,13 @@ body {
   color: white;
 }
 
-.leftSidebarDivider {
+.spacer {
+  visibility: hidden;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.sidebarDivider {
   border-top: 2px solid whitesmoke;
   border-radius: 15px;
   box-shadow: #222222;
@@ -202,10 +208,56 @@ evlt benötigt: Element.scrollIntoView()
   float: right;
   height: 100%;
   background: #3c3f41;
+  font-size: 20px;
+  font-family: 'Ultra', sans-serif;
+  color: white;
+
 }
 
 .rightSidebarTitle{
 
+}
+
+.rightBarButton {
+  background-color: #555555;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  margin: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.rightBarButton:hover {
+  background-color: #2b2b2b;
+}
+
+.rightBarInput {
+  background-color: #3c3f41;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #c8c8c8;
+  margin-left: 10%;
+  margin-right: 10%;
+  width: 80%;
+  height: 30px;
+  font-size: 20px;
+  font-family: 'Ultra', sans-serif;
+  color:white;
+  margin-bottom: 30px;
+}
+
+.rightBarInputFieldLabel{
+  margin-left: 10%;
+  float: left;
+  margin-bottom: 10px;
+}
+
+.rightBarCurrentName{
+  margin-top: 10px;
+  margin-bottom: 40px;
 }
 
 .anotherS{

@@ -646,23 +646,23 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
               <div className="leftSidebarSelectionContainer">
 
                 <div className="leftSidebarMainTitle">Er Objects</div>
-                <hr className="leftSidebarDivider"/>
+                <hr className="sidebarDivider"/>
 
                 <div className="leftSidebarTitle">Attributes</div>
                 <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.Attribute)}/>
-                <hr className="leftSidebarDivider"/>
+                <hr className="sidebarDivider"/>
 
                 <div className="leftSidebarTitle">Entities</div>
                 <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.Entity)}/>
-                <hr className="leftSidebarDivider"/>
+                <hr className="sidebarDivider"/>
 
                 <div className="leftSidebarTitle">Relations</div>
                 <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.Relation)}/>
-                <hr className="leftSidebarDivider"/>
+                <hr className="sidebarDivider"/>
 
                 <div className="leftSidebarTitle">IsA Structure</div>
                 <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.IsAStructure)}/>
-                <hr className="leftSidebarDivider"/>
+                <hr className="sidebarDivider"/>
             </div>
         </div>
 

@@ -34,11 +34,14 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
     return (
         <React.Fragment>
             {ERTYPE[selectedObject.erType].toolTipTitle}
-            <div>{selectedObject.displayName}</div>
-            <div> Name:
-                <input type="text"
+            <div className="rightBarCurrentName">{selectedObject.displayName}</div>
+            <hr className="spacer"/>
+            <div>
+                <label htmlFor="rightBarInputField" className="rightBarInputFieldLabel">Name:</label>
+                <input  type="text" className="rightBarInput" id="rightBarInputField"
                        onChange={(e) => { setDisplayName(selectedObject.id, e.target.value)}}
                         defaultValue={selectedObject.displayName}/></div>
+            <hr className="spacer"/>
         </React.Fragment>
     )
 }
@@ -66,13 +69,13 @@ export const Footer = ({selectedObjectId, removeElement, setActionState, drawBoa
 
 const FooterDelete = ({removeElement, selectedObjectId}) => {
     return(
-        <button onClick={() => removeElement(selectedObjectId)}>Delete</button>
+        <button className="rightBarButton" onClick={() => removeElement(selectedObjectId)}>Delete</button>
     )
 };
 
 //bad setState
 const FooterAddConnection = ({toAddConnectionState, selectedObjectId}) => {
     return(
-        <button onClick={() => toAddConnectionState(selectedObjectId)}>Add Association</button>
+        <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObjectId)}>Add Association</button>
     )
 }
