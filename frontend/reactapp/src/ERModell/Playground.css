@@ -201,7 +201,7 @@ evlt benötigt: Element.scrollIntoView()
   width: 300px;
   float: right;
   height: 100%;
-  background: rgb(1, 39, 175);
+  background: #3c3f41;
 }
 
 .rightSidebarTitle{

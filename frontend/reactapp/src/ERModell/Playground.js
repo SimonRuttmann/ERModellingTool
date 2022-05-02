@@ -3,8 +3,8 @@ import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
-import { useXarrow, Xwrapper } from 'react-xarrows';
-import {ERTYPECATEGORY, ERTYPE, returnNamesOfCategory} from './ErType';
+import {useXarrow, Xwrapper} from 'react-xarrows';
+import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
@@ -53,22 +53,29 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
 //TODO Test import, export
   if(importedContent.drawBoardContent != null && connections.length === 0){
     console.log("importing:..")
-    setConnections(prevState => [
+    setConnections(() => [
       ...importedContent.drawBoardContent.connections
     ])
 
-    setDrawBoardElements(prevState => [
+    setDrawBoardElements(() => [
       ...importedContent.drawBoardContent.elements
     ])
   }
 
   const onCanvasSelected = () => {
 
-    unselectPreviousDrawBoardElement();
+    if(selectedObjectId == null) return;
+
+    const newElementState = unselectPreviousDrawBoardElement();
     setSelectedObjectId(null);
 
     setActionState(ACTIONSTATE.Default);
+
+    setDrawBoardElements(() => [
+        ...newElementState
+    ])
   }
+
 
   const onDrawBoardElementSelected = (e, selectedElement) => {
 
@@ -76,21 +83,29 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
     let selectedObject = drawBoardElements.find(element => element.id === e.target.id)
     if( actionState === ACTIONSTATE.Default) {
 
-      unselectPreviousDrawBoardElement();
-      setSelectedObjectId(selectedObject.id);
-      setDrawBoardElementSelected(e.target.id)
+      const unselectedElements = unselectPreviousDrawBoardElement();
 
+      setSelectedObjectId(selectedObject.id);
+      const updatedElements = selectElement(unselectedElements, e.target.id)
+
+      setDrawBoardElements(() => [
+        ...updatedElements
+      ])
     }
 
 
     if( actionState === ACTIONSTATE.AddConnection) {
 
-      unselectPreviousDrawBoardElement();
+      const unselectedElements = unselectPreviousDrawBoardElement();
       //Selected Object ID is the previously selected element
       addConnection(selectedObjectId,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
       setSelectedObjectId(null);
       setActionState(ACTIONSTATE.Default)
       //setDrawBoardElementSelected(e.target.id)
+
+      setDrawBoardElements(() => [
+          ...unselectedElements
+      ])
 
     }
 
@@ -103,10 +118,18 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
         actionState === ACTIONSTATE.AddConnection) {
 
       //TODO 1. Unselected prev. Arrow object 2. set state object selected 3. Select this object e.target.id,
-      unselectPreviousDrawBoardElement();
+      const elements = unselectPreviousDrawBoardElement();
+      setDrawBoardElements(() => [
+          ...elements
+      ])
       let connection = connections.find(connection => connection.id === e.target.id)
       setSelectedObjectId(connection.id);
-      setDrawBoardElementSelected(e.target.id)
+
+      const updatedElements = selectElement(drawBoardElements, e.target.id)
+      setDrawBoardElements(() => [
+        ...updatedElements
+      ])
+
     }
 
   };
@@ -276,39 +299,37 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
 
   const unselectPreviousDrawBoardElement = () => {
 
-    if(selectedObjectId == null) return;
+    if(selectedObjectId == null) return drawBoardElements;
 
-    setDrawBoardElementNotSelectedNotHighlighted(selectedObjectId)
-    //setDrawBoardElementSelected(object.id, false);
+    return setDrawBoardElementNotSelectedNotHighlighted(selectedObjectId)
+
 
   }
 
   const setDrawBoardElementNotSelectedNotHighlighted = (id) => {
 
-    let changedElements = drawBoardElements.map( element => {
-      if(element.id === id) return {...element, isSelected: false, isHighlighted: false}
+    return drawBoardElements.map(element => {
+      if (element.id === id) return {...element, isSelected: false, isHighlighted: false}
       return {...element, isHighlighted: false}
-    })
+    });
 
-    setDrawBoardElements(( () => [
-      ...changedElements
-    ]))
   }
 
 
-  const setDrawBoardElementSelected = (id) => {
+  const selectElement = (elements, id) => {
 
-    let selectedElement = drawBoardElements.find(element => element.id === id)
+    let selectedElement = elements.find(element => element.id === id)
     selectedElement.isSelected = true;
 
     let copy = Object.assign({},selectedElement)
 
-    let notSelectedElements = drawBoardElements.filter(element => !(element.id === id))
+    let notSelectedElements = elements.filter(element => !(element.id === id))
 
-    setDrawBoardElements([
+    return[
       copy,
       ...notSelectedElements
-    ])
+    ];
+
   }
 
   const setDisplayName = (elementId, value) => {
