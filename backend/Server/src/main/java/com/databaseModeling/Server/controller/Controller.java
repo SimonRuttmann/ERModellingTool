@@ -1,5 +1,6 @@
 package com.databaseModeling.Server.controller;
 
+import com.databaseModeling.Server.model.Edge;
 import com.databaseModeling.Server.model.ElementMetaInformation;
 import com.databaseModeling.Server.model.Graph;
 import com.databaseModeling.Server.model.Node;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -114,7 +117,31 @@ public class Controller {
         });
 
 
+        var edgeElements = drawBoardContent.
+                getConnections().
+                stream().
+                filter(connection ->
+                    resolveNodeById(connection.getStart(), graph.nodes).isPresent() &&
+                    resolveNodeById(connection.getEnd(), graph.nodes).isPresent()).
+                collect(Collectors.toList());
+
+        edgeElements.forEach(edgeElement -> {
+            var edge = new Edge();
+            edge.setSource(getNodeById(edgeElement.getStart(), graph.nodes));
+            edge.setDestination(getNodeById(edgeElement.getEnd(), graph.nodes));
+            //TODO add meta information
+            graph.addEdge(edge);
+        });
+
         return conceptionalModelDto;
+    }
+
+    public Optional<Node> resolveNodeById(String id, List<Node> nodes){
+        return nodes.stream().filter(node -> node.getId().equals(id)).findFirst();
+    }
+
+    public Node getNodeById(String id, List<Node> nodes){
+        return resolveNodeById(id, nodes).orElse(null);
     }
 
 }
