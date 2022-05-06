@@ -1,9 +1,6 @@
 package com.databaseModeling.Server.controller;
 
-import com.databaseModeling.Server.model.Edge;
-import com.databaseModeling.Server.model.ElementMetaInformation;
-import com.databaseModeling.Server.model.Graph;
-import com.databaseModeling.Server.model.Node;
+import com.databaseModeling.Server.model.ErTreeGraphFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,9 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 public class Controller {
@@ -108,40 +102,9 @@ public class Controller {
 
         conceptionalModelDto.setDrawBoardContent(drawBoardContent);
 
-        Graph graph = new Graph();
-
-        var nodeElements = drawBoardContent.getElements().stream().filter(element -> element.getErType().isNode).collect(Collectors.toList());
-        nodeElements.forEach(nodeElement -> {
-            ElementMetaInformation elementMetaInformation = new ElementMetaInformation(); //TODO add meta information
-            graph.addNode(new Node(nodeElement.getId(), nodeElement.getErType(), elementMetaInformation));
-        });
-
-
-        var edgeElements = drawBoardContent.
-                getConnections().
-                stream().
-                filter(connection ->
-                    resolveNodeById(connection.getStart(), graph.nodes).isPresent() &&
-                    resolveNodeById(connection.getEnd(), graph.nodes).isPresent()).
-                collect(Collectors.toList());
-
-        edgeElements.forEach(edgeElement -> {
-            var edge = new Edge();
-            edge.setSource(getNodeById(edgeElement.getStart(), graph.nodes));
-            edge.setDestination(getNodeById(edgeElement.getEnd(), graph.nodes));
-            //TODO add meta information
-            graph.addEdge(edge);
-        });
+        var graph = ErTreeGraphFactory.createGraph(drawBoardContent);
 
         return conceptionalModelDto;
-    }
-
-    public Optional<Node> resolveNodeById(String id, List<Node> nodes){
-        return nodes.stream().filter(node -> node.getId().equals(id)).findFirst();
-    }
-
-    public Node getNodeById(String id, List<Node> nodes){
-        return resolveNodeById(id, nodes).orElse(null);
     }
 
 }
