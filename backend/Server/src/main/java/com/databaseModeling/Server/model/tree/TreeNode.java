@@ -3,17 +3,17 @@ package com.databaseModeling.Server.model.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeNode<T> {
+public class TreeNode<TreeData> {
 
-    private final List<TreeNode<T>> children = new ArrayList<>();
-    private TreeNode<T> parent;
+    private final List<TreeNode<TreeData>> children = new ArrayList<>();
+    private TreeNode<TreeData> parent;
 
     private final String id;
 
     public String getId() { return id; }
-    private final T data;
+    private final TreeData data;
 
-    public TreeNode(String id, T data) {
+    public TreeNode(String id, TreeData data) {
         this.id = id;
         this.data = data;
     }
@@ -30,23 +30,23 @@ public class TreeNode<T> {
         this.parent = null;
     }
 
-    public void setParent(TreeNode<T> parent) {
+    public void setParent(TreeNode<TreeData> parent) {
         this.parent = parent;
     }
 
-    public List<TreeNode<T>> getChildren(){
+    public List<TreeNode<TreeData>> getChildren(){
         return children;
     }
 
-    public void removeChild(TreeNode<T> child){
+    public void removeChild(TreeNode<TreeData> child){
         children.remove(child);
     }
 
-    public void addChild(TreeNode<T> child){
+    public void addChild(TreeNode<TreeData> child){
         children.add(child);
     }
 
-    public T getData(){
+    public TreeData getTreeData(){
         return data;
     }
 }
