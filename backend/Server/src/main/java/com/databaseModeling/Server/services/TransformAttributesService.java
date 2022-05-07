@@ -4,19 +4,9 @@ import com.databaseModeling.Server.model.*;
 import com.databaseModeling.Server.model.graph.Graph;
 import com.databaseModeling.Server.model.tree.TreeNode;
 
-public class TransformAttributesService {
+public class TransformAttributesService implements ITransformAttributesService{
 
-    /**
-     * Transforms all attributes to the relational model
-     * Therefore each graph node will have a table containing the attributes
-     * In addition, there will be more tables created, if multivalued attributes are involved
-     *
-     * @param erGraph The graph to modify
-     *
-     * This method only deletes, merges and adds object references between the tables
-     * To update the foreign keys of the tables, it is necessary to call the following method
-     * @see TransformAttributesService#generateAttributeTableKeys(Graph)
-     */
+    @Override
     public void transformAttributes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
 
         for (var root : erGraph.graphNodes){
@@ -28,13 +18,7 @@ public class TransformAttributesService {
 
     }
 
-    /**
-     * Resolves all object references and applies the foreign keys accordingly
-     * @param erGraph The graph to modify
-     *
-     * Requires that the object references are set
-     * @see TransformAttributesService#transformAttributes(Graph)
-     */
+    @Override
     public void generateAttributeTableKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
         for (var root : erGraph.graphNodes){
 
@@ -161,61 +145,5 @@ public class TransformAttributesService {
         }
 
     }
-
-
-
-    /**
-     *
-     * //TODO BUGGED USE ABOVE METHOD INSTEAD!
-     * //TODO Fehler hier sind compound attributes nicht richtig beachtet worden
-     * //TODO Compound key "KÖNNEN" eine tabelle bilden, abhängig von seinen kindern
-     * //TODO Subtraversals wären zu inperfomant
-     *
-     * Algorithm to transform each element in the tree into tables
-     * The algorithm traversals the tree in preorder and merges or enhances tables
-     *
-     *<pre>
-     * 1. If it is a leaf, stop execution
-     * 2. For each child of the current parent
-     *      1. Set the new active table to the given active table
-     *      2. If it is a multivalued attribute
-     *          1. Add references to the attribute table referencing the active table
-     *          2. Update the active table with the referenced
-     *      3  Else
-     *          1. Merge the attribute table with the active table
-     *          2. Delete the attribute table
-     *      4  Start the recursion step for each child with the (eventually new) active table
-     *</pre>
-     *
-     * @param parent The parent element of the tree
-     * @param activeTable The current active table, which will be enhanced by attributes
-     */
-    public void transformTree(TreeNode<EntityRelationElement> parent, Table activeTable){
-
-        //Added for more readability
-        if(parent.isLeaf()) return;
-
-        for(var child : parent.getChildren()){
-            var childData = child.getTreeData();
-
-            var activeTableForChildren = activeTable;
-
-            switch (childData.getErType()){
-                case MultivaluedAttribute:
-                    TableManager.AddForeignKeysToTableAsPrimaryKeys(activeTable, childData.getTable());
-                    activeTableForChildren = childData.getTable();
-                    break;
-                case NormalAttribute:
-                case IdentifyingAttribute:
-                case WeakIdentifyingAttribute:
-                    TableManager.AddColumns(activeTable, childData.getTable().getColumns());
-                    childData.removeTable();
-            }
-
-            transformTree(child, activeTableForChildren);
-        }
-
-    }
-
 
 }
