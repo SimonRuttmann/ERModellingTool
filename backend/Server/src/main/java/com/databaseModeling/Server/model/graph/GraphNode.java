@@ -6,29 +6,29 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 //T = DataNode, E = DateEdge
-public class GraphNode<T, E> {
+public class GraphNode<NodeData, EdgeData> {
 
     private final String id;
     public String getId() { return id; }
 
 
-    private final T data;
-    public T getData(){return data;}
+    private final NodeData data;
+    public NodeData getNodeData(){return data;}
 
 
-    private final List<GraphEdge<T, E>> graphEdges = new ArrayList<>();
+    private final List<GraphEdge<NodeData, EdgeData>> graphEdges = new ArrayList<>();
 
     public int getDegree() {return graphEdges.size();}
-    public List<GraphEdge<T, E>> getEdges() { return graphEdges; }
+    public List<GraphEdge<NodeData, EdgeData>> getEdges() { return graphEdges; }
 
-    public void addEdge(GraphEdge<T,E> graphEdge){graphEdges.add(graphEdge);}
-    public void removeEdge(GraphEdge<T,E> graphEdge){graphEdges.remove(graphEdge);}
+    public void addEdge(GraphEdge<NodeData, EdgeData> graphEdge){graphEdges.add(graphEdge);}
+    public void removeEdge(GraphEdge<NodeData, EdgeData> graphEdge){graphEdges.remove(graphEdge);}
 
-    public List<GraphEdge<T,E>> getSourceEdges(){ return graphEdges.stream().filter(graphEdge -> graphEdge.getSource().equals(this)).collect(Collectors.toList());}
-    public List<GraphEdge<T,E>> getDestinationEdges(){ return graphEdges.stream().filter(graphEdge -> graphEdge.getDestination().equals(this)).collect(Collectors.toList());}
+    public List<GraphEdge<NodeData, EdgeData>> getSourceEdges(){ return graphEdges.stream().filter(graphEdge -> graphEdge.getSource().equals(this)).collect(Collectors.toList());}
+    public List<GraphEdge<NodeData, EdgeData>> getDestinationEdges(){ return graphEdges.stream().filter(graphEdge -> graphEdge.getDestination().equals(this)).collect(Collectors.toList());}
 
 
-    public GraphNode(String id, T data) {
+    public GraphNode(String id, NodeData data) {
         this.id = id;
         this.data = data;
     }

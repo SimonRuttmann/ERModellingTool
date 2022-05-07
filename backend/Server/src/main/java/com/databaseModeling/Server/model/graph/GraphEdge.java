@@ -1,33 +1,33 @@
 package com.databaseModeling.Server.model.graph;
 
 //T = DataNode, E = DateEdge
-public class GraphEdge<T, D> {
+public class GraphEdge<NodeData, EdgeData> {
 
-    private D data;
+    private EdgeData data;
     private final String id;
 
-    private GraphNode<T,D> source;
-    private GraphNode<T,D> destination;
+    private GraphNode<NodeData, EdgeData> source;
+    private GraphNode<NodeData, EdgeData> destination;
 
-    public GraphEdge(String id, D data) {
+    public GraphEdge(String id, EdgeData data) {
         this.id = id;
         this.data = data;
     }
 
 
-    public GraphNode<T,D> getSource() {
+    public GraphNode<NodeData, EdgeData> getSource() {
         return source;
     }
 
-    public void setSource(GraphNode<T,D> source) {
+    public void setSource(GraphNode<NodeData, EdgeData> source) {
         this.source = source;
     }
 
-    public GraphNode<T,D> getDestination() {
+    public GraphNode<NodeData, EdgeData> getDestination() {
         return destination;
     }
 
-    public void setDestination(GraphNode<T,D> destination) {
+    public void setDestination(GraphNode<NodeData, EdgeData> destination) {
         this.destination = destination;
     }
 
