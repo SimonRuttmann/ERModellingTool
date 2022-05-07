@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//TODO Performanceverbesserung
+// Halte für jedes Element eine HashSet mit <Id, Element>
+// Zugriff der Elemente über die Conenction start und end ids mittels der Hashsets!
 public class ErTreeGraphFactory {
 
     public static Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> createGraph(
@@ -82,7 +85,7 @@ public class ErTreeGraphFactory {
 
         //For each node order and add the tree
         for(var root : erGraph.graphNodes) {
-            orderTreeRecursive(root.getData(), attributeConnectors, attributes);
+            orderTreeRecursive(root.getNodeData(), attributeConnectors, attributes);
         }
 
         //TODO remove this
