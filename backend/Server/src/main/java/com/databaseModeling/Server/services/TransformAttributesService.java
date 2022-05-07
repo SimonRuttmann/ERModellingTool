@@ -51,41 +51,53 @@ public class TransformAttributesService {
      *
      *<pre>
      * 1. Execute postorder traversal
-     * 2. If the node is leaf and multivalued
+     * 2. If the node is multivalued
      *     2.1  The table needs to be marked to be preserved
      * 3. If the parent is a leaf stop execution
      * 4. Iterate through children
-     *      1. If the table of the child is marked as fixed
-     *          1.1 Create a reference from the child to the parent
-     *      2. Else
-     *          2.1 Merge the table of the child with the parent table
-     *          2.2 Remove the child table
+     *      4.1 If the table of the child is marked as fixed
+     *           4.1.1 If the table has at least one more children
+     *                    Create a reference from the child to the parent
+     *           4.1.2 Else
+     *                     Merge the child table with the parent table
+     *                     and update the sub children reference
+     *           4.1.3 Mark the table, to be persisted
+     *      4.2. Else
+     *          4.2.1 Merge the table of the child with the parent table
+     *          4.2.2 Remove the child table
      *</pre>
      *
      * @param parent The parent element of the tree
      */
     private void transformTree(TreeNode<EntityRelationElement> parent){
 
-
         //Traversal of tree
-        for (var child: parent.getChildren()) {
+        for (var child : parent.getChildren()) {
             transformTree(child);
         }
 
-        if(parent.isLeaf() && parent.getTreeData().getErType() == ErType.MultivaluedAttribute){
+        if(parent.getTreeData().getErType() == ErType.MultivaluedAttribute){
             parent.getTreeData().getTable().isFixedAttributeTable = true;
         }
 
         if(parent.isLeaf()) return;
 
+
         for (var child : parent.getChildren()) {
             var childTable = child.getTreeData().getTable();
             var parentTable = parent.getTreeData().getTable();
 
+
             if(childTable.isFixedAttributeTable){
-                childTable.referencedAttributeTable = parentTable;
+
+                //Attribute is used as a "pipe", therefore we can merge the table
+                if(parent.getChildren().size() == 1) removePipelineAttribute(parent, child);
+
+                else childTable.referencedAttributeTable = parentTable;
+
                 parentTable.isFixedAttributeTable = true;
             }
+
             else{
                 TableManager.AddColumns(parentTable, childTable.getColumns());
                 child.getTreeData().removeTable();
@@ -95,6 +107,27 @@ public class TransformAttributesService {
 
     }
 
+    private void removePipelineAttribute(
+            TreeNode<EntityRelationElement> parent,
+            TreeNode<EntityRelationElement> child){
+
+        var childTable = child.getTreeData().getTable();
+        var parentTable = parent.getTreeData().getTable();
+
+        TableManager.AddColumns(parentTable, childTable.getColumns());
+
+        //Get all references to the child table and update them to the parent table
+        for(var subChild : child.getChildren()){
+
+            //Check for reference!
+            if(subChild.getTreeData().getTable().referencedAttributeTable == child.getTreeData().getTable()){
+                subChild.getTreeData().getTable().referencedAttributeTable = parentTable;
+            }
+
+        }
+
+        child.getTreeData().removeTable();
+    }
 
     /**
      * Resolves references between attribute tables and adds foreign keys, referencing the parent table
