@@ -237,11 +237,12 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
     console.log("Removing draw board element with id: " + elementId)
 
     setConnections((prevState => [
-      prevState.filter(connection => connection.start === elementId || connection.end === elementId)
+        ...prevState.filter(connection => !(connection.start === elementId || connection.end === elementId))
     ]))
 
+
     setDrawBoardElements((prevState => [
-      prevState.filter((element) => !(element.id === elementId))
+        ...prevState.filter((element) => !(element.id === elementId))
     ]))
 
     setSelectedObjectId(null)
@@ -642,7 +643,7 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
           {/* The left toolbar, containing the elements to drag into the draw board  */}
 
           <div className="leftSidebarContainer">
-            <button onClick={e => sendDrawBoardData(drawBoardElements, connections )}>Upload</button>
+
               <div className="leftSidebarSelectionContainer">
 
                 <div className="leftSidebarMainTitle">Er Objects</div>

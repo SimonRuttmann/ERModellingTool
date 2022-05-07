@@ -53,8 +53,8 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
             <div
                 contentEditable
                 suppressContentEditableWarning={true}
-                style={{ font: 'italic 1.5em serif', color: 'purple' }}>
-                ( Min: {thisConnection.min} | Max: {thisConnection.max} )
+                style={{ font: 'italic 1.5em serif', color: 'black', left: '30px' }}>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ({thisConnection.min},{thisConnection.max})
             </div>
         )
     }
@@ -73,7 +73,7 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
         end: thisConnection.end,
         showHead: thisConnection.withArrow,
         showTail: false,
-        strokeWidth: 5,
+        strokeWidth: 3,
         //endAnchor: offset,
         path: "straight",
         color: arrowColor,
