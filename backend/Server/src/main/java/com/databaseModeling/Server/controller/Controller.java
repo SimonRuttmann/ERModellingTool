@@ -103,7 +103,6 @@ public class Controller {
         conceptionalModelDto.setDrawBoardContent(drawBoardContent);
 
         var graph = ErTreeGraphFactory.createGraph(drawBoardContent);
-
         return conceptionalModelDto;
     }
 

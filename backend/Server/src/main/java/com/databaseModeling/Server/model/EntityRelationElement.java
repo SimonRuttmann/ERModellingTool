@@ -16,6 +16,10 @@ public class EntityRelationElement {
     public Table getTable(){return table;}
     public void setTable(Table table){this.table = table;}
 
+    public boolean hasTable(){
+        return table != null;
+    }
+
     public void removeTable(){
         this.table = null;
     }

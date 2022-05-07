@@ -9,7 +9,7 @@ public enum ErType {
     IdentifyingAttribute(false),
     WeakIdentifyingAttribute(false),
     NormalAttribute(false),
-    CompoundAttribute(false),
+   // CompoundAttribute(false),
     MultivaluedAttribute(false);
 
     public final boolean isNode;

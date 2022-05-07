@@ -14,8 +14,8 @@ public class TransformAttributesService {
      * @param erGraph The graph to modify
      *
      * This method only deletes, merges and adds object references between the tables
-     * To update the foreign keys of the tables, each element has to call the following method
-     * @see TableManager#AddForeignKeysToTableAsPrimaryKeys(Table, Table)
+     * To update the foreign keys of the tables, it is necessary to call the following method
+     * @see TransformAttributesService#generateAttributeTableKeys(Graph)
      */
     public void transformAttributes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
 
@@ -26,6 +26,22 @@ public class TransformAttributesService {
 
         }
 
+    }
+
+    /**
+     * Resolves all object references and applies the foreign keys accordingly
+     * @param erGraph The graph to modify
+     *
+     * Requires that the object references are set
+     * @see TransformAttributesService#transformAttributes(Graph)
+     */
+    public void generateAttributeTableKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
+        for (var root : erGraph.graphNodes){
+
+            if(root.getNodeData().getTreeData().getErType().isNode)
+                updateReferences(root.getNodeData());
+
+        }
     }
 
 
@@ -48,7 +64,7 @@ public class TransformAttributesService {
      *
      * @param parent The parent element of the tree
      */
-    public void transformTree(TreeNode<EntityRelationElement> parent){
+    private void transformTree(TreeNode<EntityRelationElement> parent){
 
 
         //Traversal of tree
@@ -75,6 +91,40 @@ public class TransformAttributesService {
                 child.getTreeData().removeTable();
             }
 
+        }
+
+    }
+
+
+    /**
+     * Resolves references between attribute tables and adds foreign keys, referencing the parent table
+     *
+     *<pre>
+     * 1. If it is a leaf, stop execution
+     * 2. For each child of the current parent
+     *      1. If the child has no table, skip
+     *      2. Add foreign keys to the child table to reference the parent table
+     * 3. Start preorder traversal
+     *</pre>
+     *
+     * @param parent The parent element of the tree
+     */
+    private void updateReferences(TreeNode<EntityRelationElement> parent){
+
+        //Added for more readability
+        if(parent.isLeaf()) return;
+
+        for(var child : parent.getChildren()){
+            var childData = child.getTreeData();
+
+            if(! childData.hasTable() ) continue;
+
+            var childTable = childData.getTable();
+            var parentTable = parent.getTreeData().getTable();
+
+            TableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
+
+            updateReferences(child);
         }
 
     }
