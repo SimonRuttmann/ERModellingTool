@@ -10,9 +10,18 @@ public final class Table {
 
     public String getId() {return id;}
 
+    //used for attribute tables
     public Table referencedAttributeTable;
     public Boolean isFixedAttributeTable;
 
+
+    //used for weak entity tables
+    public Table referencedIdentifyingTable;
+    public Boolean isWeakEntityTable;
+    public boolean isStrongWithReferences(){
+        if (isWeakEntityTable) return referencedIdentifyingTable != null;
+        return true;
+    }
     public Table(String id) {
         this.id = id;
     }

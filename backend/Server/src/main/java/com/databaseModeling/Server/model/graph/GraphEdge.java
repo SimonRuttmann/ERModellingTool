@@ -14,6 +14,17 @@ public class GraphEdge<NodeData, EdgeData> {
         this.data = data;
     }
 
+    public EdgeData getEdgeData() {
+        return data;
+    }
+
+    public void setEdgeData(EdgeData data) {
+        this.data = data;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public GraphNode<NodeData, EdgeData> getSource() {
         return source;
@@ -27,6 +38,10 @@ public class GraphEdge<NodeData, EdgeData> {
         return destination;
     }
 
+    public GraphNode<NodeData, EdgeData> getOtherSide(GraphNode<NodeData, EdgeData> side) {
+        if(destination.equals(side)) return source;
+        return destination;
+    }
     public void setDestination(GraphNode<NodeData, EdgeData> destination) {
         this.destination = destination;
     }

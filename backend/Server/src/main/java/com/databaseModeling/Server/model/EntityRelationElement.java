@@ -4,9 +4,11 @@ import com.databaseModeling.Server.services.TableManager;
 
 public class EntityRelationElement {
 
-    private final ErType erType;
+    private ErType erType;
     public ErType getErType() { return erType; }
-
+    public void setErType(ErType erType) {
+        this.erType = erType;
+    }
 
     private final ElementMetaInformation elementMetaInformation;
     public ElementMetaInformation getElementMetaInformation() {return elementMetaInformation;}
