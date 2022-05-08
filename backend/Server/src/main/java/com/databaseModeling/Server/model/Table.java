@@ -18,6 +18,7 @@ public final class Table {
     //used for weak entity tables
     public Table referencedIdentifyingTable;
     public Boolean isWeakEntityTable;
+    public Boolean isTransformed;
     public boolean isStrongWithReferences(){
         if (isWeakEntityTable) return referencedIdentifyingTable != null;
         return true;

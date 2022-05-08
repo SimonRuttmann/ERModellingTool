@@ -3,6 +3,7 @@ package com.databaseModeling.Server.services;
 import com.databaseModeling.Server.model.EntityRelationAssociation;
 import com.databaseModeling.Server.model.EntityRelationElement;
 import com.databaseModeling.Server.model.ErType;
+import com.databaseModeling.Server.model.Table;
 import com.databaseModeling.Server.model.graph.Graph;
 import com.databaseModeling.Server.model.graph.GraphNode;
 import com.databaseModeling.Server.model.tree.TreeNode;
@@ -11,41 +12,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-public class TransformWeakTypesService {
-    ///IDDEEE!!!!
+public class TransformWeakTypesService implements ITransformWeakTypesService{
 
-    // Halte eine liste aller tabellen
-    // Alle tabellen haben objektverweise
-    // so wie .z.b. Tabelle a mit froeign key auf Tabelle b, dann a hat objectverweis auf tabelle b
-    // Damit können alle algorithmen (der 1. davon) ausgeführt werden.
-
-    //Bei zuvoriger übersetztung der primary keys
-    // Im anschluss daran ist es möglich, beim einem "MERGE" einer 1:1 tabelle alle tabellen ermittelt werden, welche davon betroffen sind
-    // diese können sich dann entsprechend updaten
-
-    //Bei späterer übersetzung der primary kesys
-    //Es kann bei einem emerge alle betroffenen tabellen ermittelt werden
-    //Diese referenzen der Tabellen auf andere können dan geupdated werden
-
-    //Dsa Tranform attribute service ist davon nicht betroffen, wir behandeln hier einfach nur Entity oder Relation tabellen
-    //Wird eine Entitätstabelle geändert, so werden alle columns kopiert.
-
-    //Alle tabelle der Attribute werden folgendermaßen geändert.
-    // Es werden alle childs einer knoten geommen. wenn sie einen tabelle haben, dann ist die neue referencedTable diese Tabelle (nur suche auf 1. Stufe, nicht kinder der kinder)
-
-    //Bei der alten version reicht es aus, die kinder zum parent zu kopieren, die kinder verweisen dann auf den neuen parent und der parent auf die kinder
-
-    //Algo
-    /*
-    Wir gehen den ganzen algo n-1 mal durch, woebei n die anzahl der nodes im graphen ist
-    1. Suche die Weak enttity, die mit einer weak relation auf ein strong entity zeigt
-    2. Füge schlüssel hinzu
-    3. Ändere Typ zu Strong
-     */
-
+    @Override
     public void transformWeakTypes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
-
-        var weakEntities = resolveWeakEntities(erGraph);
 
         //We execute the algorithm n - 1 times, as the longest possible chain
         //can be n-1 weak entities with 1 strong entity
@@ -62,11 +32,35 @@ public class TransformWeakTypesService {
 
     }
 
+    @Override
     public void generateIdentifyingPrimaryKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
         var entities = resolveWeakEntities(erGraph);
+        
+        for (var weakEntity : entities){
+            var weakEntityTable = weakEntity.getNodeData().getTreeData().getTable();
+            addForeignAsPrimaryKeysRecursive(weakEntityTable);
+        }
+        
+    }
 
-        //TODO
-        TableManager.AddForeignKeysToTableAsPrimaryKeys();
+    /**
+     * Adds foreign keys as primary keys recursive to all above tables of the weak entity chain
+     * @param table The current table, which needs to add the references as primary keys
+     */
+    private void addForeignAsPrimaryKeysRecursive(Table table){
+        
+        if(!table.isWeakEntityTable || table.isTransformed) return;
+        
+        var isReferenceStrongEntityTable = !table.referencedIdentifyingTable.isWeakEntityTable;
+        var isReferenceTransformedWeakEntityTable = table.referencedIdentifyingTable.isTransformed;
+        
+        if(isReferenceStrongEntityTable || isReferenceTransformedWeakEntityTable){
+            TableManager.AddForeignKeysToTableAsPrimaryKeys(table.referencedIdentifyingTable, table);
+            table.isTransformed = true;
+            return;
+        }
+        
+        addForeignAsPrimaryKeysRecursive(table.referencedIdentifyingTable);
     }
 
     private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
@@ -140,6 +134,8 @@ public class TransformWeakTypesService {
                 collect(Collectors.toList());
     }
 
+    //TODO This method can throw an exception, if the weak relation has only 1 connection
+    //TODO Such inconsistency needs to be checked via the validation!
 
     /**
      * Returns the entity connected to the relation, without the element specified in the first argument
