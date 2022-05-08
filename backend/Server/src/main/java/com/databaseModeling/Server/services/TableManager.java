@@ -19,7 +19,7 @@ public class TableManager {
     public static Table createTable(EntityRelationElement element){
 
         var tableId = generateTableId();
-        Table table = new Table(tableIdCounter.getAndIncrement() + "-- Table");
+        Table table = new Table(tableId);
 
         var columnId = generateColumnId(table);
         Column column = new Column();

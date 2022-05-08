@@ -137,6 +137,9 @@ public class TransformAttributesService implements ITransformAttributesService{
             if(! childData.hasTable() ) continue;
 
             var childTable = childData.getTable();
+            //TODO Version 1, kindtabellen (der 1. stufe) muss das attributeTable aktualisiert werden
+            //var parentTable = childData.getTable().referencedAttributeTable;
+            //TODO Version 2, die kinder werden bei einem merge ebenfalls gemergt (whr. besser?)
             var parentTable = parent.getTreeData().getTable();
 
             TableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
