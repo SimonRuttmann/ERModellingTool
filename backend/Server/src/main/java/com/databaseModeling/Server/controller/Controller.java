@@ -50,22 +50,22 @@ public class Controller {
 
         element0.setId("Id0");
         element0.setDisplayName("Element0");
-        element0.setXPos("500");
-        element0.setYPos("500");
+        element0.setX("500");
+        element0.setY("500");
         element0.setHeight("100");
         element0.setWidth("200");
 
         element1.setId("Id1");
         element1.setDisplayName("Element1");
-        element1.setXPos("500");
-        element1.setYPos("500");
+        element1.setX("500");
+        element1.setY("500");
         element1.setHeight("100");
         element1.setWidth("200");
 
         element2.setId("Id2");
         element2.setDisplayName("Element2");
-        element2.setXPos("500");
-        element2.setYPos("500");
+        element2.setX("500");
+        element2.setY("500");
         element2.setHeight("100");
         element2.setWidth("200");
 
@@ -102,7 +102,7 @@ public class Controller {
 
         conceptionalModelDto.setDrawBoardContent(drawBoardContent);
 
-        var graph = ErTreeGraphFactory.createGraph(drawBoardContent);
+        var graph = ErTreeGraphFactory.createGraph(type.getDrawBoardContent());
         return conceptionalModelDto;
     }
 

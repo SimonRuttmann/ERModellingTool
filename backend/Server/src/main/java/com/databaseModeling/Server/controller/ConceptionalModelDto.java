@@ -47,12 +47,16 @@ public class ConceptionalModelDto {
             private String displayName;
             //private Boolean isHighlighted;
             //private Boolean isSelected;
-            private String xPos;
-            private String yPos;
+            private String x;
+            private String y;
             private String width;
             private String height;
             private String objectType;  //Enum DrawBoardElement ...
-            private ErType erType;      //Enum IdentifyingAttribute ...
+            private String erType;      //Enum IdentifyingAttribute ... //TODO
+
+            public ErType getErType(){
+                return ErType.valueOf(erType);
+            }
         }
 
         @Data

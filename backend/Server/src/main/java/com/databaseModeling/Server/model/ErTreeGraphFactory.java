@@ -50,12 +50,13 @@ public class ErTreeGraphFactory {
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
     {
 
+
          drawBoardContent.
                 getConnections().
                 stream().
                 filter(connection ->
-                        drawBoardContent.getElements().stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getStart())) &&
-                        drawBoardContent.getElements().stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getEnd()))).
+                        erGraph.graphNodes.stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getStart())) &&
+                        erGraph.graphNodes.stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getEnd()))).
                 forEach(edge -> erGraph.addEdge(edge.getId(), edge.getStart(), edge.getEnd(),
                                 new EntityRelationAssociation(edge.getMin(), edge.getMax(), new ElementMetaInformation())));
 
@@ -80,8 +81,8 @@ public class ErTreeGraphFactory {
                 getConnections().
                 stream().
                 filter(connection ->
-                        drawBoardContent.getElements().stream().noneMatch(graphNode -> graphNode.getId().equals(connection.getStart())) ||
-                        drawBoardContent.getElements().stream().noneMatch(graphNode -> graphNode.getId().equals(connection.getEnd()))).collect(Collectors.toList());
+                        erGraph.graphNodes.stream().noneMatch(graphNode -> graphNode.getId().equals(connection.getStart())) ||
+                        erGraph.graphNodes.stream().noneMatch(graphNode -> graphNode.getId().equals(connection.getEnd()))).collect(Collectors.toList());
 
         //For each node order and add the tree
         for(var root : erGraph.graphNodes) {
@@ -113,19 +114,26 @@ public class ErTreeGraphFactory {
         for (var connector : connectors) {
 
             //Find connectors which are connected to parent
-            if(connector.getStart().equals(parent.getId()) || connector.getEnd().equals(parent.getId())){
+            TreeNode<EntityRelationElement> child = null;
+            //If the connector start is the entity (parent), then the end is the attribute (child)
+            if(connector.getStart().equals(parent.getId()) ){
+                 child = treeNodes.stream().filter(treeNode -> treeNode.getId().equals(connector.getEnd())).findFirst().orElseThrow();
+            }
+            if(connector.getEnd().equals(parent.getId())) {
+                child = treeNodes.stream().filter(treeNode -> treeNode.getId().equals(connector.getStart())).findFirst().orElseThrow();
+            }
 
                 //Resolve child and add connection
 
-                var child = treeNodes.stream().filter(treeNode -> treeNode.getId().equals(parent.getId())).findFirst().orElseThrow();
+            if(child != null) {
                 children.add(child);
 
                 parent.addChild(child);
                 child.setParent(parent);
 
                 usedConnections.add(connector);
-
             }
+
         }
 
         //Remove used connection to avoid endless parent <-> child circle and increase performance
