@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import static com.databaseModeling.Server.services.ErUtil.*;
+
 public class TransformWeakTypesService implements ITransformWeakTypesService{
 
     @Override
@@ -37,7 +39,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
         var entities = resolveWeakEntities(erGraph);
         
         for (var weakEntity : entities){
-            var weakEntityTable = weakEntity.getNodeData().getTreeData().getTable();
+            var weakEntityTable = resolveErData(weakEntity).getTable();
             addForeignAsPrimaryKeysRecursive(weakEntityTable);
         }
         
@@ -69,7 +71,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
         return erGraph.graphNodes.
                 stream().
                 filter(element ->
-                        element.getNodeData().getTreeData().getErType() == ErType.WeakEntity).
+                        resolveErType(element) == ErType.WeakEntity).
                 collect(Collectors.toList());
 
     }
@@ -80,7 +82,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
         return resolveWeakEntities(erGraph).
                 stream().
                 filter(weakEntity ->
-                        !weakEntity.getNodeData().getTreeData().getTable().isStrongWithReferences()).
+                        !resolveErData(weakEntity).getTable().isStrongWithReferences()).
                 collect(Collectors.toList());
     }
 
@@ -88,7 +90,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
 
         //If the weak entity is already resolved, we can skip processing
-        if(weakEntity.getNodeData().getTreeData().getTable().isStrongWithReferences()) return;
+        if(resolveErData(weakEntity).getTable().isStrongWithReferences()) return;
 
         //Returns all identifying relations connected to the weak entity
         var identifyingRelations = ResolveIdentifyingRelations(weakEntity);
@@ -98,8 +100,8 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
             //Returns all entities of the other side of the identifyingRelation
             var identifyingEntity = ResolveOtherEntityConnectedToRelation(weakEntity, identifyingRelation);
 
-            var identifyingEntityData = identifyingEntity.getNodeData().getTreeData();
-            var weakEntityData = weakEntity.getNodeData().getTreeData();
+            var identifyingEntityData = resolveErData(identifyingEntity);
+            var weakEntityData = resolveErData(weakEntity);
 
             //Note, that the defining type does not need to be a strong entity,
             //it can also be a weak entity, which has already resolved its strong type
@@ -121,7 +123,6 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
      * Returns all identifying relations the given entity is connected to
      * @param weakEntity The entity to query for
      * @return A list of graph edges, representing the relations
-     * @see TransformWeakTypesService#ResolveRelationsOfEntity(GraphNode)
      */
     private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
             ResolveIdentifyingRelations(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
@@ -130,7 +131,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
 
         return  relations.
                 stream().
-                filter(connectedNode -> connectedNode.getNodeData().getTreeData().getErType() == ErType.IdentifyingRelation).
+                filter(connectedNode -> resolveErType(connectedNode) == ErType.IdentifyingRelation).
                 collect(Collectors.toList());
     }
 
@@ -155,48 +156,6 @@ public class TransformWeakTypesService implements ITransformWeakTypesService{
         return entities.stream().findFirst().orElseThrow();
     }
 
-
-
-    //TODO Move them to util class if needed anywhere else
-    //General purpose utils
-
-    /**
-     * Returns all relations the given entity is connected to
-     * @param entity The entity to query for
-     * @return A list of graph edges, representing the relations
-     */
-    private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-        ResolveRelationsOfEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
-
-        return  entity.
-                getEdges().
-                stream().
-                map(edge -> edge.getOtherSide(entity)).
-                collect(Collectors.toList());
-    }
-
-    /**
-     * Returns all entities connected to the relation, without the element specified in the first argument
-     * <pre>
-     *     Origin Entity <-> Relation <-> Entity1
-     *                                <-> Entity2
-     *     Return: Entity1, Entity2
-     * </pre>
-     * @param originEntity The entity, which should be excluded from the result list
-     * @param identifyingRelation The relation which will be queried for
-     * @return A list of GraphNodes representing the entities
-     */
-    private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-            ResolveOtherEntitiesConnectedToRelation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> originEntity,
-                                                    GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> identifyingRelation){
-
-        return  identifyingRelation.
-                getEdges().
-                stream().                                               //WE = Weak Entity, IR = Identifying Relation, IE = Identifying Entity
-                map(edge -> edge.getOtherSide(identifyingRelation)).    //e.g. WE <-> IR <-> IE ---> WR, IE
-                filter(node -> !node.equals(originEntity)).               //e.g  WE, IE --> IE
-                collect(Collectors.toList());
-    }
 
 
 }

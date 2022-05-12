@@ -3,7 +3,7 @@ package com.databaseModeling.Server.services;
 import com.databaseModeling.Server.model.*;
 import com.databaseModeling.Server.model.graph.Graph;
 import com.databaseModeling.Server.model.tree.TreeNode;
-
+import static com.databaseModeling.Server.services.ErUtil.*;
 public class TransformAttributesService implements ITransformAttributesService{
 
     @Override
@@ -11,7 +11,7 @@ public class TransformAttributesService implements ITransformAttributesService{
 
         for (var root : erGraph.graphNodes){
 
-            if(root.getNodeData().getTreeData().getErType().isNode)
+            if(resolveErType(root).isNode)
                 transformTree(root.getNodeData());
 
         }
@@ -22,7 +22,7 @@ public class TransformAttributesService implements ITransformAttributesService{
     public void generateAttributeTableKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
         for (var root : erGraph.graphNodes){
 
-            if(root.getNodeData().getTreeData().getErType().isNode)
+            if(resolveErType(root).isNode)
                 updateReferences(root.getNodeData());
 
         }
