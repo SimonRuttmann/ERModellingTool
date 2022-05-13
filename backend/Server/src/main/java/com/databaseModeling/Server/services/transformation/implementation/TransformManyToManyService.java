@@ -11,20 +11,15 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 
 import java.util.stream.Collectors;
 
-import static com.databaseModeling.Server.services.util.ErUtil.ResolveEntitiesConnectedToRelation;
-import static com.databaseModeling.Server.services.util.ErUtil.resolveErType;
+import static com.databaseModeling.Server.services.util.ErUtil.*;
 
 public class TransformManyToManyService implements ITransformManyToManyService {
 
 
     @Override
     public void transformManyToManyRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
-        var relations = erGraph.graphNodes.
-                stream().
-                filter(node -> resolveErType(node) == ErType.StrongRelation ||
-                        resolveErType(node) == ErType.IdentifyingRelation).
-                collect(Collectors.toList());
 
+        var relations = resolveRelations(erGraph);
         relations.forEach(this::transformManyToManyRelation);
     }
 

@@ -18,12 +18,12 @@ public class TransformIsAStructureServiceService implements ITransformIsAStructu
     @Override
     public void transformIsAStructures(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        var relations = erGraph.graphNodes.
+        var isaStructures = erGraph.graphNodes.
                 stream().
                 filter(node -> resolveErType(node) == ErType.IsAStructure).
                 collect(Collectors.toList());
 
-        relations.forEach(this::transformIsAStructure);
+        isaStructures.forEach(this::transformIsAStructure);
     }
 
     private void transformIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure) {

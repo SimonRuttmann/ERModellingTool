@@ -8,19 +8,18 @@ import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 import static com.databaseModeling.Server.services.util.ErUtil.resolveRelationsOfDeg2;
 
-public class TransformMandatoryOneToOptionalOneService implements ITransformMandatoryOneToOptionalOneService{
+public class TransformOptionalOneToOptionalOneService implements ITransformOptionalOneToOptionalOneService{
+
     @Override
-    public void transformMandatoryOneToOptionalOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
+    public void transformOptionalOneToOptionalOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         var relations = resolveRelationsOfDeg2(erGraph);
-        relations.forEach(this::transformMandatoryOneToOptionalOneRelation);
+        relations.forEach(this::transformOptionalOneToOptionalOneRelation);
 
     }
 
-    private void transformMandatoryOneToOptionalOneRelation(
+    private void transformOptionalOneToOptionalOneRelation(
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation) {
         //TODO
     }
-
-
 }

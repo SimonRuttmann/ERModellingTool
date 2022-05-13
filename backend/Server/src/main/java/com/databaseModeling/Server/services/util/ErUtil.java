@@ -4,6 +4,7 @@ import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
@@ -12,7 +13,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ErUtil {
+public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
 
     public static String resolveAssociationQualifiedName(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> edge){
 
@@ -39,6 +40,7 @@ public class ErUtil {
     }
 
 
+    //ENTITY UTIL
     /**
      * Returns all relations the given entity is connected to
      * @param entity The entity to query for
@@ -97,7 +99,7 @@ public class ErUtil {
 
     }
 
-
+    //ISA UTIL
     private static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     ResolveTypesConnectedToIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure, AssociationType type){
 
@@ -131,5 +133,30 @@ public class ErUtil {
     ResolveBaseOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
         return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Base).stream().findFirst().orElseThrow();
+    }
+
+
+    //RELATION UTIL
+
+    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    resolveRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
+
+        return erGraph.graphNodes.
+                stream().
+                filter(node -> resolveErType(node) == ErType.StrongRelation ||
+                        resolveErType(node) == ErType.IdentifyingRelation).
+                filter(node -> node.getDegree() == 2).
+                collect(Collectors.toList());
+
+
+    }
+
+    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    resolveRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
+
+        return resolveRelations(erGraph).stream().
+                filter(node -> node.getDegree() == 2).
+                collect(Collectors.toList());
+
     }
 }
