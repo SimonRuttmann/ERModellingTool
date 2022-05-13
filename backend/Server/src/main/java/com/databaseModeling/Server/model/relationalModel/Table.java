@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.model;
+package com.databaseModeling.Server.model.relationalModel;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.model;
+package com.databaseModeling.Server.model.relationalModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

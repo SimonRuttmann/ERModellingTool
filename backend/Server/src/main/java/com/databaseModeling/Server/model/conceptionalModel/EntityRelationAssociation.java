@@ -1,7 +1,7 @@
-package com.databaseModeling.Server.model;
+package com.databaseModeling.Server.model.conceptionalModel;
 
-import com.databaseModeling.Server.services.AssociationType;
-import com.databaseModeling.Server.services.Cardinality;
+import com.databaseModeling.Server.model.ElementMetaInformation;
+import com.databaseModeling.Server.model.relationalModel.Table;
 
 public class EntityRelationAssociation {
 

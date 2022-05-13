@@ -1,6 +1,8 @@
-package com.databaseModeling.Server.model;
+package com.databaseModeling.Server.model.conceptionalModel;
 
-import com.databaseModeling.Server.services.TableManager;
+import com.databaseModeling.Server.model.ElementMetaInformation;
+import com.databaseModeling.Server.model.relationalModel.Table;
+import com.databaseModeling.Server.model.relationalModel.TableManager;
 
 public class EntityRelationElement {
 

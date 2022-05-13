@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.model.graph;
+package com.databaseModeling.Server.model.dataStructure.graph;
 
 //T = DataNode, E = DateEdge
 public class GraphEdge<NodeData, EdgeData> {

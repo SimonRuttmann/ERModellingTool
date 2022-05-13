@@ -98,7 +98,8 @@
         "max": 1,
         "objectType": "Connection",
         "isSelected": false,
-        "withArrow": false
+        "withArrow": false,
+        "associationType": "Association" // can also be Inheritor,Base,AttributeConnector
       },
       {
         "id": "NormalAttribute--1650639055413 --> StrongEntity--1650639058958 - 1650639063463",

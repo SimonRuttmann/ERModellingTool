@@ -1,22 +1,19 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.model.relationalModel;
 
-import com.databaseModeling.Server.model.Column;
-import com.databaseModeling.Server.model.EntityRelationElement;
-import com.databaseModeling.Server.model.Table;
+import com.databaseModeling.Server.model.ElementMetaInformation;
+import com.databaseModeling.Server.model.conceptionalModel.ErType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class TableManager {
 
     private static final AtomicLong tableIdCounter = new AtomicLong();
 
-    public static Table createTable(EntityRelationElement element){
+    public static Table createTable(ErType erType, ElementMetaInformation elementMetaInformation){
 
         var tableId = generateTableId();
         Table table = new Table(tableId);
@@ -25,7 +22,7 @@ public class TableManager {
         Column column = new Column();
         column.setId(columnId);
 
-        switch (element.getErType()){
+        switch (erType){
             case IdentifyingAttribute:
             case WeakIdentifyingAttribute:  column.getKey().setIsPrimaryKey(true);
                                             break;
@@ -33,7 +30,7 @@ public class TableManager {
             case MultivaluedAttribute:
         }
 
-        column.setOriginDisplayName(element.getElementMetaInformation().getDisplayName());
+        column.setOriginDisplayName(elementMetaInformation.getDisplayName());
 
         return table;
     }

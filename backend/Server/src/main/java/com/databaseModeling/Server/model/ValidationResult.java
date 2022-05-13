@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.model;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package com.databaseModeling.Server.controller;
 
-import com.databaseModeling.Server.model.ErType;
+import com.databaseModeling.Server.model.conceptionalModel.ErType;
+import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -72,6 +73,11 @@ public class ConceptionalModelDto {
             private String objectType;
             private Boolean withArrow;
 
+            private String associationType;
+
+            public AssociationType getAssociationType(){
+                return AssociationType.valueOf(associationType);
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.model.tree;
+package com.databaseModeling.Server.model.dataStructure.tree;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,20 +1,22 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.transformation.implementation;
 
-import com.databaseModeling.Server.model.EntityRelationAssociation;
-import com.databaseModeling.Server.model.EntityRelationElement;
-import com.databaseModeling.Server.model.ErType;
-import com.databaseModeling.Server.model.Table;
-import com.databaseModeling.Server.model.graph.Graph;
-import com.databaseModeling.Server.model.graph.GraphNode;
-import com.databaseModeling.Server.model.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.conceptionalModel.ErType;
+import com.databaseModeling.Server.model.relationalModel.Table;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
+import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.relationalModel.TableManager;
+import com.databaseModeling.Server.services.transformation.interfaces.ITransformWeakTypesService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static com.databaseModeling.Server.services.ErUtil.*;
+import static com.databaseModeling.Server.services.util.ErUtil.*;
 
-public class TransformWeakTypesService implements ITransformWeakTypesService{
+public class TransformWeakTypesService implements ITransformWeakTypesService {
 
     @Override
     public void transformWeakTypes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){

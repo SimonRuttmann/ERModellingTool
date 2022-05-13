@@ -1,9 +1,9 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.transformation.interfaces;
 
-import com.databaseModeling.Server.model.EntityRelationAssociation;
-import com.databaseModeling.Server.model.EntityRelationElement;
-import com.databaseModeling.Server.model.graph.Graph;
-import com.databaseModeling.Server.model.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 public interface ITransformWeakTypesService {
 
@@ -29,6 +29,14 @@ public interface ITransformWeakTypesService {
      */
     void generateIdentifyingPrimaryKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph);
 
+
+    //TODO
+    // 1:N      trivial
+    // N:M      trivial
+    // 1:1      frei -- mergebar
+    // 01:1     01 seite
+    // 01:01    frei
+    // Testen!!!!
 
     ///IDDEEE!!!!
 

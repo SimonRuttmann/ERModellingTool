@@ -1,11 +1,11 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.util;
 
-import com.databaseModeling.Server.model.EntityRelationAssociation;
-import com.databaseModeling.Server.model.EntityRelationElement;
-import com.databaseModeling.Server.model.ErType;
-import com.databaseModeling.Server.model.graph.GraphEdge;
-import com.databaseModeling.Server.model.graph.GraphNode;
-import com.databaseModeling.Server.model.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.conceptionalModel.ErType;
+import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
+import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 import java.text.MessageFormat;
 import java.util.List;

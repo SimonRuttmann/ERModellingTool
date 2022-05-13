@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.model.graph;
+package com.databaseModeling.Server.model.dataStructure.graph;
 
 import java.util.ArrayList;
 import java.util.List;

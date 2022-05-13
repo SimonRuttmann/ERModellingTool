@@ -1,10 +1,15 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.transformation.implementation;
 
-import com.databaseModeling.Server.model.*;
-import com.databaseModeling.Server.model.graph.Graph;
-import com.databaseModeling.Server.model.tree.TreeNode;
-import static com.databaseModeling.Server.services.ErUtil.*;
-public class TransformAttributesService implements ITransformAttributesService{
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.conceptionalModel.ErType;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.relationalModel.TableManager;
+import com.databaseModeling.Server.services.transformation.interfaces.ITransformAttributesService;
+
+import static com.databaseModeling.Server.services.util.ErUtil.resolveErType;
+public class TransformAttributesService implements ITransformAttributesService {
 
     @Override
     public void transformAttributes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){

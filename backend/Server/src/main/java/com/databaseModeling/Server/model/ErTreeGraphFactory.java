@@ -1,8 +1,10 @@
 package com.databaseModeling.Server.model;
 
 import com.databaseModeling.Server.controller.ConceptionalModelDto;
-import com.databaseModeling.Server.model.graph.Graph;
-import com.databaseModeling.Server.model.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 import com.mongodb.assertions.Assertions;
 
 import java.util.ArrayList;

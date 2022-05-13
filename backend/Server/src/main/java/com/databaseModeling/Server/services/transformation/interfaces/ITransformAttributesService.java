@@ -1,9 +1,9 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.transformation.interfaces;
 
-import com.databaseModeling.Server.model.EntityRelationAssociation;
-import com.databaseModeling.Server.model.EntityRelationElement;
-import com.databaseModeling.Server.model.graph.Graph;
-import com.databaseModeling.Server.model.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 public interface ITransformAttributesService {
 

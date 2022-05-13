@@ -1,9 +1,13 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.transformation.implementation;
 
-import com.databaseModeling.Server.model.EntityRelationAssociation;
-import com.databaseModeling.Server.model.EntityRelationElement;
-import com.databaseModeling.Server.model.graph.Graph;
-import com.databaseModeling.Server.model.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
+import com.databaseModeling.Server.model.dataStructure.graph.Graph;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
+import com.databaseModeling.Server.model.conceptionalModel.Cardinality;
+import com.databaseModeling.Server.model.ValidationResult;
+import com.databaseModeling.Server.services.transformation.interfaces.ICardinalityResolverService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -11,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.databaseModeling.Server.services.ErUtil.resolveAssociationQualifiedName;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveAssociationQualifiedName;
 
 
 public class CardinalityResolverService implements ICardinalityResolverService {
