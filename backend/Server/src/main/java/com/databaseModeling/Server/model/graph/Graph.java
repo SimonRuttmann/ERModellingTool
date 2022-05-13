@@ -8,7 +8,7 @@ import java.util.List;
 //2. Injezieren von weiteren Datenstrukturen (hier tree in node)
 public class Graph<NodeData, EdgeData> {
     public List<GraphNode<NodeData, EdgeData>> graphNodes = new ArrayList<>();
-
+    public List<GraphEdge<NodeData, EdgeData>> graphEdges = new ArrayList<>();
     public void addNode(String id, NodeData nodeData){
         GraphNode<NodeData, EdgeData> node = new GraphNode<>(id, nodeData);
         graphNodes.add(node);
@@ -25,6 +25,8 @@ public class Graph<NodeData, EdgeData> {
 
         edge.setDestination(destination);
         edge.getDestination().addEdge(edge);
+
+        graphEdges.add(edge);
 
     }
 
