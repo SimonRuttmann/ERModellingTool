@@ -1,5 +1,8 @@
 package com.databaseModeling.Server.model;
 
+import com.databaseModeling.Server.services.AssociationType;
+import com.databaseModeling.Server.services.Cardinality;
+
 public class EntityRelationAssociation {
 
 
@@ -9,6 +12,26 @@ public class EntityRelationAssociation {
     public String getMin() {return min;}
 
     public String getMax() {return max;}
+
+    private Cardinality cardinality;
+
+    public void setCardinality(Cardinality cardinality) {
+        this.cardinality = cardinality;
+    }
+
+    public Cardinality getCardinality(){
+        return cardinality;
+    }
+
+    private AssociationType associationType;
+
+    public AssociationType getAssociationType() {
+        return associationType;
+    }
+
+    public void setAssociationType(AssociationType associationType) {
+        this.associationType = associationType;
+    }
 
     public ElementMetaInformation elementMetaInformation;
 
