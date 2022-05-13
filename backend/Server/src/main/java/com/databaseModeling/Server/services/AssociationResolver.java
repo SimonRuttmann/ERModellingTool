@@ -1,8 +1,17 @@
 package com.databaseModeling.Server.services;
 
+import com.databaseModeling.Server.model.EntityRelationAssociation;
+import com.databaseModeling.Server.model.EntityRelationElement;
+import com.databaseModeling.Server.model.graph.Graph;
+import com.databaseModeling.Server.model.tree.TreeNode;
+
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.databaseModeling.Server.services.ErUtil.resolveAssociationQualifiedName;
 
 //Direkt der Association hinzufügen
 public class AssociationResolver {
@@ -12,63 +21,69 @@ public class AssociationResolver {
     private final String regex = MessageFormat.
             format("^\\s*((?<{1}>[A-Za-z]+)|(?<{2}>\\d+))\\s*$", alphabeticValue, numericValue);
 
-    public enum Cardinality {
-        MandatoryOne,
-        OptionalOne,
-        Many
+
+    public void ResolveAssociations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph, ValidationResult validationResult){
+        for (var edge : erGraph.graphEdges){
+            List<String> errors = new ArrayList<>();
+            resolveAssociation(edge.getEdgeData().getMin(), edge.getEdgeData().getMax(), errors);
+            if(! errors.isEmpty()) {
+
+                validationResult.addErrorsWithPrefix(resolveAssociationQualifiedName(edge), errors);
+            }
+        }
     }
 
-    //TODO Check (5,4) !! exception
+    private Cardinality resolveAssociation(String min, String max, List<String> errorMessages){
 
-    // Mandatory One (1,1)
-    // Optional one (0,1)
-    // Many(0, N) (1,N) (2,N) (3,5)
+        var cardinalityMin = this.parseAssociationValue(min,errorMessages);
+        var cardinalityMax = this.parseAssociationValue(max,errorMessages);
 
-    public Cardinality resolveAssociation(String min, String max){
+        if(! errorMessages.isEmpty()) return null;
 
-        var cardinalityMin = this.parseAssociationValue(min);
-        var cardinalityMax = this.parseAssociationValue(max);
+        if(cardinalityMin < 0) errorMessages.add("The min cardinality is negative");
+        if(cardinalityMax < 0) errorMessages.add("The max cardinality is negative");
+        if(cardinalityMin == 0 && cardinalityMax == 0) errorMessages.add("The min and max cardinality are 0");
+        if(cardinalityMin > cardinalityMax) errorMessages.add("The min cardinality is greater than the max cardinality");
 
-        if(cardinalityMin == Cardinality.MandatoryOne && cardinalityMax == Cardinality.MandatoryOne)
-            return Cardinality.MandatoryOne;
+        if(cardinalityMin == 0 && cardinalityMax == 1) return Cardinality.OptionalOne;
+        if(cardinalityMin == 0 && cardinalityMax > 1) return Cardinality.Many;
+        if(cardinalityMin == 1 && cardinalityMax == 1) return Cardinality.MandatoryOne;
+        if(cardinalityMin == 1 && cardinalityMax > 1) return Cardinality.Many;
+        if(cardinalityMin > 1  && cardinalityMax > 1) return Cardinality.Many;
 
-        if(cardinalityMin == Cardinality.OptionalOne && cardinalityMax != Cardinality.Many)
-            return Cardinality.OptionalOne;
-
-        else
-            return Cardinality.Many;
+        errorMessages.add("The cardinality could not be parsed");
+        return null;
     }
 
-    private Cardinality parseAssociationValue(String value){
+    private int parseAssociationValue(String value, List<String> errorMessages){
 
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(value);
 
-        if(! matcher.matches()) throw new IllegalArgumentException();
+        if(! matcher.matches()) errorMessages.add("The cardinality " + value + " could not be parsed");
 
-        Cardinality cardinality;
+        int number = 0;
 
-        if(! matcher.group(alphabeticValue).isEmpty()) return Cardinality.Many;
+        if(! matcher.group(alphabeticValue).isEmpty()) number = Integer.MAX_VALUE;
 
-        else if(! matcher.group(numericValue).isEmpty()) {
-            int number = 0;
-            try{
-                //Check for stack overflow
-                number = Integer.parseInt(matcher.group(numericValue));
-            }
-            catch (NumberFormatException e ) {
-                number = Integer.MAX_VALUE;
-            }
-            finally {
-                if      (number > 1)  cardinality = Cardinality.Many;
-                else if (number == 1) cardinality = Cardinality.MandatoryOne;
-                else                  cardinality = Cardinality.OptionalOne;
-            }
+        else if(! matcher.group(numericValue).isEmpty())
+            number = getNumberOfValue(matcher.group(numericValue));
+
+        else errorMessages.add("The cardinality " + value + " could not be parsed");
+
+        return number;
+    }
+
+    private int getNumberOfValue(String val1){
+        int number;
+        try{
+            //Check for stack overflow
+            number = Integer.parseInt(val1);
         }
-
-        else throw new IllegalArgumentException();
-
-        return cardinality;
+        catch (NumberFormatException e ) {
+            number = Integer.MAX_VALUE;
+        }
+        return number;
     }
 
 
