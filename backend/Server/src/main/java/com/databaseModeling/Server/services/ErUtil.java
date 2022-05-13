@@ -3,19 +3,37 @@ package com.databaseModeling.Server.services;
 import com.databaseModeling.Server.model.EntityRelationAssociation;
 import com.databaseModeling.Server.model.EntityRelationElement;
 import com.databaseModeling.Server.model.ErType;
+import com.databaseModeling.Server.model.graph.GraphEdge;
 import com.databaseModeling.Server.model.graph.GraphNode;
 import com.databaseModeling.Server.model.tree.TreeNode;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ErUtil {
 
+    public static String resolveAssociationQualifiedName(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> edge){
+
+        var sourceDesc = resolveErTypeQualifiedName(edge.getSource());
+        var destDesc = resolveErTypeQualifiedName(edge.getDestination());
+
+        return MessageFormat.format("Association from {1} to {2}", sourceDesc, destDesc );
+
+    }
+
+    public static String resolveErTypeQualifiedName(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
+
+        var erData = resolveErData(erElement);
+        return MessageFormat.format("{1} with name {2}", erData.getErType().displayName, erData.getElementMetaInformation().getDisplayName() );
+    }
     public static ErType resolveErType(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
+
         return resolveErData(erElement).getErType();
     }
 
     public static EntityRelationElement resolveErData(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
+
         return erElement.getNodeData().getTreeData();
     }
 
