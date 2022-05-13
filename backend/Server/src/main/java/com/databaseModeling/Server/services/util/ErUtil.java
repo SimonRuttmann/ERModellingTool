@@ -41,6 +41,13 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
 
 
     //ENTITY UTIL
+
+    public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
+    resolveEntityById(String id, Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
+
+        return erGraph.graphNodes.stream().filter(node -> node.getId().equals(id)).findFirst().orElseThrow();
+    }
+
     /**
      * Returns all relations the given entity is connected to
      * @param entity The entity to query for

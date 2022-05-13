@@ -14,7 +14,11 @@ import static com.databaseModeling.Server.services.util.ErUtil.resolveRelationsO
 
 public class TransformManyToOneService implements ITransformManyToOneService {
 
-
+//Achtung min,max ist umgekehrt
+    // A - 1,N -AB - 1 - B
+    // 1 A hat n viele b
+    // 1 B hat 1 A
+    //Stimmt hier
     @Override
     public void transformManyToOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 

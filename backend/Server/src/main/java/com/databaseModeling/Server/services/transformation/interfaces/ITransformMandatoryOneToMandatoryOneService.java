@@ -1,4 +1,4 @@
-package com.databaseModeling.Server.services;
+package com.databaseModeling.Server.services.transformation.interfaces;
 
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;

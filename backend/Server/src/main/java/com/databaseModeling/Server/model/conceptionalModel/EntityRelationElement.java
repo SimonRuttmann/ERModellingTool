@@ -16,6 +16,28 @@ public class EntityRelationElement {
         isTransformed = transformed;
     }
 
+    //Optional! TODO
+    private boolean shouldBeMerged = false;
+
+    //Optional! TODO
+    private String owningSide;
+
+    public boolean isShouldBeMerged() {
+        return shouldBeMerged;
+    }
+
+    public void setShouldBeMerged(boolean shouldBeMerged) {
+        this.shouldBeMerged = shouldBeMerged;
+    }
+
+    public String getOwningSide() {
+        return owningSide;
+    }
+
+    public void setOwningSide(String owningSide) {
+        this.owningSide = owningSide;
+    }
+
     private ErType erType;
     public ErType getErType() { return erType; }
     public void setErType(ErType erType) {
