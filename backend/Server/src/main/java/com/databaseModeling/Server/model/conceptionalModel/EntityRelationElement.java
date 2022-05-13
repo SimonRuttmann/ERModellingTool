@@ -6,6 +6,16 @@ import com.databaseModeling.Server.model.relationalModel.TableManager;
 
 public class EntityRelationElement {
 
+    private boolean isTransformed = false;
+
+    public boolean isTransformed() {
+        return isTransformed;
+    }
+
+    public void setTransformed(boolean transformed) {
+        isTransformed = transformed;
+    }
+
     private ErType erType;
     public ErType getErType() { return erType; }
     public void setErType(ErType erType) {
