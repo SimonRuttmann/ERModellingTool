@@ -1,5 +1,6 @@
 package com.databaseModeling.Server.services.util;
 
+import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
@@ -94,5 +95,41 @@ public class ErUtil {
                 filter(node -> !node.equals(originEntity)).
                 collect(Collectors.toList());
 
+    }
+
+
+    private static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    ResolveTypesConnectedToIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure, AssociationType type){
+
+        return  isAStructure.
+                getEdges().
+                stream().
+                filter(edge -> edge.getEdgeData().getAssociationType() == type).
+                map(edge -> edge.getOtherSide(isAStructure)).
+                collect(Collectors.toList());
+    }
+
+    /**
+     * Resolves all inheritors of the given IsA Structure
+     * @param isAStructure The IsA Structure to query for
+     * @return All inheritors of the isA Structure
+     */
+    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    ResolveInheritorsOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
+
+        return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Inheritor);
+    }
+
+    //TODO VALIDATION IF ISA HAS NO BASE
+
+    /**
+     * Resolves the base entity of the given IsA Structure
+     * @param isAStructure The IsA Structure to query for
+     * @return The base of the isA Structure
+     */
+    public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
+    ResolveBaseOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
+
+        return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Base).stream().findFirst().orElseThrow();
     }
 }

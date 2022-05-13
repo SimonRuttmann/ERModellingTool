@@ -10,8 +10,9 @@ public interface ICardinalityResolverService {
 
     /**
      * Resolves the cardinality of every association with AssociationType.Association
-     * @param erGraph
-     * @param validationResult
+     * @param erGraph The graph to transform
+     * @param validationResult The validation result containing all errors/warning occured during execution
+     * @see com.databaseModeling.Server.model.conceptionalModel.AssociationType#Association
      */
     void ResolveCardinalities(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph, ValidationResult validationResult);
 }

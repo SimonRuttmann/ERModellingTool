@@ -5,17 +5,14 @@ import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssocia
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
-import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
-import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformManyToManyService;
 
 import java.util.stream.Collectors;
 
-import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
-import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
-import static com.databaseModeling.Server.services.util.ErUtil.*;
+import static com.databaseModeling.Server.services.util.ErUtil.ResolveEntitiesConnectedToRelation;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveErType;
 
 public class TransformManyToManyService implements ITransformManyToManyService {
 
