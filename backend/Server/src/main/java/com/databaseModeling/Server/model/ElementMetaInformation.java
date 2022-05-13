@@ -15,4 +15,11 @@ public class ElementMetaInformation {
     private String height;
     private String width;
     private String displayName;
+
+    public String getDisplayName(){
+        if(displayName == null || displayName.isEmpty() || displayName.isBlank()){
+            return "No name given";
+        }
+        return displayName;
+    }
 }
