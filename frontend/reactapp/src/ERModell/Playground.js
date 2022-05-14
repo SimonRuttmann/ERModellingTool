@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
@@ -9,9 +9,8 @@ import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
 
-const PlayGround = ({sendDrawBoardData, importedContent}) => {
+const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => {
   const updateConnections = useXarrow();
-
 
   /**
    * Schema for drawBoardElements
@@ -27,7 +26,7 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
    * erType: erType
    */
   const [drawBoardElements, setDrawBoardElements] = useState([]);
-
+  
   /**
    * Schema for connections
    * id: `${idStart} --> ${idEnd} - ${Date.now()}`,
@@ -41,6 +40,10 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
    */
   const [connections, setConnections] = useState([]);
 
+  console.log(drawBoardElements)
+
+
+
   //Adding the default display name based on this counter
   const [counter, setCounter] = useState(0);
 
@@ -50,17 +53,52 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
   //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
 
-//TODO Test import, export
-  if(importedContent.drawBoardContent != null && connections.length === 0){
-    console.log("importing:..")
-    setConnections(() => [
-      ...importedContent.drawBoardContent.connections
-    ])
 
-    setDrawBoardElements(() => [
-      ...importedContent.drawBoardContent.elements
-    ])
-  }
+  /**
+   * Synchronize data with parent for download and transformation
+   */
+  useEffect( () => {
+    console.log("syncing content")
+    syncErContent(drawBoardElements, connections);
+  },[drawBoardElements, connections, syncErContent])
+
+
+  /**
+   *
+   */
+  useEffect( () => {
+
+
+    console.log("start import")
+    if(importedContent == null) return;
+    console.log("IMPORT ")
+    console.log(importedContent)
+    if(importedContent.drawBoardContent != null){
+      console.log("importing:..")
+
+
+        console.log("Import connections: " )
+        console.log(importedContent.drawBoardContent.connections)
+       if(Array.isArray(importedContent.drawBoardContent.connections)) {
+         setConnections(() => [
+           ...importedContent.drawBoardContent.connections
+         ])
+       }
+
+
+        console.log("Import draw board elements: " )
+        console.log(importedContent.drawBoardContent.elements)
+      if(Array.isArray(importedContent.drawBoardContent.connections)) {
+        setDrawBoardElements(() => [
+          ...importedContent.drawBoardContent.elements
+        ])
+      }
+      triggerImportComplete()
+
+    }
+
+  },[importedContent, triggerImportComplete])
+
 
   const onCanvasSelected = () => {
 
@@ -467,6 +505,7 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
     let currentPagesHorizontal = amountBackgroundPages.horizontal;
     let currentPagesVertical = amountBackgroundPages.vertical;
 
+    //TODO multiple set states
     let updatedIncreasedPages = increasePageIfNecessary(elementX, elementY, currentPagesHorizontal, currentPagesVertical)
 
     let updatedPages = decreasePageIfNecessary(updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
@@ -509,6 +548,7 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
 
   }
 
+
   function decreasePageIfNecessary(pagesHorizontal, pagesVertical){
 
     //Get highest x and highest y, which are required to fit within the pages
@@ -516,6 +556,7 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
     let maxX = 0;
     let maxY = 0;
 
+    //TODO bei delete wird der state gesetzt, hier ist der state aber noch "effektiv". drawboardElements müssen über parameter übergeben werden
     drawBoardElements.forEach( element => {
       if(element.x>maxX) maxX = element.x
       if(element.y>maxY) maxY = element.y
@@ -586,6 +627,12 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
    * @type {React.MutableRefObject<null>}
    */
   const mostOuterDiagramDivRef = useRef(null)
+                                                      // |                   Render                                                   |
+  //We use useLayoutEffect  (AnyStateChange, PropChange) | -> Calculate Dom measurements -> run useLayoutEffect -> prints dom to screen  -> use effect
+  // 1. Runs synchronously after react has performed all dom mutations ! Runs before the dom is printed to the screen
+  // In contrast, useEffect runs after react render
+  // If the effect would mutate the dom (via a dom node ref) and the dom mutation will change the appreacreade of the dom node
+  // We need useLayoutEffect, as use Effect would cause a "flicker" when your dom mutations take effect
 
   /**
    * If the background pages are not greater than the viewport, the svg area is set
@@ -683,7 +730,7 @@ const PlayGround = ({sendDrawBoardData, importedContent}) => {
           <svg
             id="boxesContainer"
             className="drawboardDragArea"
-            onDragOver={(e) => e.preventDefault()}
+            onDragOver={(e) => e.preventDefault()} //enable "dropping"
             onDrop={(e) => addDrawBoardElement(e)}
             style={{
               position: "absolute",
