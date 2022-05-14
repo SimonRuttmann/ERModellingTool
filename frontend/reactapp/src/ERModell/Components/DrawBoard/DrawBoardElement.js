@@ -103,6 +103,11 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
          onStop ={onStop}
          grid={[1, 1]}
          scale={1}
+          //This is necessary to allow multiple uploads of the same file
+          //If a file is imported and objects are moved around and the same file is again imported, then
+          //the elements' id did not change, therefore the default position will not have any effect and the elements
+          //will stay on the same position as before
+         position={{x: thisObject.x, y: thisObject.y}}
          defaultPosition={{x: thisObject.x, y: thisObject.y}}>
 
         <g

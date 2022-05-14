@@ -10,7 +10,7 @@ import Xarrow from 'react-xarrows';
  */
 const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) => {
 
-    console.log("update")
+
 
     let arrowColor = "black"
     if(thisConnection.isSelected) arrowColor="red"
