@@ -260,6 +260,44 @@ evlt benötigt: Element.scrollIntoView()
   margin-bottom: 40px;
 }
 
+input[type="file"] {
+  display: none;
+}
+.uploadButton{
+  float:right; display:inline;
+  text-align: unset;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin: 10px 10px 10px 10px;
+}
+
+.downloadButton{
+  float:right; display:inline;
+  text-align: unset;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin: 10px 50px 10px 10px;
+}
+
+.Head{
+  text-align: unset;
+  justify-content: center;
+  height: 60px;
+  min-height: 60px;
+  width: 100%;
+  min-width: 100%;
+  background-color: #222222;
+}
+
+
+
+
+
+
+
+
 .anotherS{
   width:300px;
   background: rgb(220, 240, 250);

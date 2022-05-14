@@ -2,6 +2,8 @@
 import './App.css';
 import PlayGround from './ERModell/Playground';
 import {useRef, useState} from "react";
+import downloadIcon from './Resources/cloud-download.svg'
+import uploadIcon from './Resources/cloud-upload.svg'
 import React from "react";
 
 function ContentManager() {
@@ -51,8 +53,10 @@ function ContentManager() {
 
     return (
         <div className="App">
-            <Download erContent={erContent}/>
-            <Upload importDrawBoardData={importDrawBoardData}/>
+            <div className="Head">
+                <Download erContent={erContent}/>
+                <Upload importDrawBoardData={importDrawBoardData}/>
+            </div>
             <PlayGround syncErContent={syncErContent} importedContent = {importedContent} triggerImportComplete={triggerImportComplete}/>
         </div>
     )
@@ -86,10 +90,11 @@ export function Download({erContent}){
         document.body.removeChild(link);
 
     }
-
+//     <button onClick={download} className="downloadButton">Download</button>
     return (
         <React.Fragment>
-            <button onClick={download}>Download</button>
+            <img src={downloadIcon} className="downloadButton" onClick={download} />
+
         </React.Fragment>
     );
 }
@@ -115,7 +120,10 @@ export function Upload({ importDrawBoardData }) {
 
     return (
         <React.Fragment>
-            <input type="file" onChange={handleChange} onClick={resetValue} />
+            <label htmlFor="file-upload">
+                <img src={uploadIcon} className="uploadButton"/>
+            </label>
+            <input id="file-upload" type="file" onChange={handleChange} onClick={resetValue} className="uploadButton"/>
         </React.Fragment>
     );
 }
