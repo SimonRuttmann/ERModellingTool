@@ -1,5 +1,4 @@
-import React, {useLayoutEffect, useRef, useState} from "react";
-import DrawBoardElement from "./Components/DrawBoard/DrawBoardElement";
+import React, {useLayoutEffect, useState} from "react";
 
 /**
  * BackgroundPageSize:
@@ -91,8 +90,7 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
             width: svgWidth
         }))
 
-    },
-    [
+    }, [
         amountBackgroundPages.horizontal,
         amountBackgroundPages.vertical,
         backgroundPageSize.horizontal,

@@ -1,11 +1,10 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
 import {useXarrow, Xwrapper} from 'react-xarrows';
-import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from './ErType';
-import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
+import {ERTYPE} from './ErType';
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
 import BackgroundPaging from "./BackgroundPaging";
@@ -276,8 +275,6 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
     setSelectedObjectId(null)
 
-    let elements = drawBoardElements.filter((element) => !(element.id === elementId));
-
   }
 
 
@@ -481,6 +478,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
                           backgroundPageSize={ {vertical: oneBackgroundPageVertical, horizontal: oneBackgroundPageHorizontal}}
                           amountBackgroundPages={amountBackgroundPages}
+                          drawBoardBorderOffset={drawBoardBorderOffset}
 
                           addDrawBoardElement={addDrawBoardElement}>
 

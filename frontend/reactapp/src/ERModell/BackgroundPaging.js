@@ -1,5 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Download, Upload} from "../ContentManager";
+import React, {useEffect} from "react";
 
 const BackgroundPaging = React.forwardRef (({elements, children,amountBackgroundPages, setAmountBackgroundPages}, ref) => {
 
@@ -35,41 +34,6 @@ const BackgroundPaging = React.forwardRef (({elements, children,amountBackground
         }
     }
 
-    /**
-     * Standalone function to decrease the bounds,
-     * e.g. minimize the amount of pages displayed, if possible
-     * @required drawBoardElements elements inside the draw board need to be added to the state
-     * @see drawBoardElements
-     * @see setDrawBoardElements
-     */
-    function decreaseBounds(elements){
-
-        let updatedPages = decreasePageIfNecessary(elements, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
-
-        setAmountBackgroundPages(() => ({
-            horizontal: updatedPages.horizontal,
-            vertical: updatedPages.vertical
-        }))
-    }
-
-
-    /**
-     * Standalone function to increase the bounds,
-     * e.g. increase the amount of pages displayed,
-     * when the given coordinates are outside of displayed pages
-     * The element does not need to be added to the state already
-     * @param elementX The x-Coordinate of the element
-     * @param elementY The y-Coordinate of the element
-     */
-    function increaseBounds(elementX, elementY){
-        let updatedPages = increasePageIfNecessary(elementX, elementY, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
-
-        setAmountBackgroundPages(() => ({
-            horizontal: updatedPages.horizontal,
-            vertical: updatedPages.vertical
-        }))
-
-    }
 
     /**
      * Function to increase or decrease the amount of pages
