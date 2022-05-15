@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Download, Upload} from "../ContentManager";
 
-const BackgroundPaging = React.forwardRef (({elements, children}, ref) => {
+const BackgroundPaging = React.forwardRef (({elements, children,amountBackgroundPages, setAmountBackgroundPages}, ref) => {
 
     useEffect( () => {
         console.log("Adjust bounds")
@@ -26,7 +26,7 @@ const BackgroundPaging = React.forwardRef (({elements, children}, ref) => {
     const oneBackgroundPageVertical = 810;
     const oneBackgroundPageHorizontal = 576;
 
-    const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
+
 
     function getBackgroundPageBounds(pagesHorizontal, pagesVertical) {
         return {

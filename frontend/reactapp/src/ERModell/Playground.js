@@ -428,8 +428,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   // 1. Add with and height properties to "drawBoardElement" (depending on text, width is dynamic),
   // 2. resolve elements instead of positions,
   // 3. apply offsets
-  const elementWidthOffset = 150;
-  const elementHeightOffset = 75;
+
 
 
   const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
@@ -437,13 +436,6 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   const oneBackgroundPageHorizontal = 576;
 
   const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
-
-  function getBackgroundPageBounds(pagesHorizontal, pagesVertical) {
-    return {
-      x: drawBoardBorderOffset + pagesHorizontal * oneBackgroundPageHorizontal,
-      y: drawBoardBorderOffset + pagesVertical * oneBackgroundPageVertical
-    }
-  }
 
 
 
@@ -534,7 +526,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
     <div>
 
 
-      <Xwrapper>
+
         <div className="canvasStyle" id="canvas" onClick={() => onCanvasSelected(null)}>
 
 
@@ -569,10 +561,10 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
 
         {/* The draw board   */}
-
+          <Xwrapper>
         <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef} onScroll={updateConnections}>
 
-          <BackgroundPaging elements={drawBoardElements}  ref={backgroundPageRef}/>
+          <BackgroundPaging elements={drawBoardElements} amountBackgroundPages={amountBackgroundPages} setAmountBackgroundPages={setAmountBackgroundPages}  ref={backgroundPageRef}/>
 
 
           <svg
@@ -606,7 +598,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
           </svg>
 
         </div>
-
+      </Xwrapper>
 
 
           {/* The right bar, used for editing the elements in the draw board */}
@@ -629,7 +621,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
           ))}
 
         </div>
-      </Xwrapper>
+
     </div>
   );
 };
