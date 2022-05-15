@@ -64,6 +64,17 @@ export const ERTYPENAME = {
     IsAStructure:               "IsAStructure"
 };
 
+const erType_displayName = {
+    IdentifyingAttribute:       "Identifying Attribute",
+    NormalAttribute:            "Normal Attribute",
+    MultivaluedAttribute:       "Multivalued Attribute",
+    WeakIdentifyingAttribute:   "Weak Identifying Attribute",
+    StrongEntity:               "Strong Entity",
+    WeakEntity:                 "Weak Entity",
+    StrongRelation:             "Strong Relation",
+    WeakRelation:               "Weak Relation",
+    IsAStructure:               "IsA-Structure"
+}
 
 const erType_DraggableIcon = {
     IdentifyingAttribute:       <img src={IdentifyingAttributeDragBarSvg}       draggable className="leftSideBarElementImage" alt={"IdentifyingAttribute"}/>,
@@ -176,6 +187,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.IdentifyingAttribute,
             toolTipDescription: erType_TooltipDescription.IdentifyingAttribute,
             toolTipImage: erType_TooltipImage.IdentifyingAttribute,
+            displayName: erType_displayName.IdentifyingAttribute,
         },
 
     NormalAttribute:
@@ -186,6 +198,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.NormalAttribute,
             toolTipDescription: erType_TooltipDescription.NormalAttribute,
             toolTipImage: erType_TooltipImage.NormalAttribute,
+            displayName: erType_displayName.NormalAttribute,
         },
 
     MultivaluedAttribute:
@@ -196,6 +209,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.MultivaluedAttribute,
             toolTipDescription: erType_TooltipDescription.MultivaluedAttribute,
             toolTipImage: erType_TooltipImage.MultivaluedAttribute,
+            displayName: erType_displayName.MultivaluedAttribute,
         },
 
     WeakIdentifyingAttribute:
@@ -206,6 +220,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.WeakIdentifyingAttribute,
             toolTipDescription: erType_TooltipDescription.WeakIdentifyingAttribute,
             toolTipImage: erType_TooltipImage.WeakIdentifyingAttribute,
+            displayName: erType_displayName.WeakIdentifyingAttribute,
         },
 
     StrongEntity:
@@ -216,6 +231,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.StrongEntity,
             toolTipDescription: erType_TooltipDescription.StrongEntity,
             toolTipImage: erType_TooltipImage.StrongEntity,
+            displayName: erType_displayName.StrongEntity,
         },
 
     WeakEntity:
@@ -226,6 +242,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.WeakEntity,
             toolTipDescription: erType_TooltipDescription.WeakEntity,
             toolTipImage: erType_TooltipImage.WeakEntity,
+            displayName: erType_displayName.WeakEntity,
         },
 
     StrongRelation:
@@ -236,6 +253,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.StrongRelation,
             toolTipDescription: erType_TooltipDescription.StrongRelation,
             toolTipImage: erType_TooltipImage.StrongRelation,
+            displayName: erType_displayName.StrongRelation,
         },
 
     WeakRelation:
@@ -246,6 +264,7 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.WeakRelation,
             toolTipDescription: erType_TooltipDescription.WeakRelation,
             toolTipImage: erType_TooltipImage.WeakRelation,
+            displayName: erType_displayName.WeakRelation,
         },
 
     IsAStructure:
@@ -256,5 +275,6 @@ export const ERTYPE = {
             toolTipTitle: erType_TooltipTitle.IsAStructure,
             toolTipDescription: erType_TooltipDescription.IsAStructure,
             toolTipImage: erType_TooltipImage.IsAStructure,
+            displayName: erType_displayName.IsAStructure,
         }
 }

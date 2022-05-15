@@ -278,3 +278,16 @@ input[type="file"] {
   background-color: #222222;
 }
 
+.rightBarCardinality{
+  background-color: #3c3f41;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #c8c8c8;
+  width: 40px;
+  min-width: 40px;
+  height: 30px;
+  font-size: 20px;
+  font-family: 'Ultra', sans-serif;
+  color:white;
+  margin: 20px 5% 50px 5%;  /* top, right, bot, left */
+}

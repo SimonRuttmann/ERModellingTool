@@ -22,29 +22,48 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 
       let otherObject = drawBoardElements.find(element => element.id === otherObjectId)
 
-      return {
-            displayName: otherObject.displayName,
-            type: otherObject.erType
-        }
+      let erTypeDisplayName = ERTYPE[otherObject.erType].displayName;
+      let displayName = erTypeDisplayName + ": " + otherObject.displayName
+
+
+      if(otherObject.erType === ERTYPE.IsAStructure.name){
+          displayName = erTypeDisplayName;
+      }
+
+      return displayName
 
     }
 
+    function filterAndSortConnections(){
+        return connections.filter(connection =>
+            connection.end === selectedObject.id ||
+            connection.start === selectedObject.id).
+            sort((a,b) => {
+                return a.id<b.id?-1:1
+            });
 
+    }
+
+    //TODO ... .map((connection,id) => (..... <div key = {...} ... ) überall einbauen
     const RelationMenu = () => {
         return (
 
             <React.Fragment>
 
-                <div>Associated to:</div>
+                {filterAndSortConnections().length > 0 ? <div>Associated to:</div> : <div>No associations</div> }
 
-                {connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id).map(connection => (
-                    <div>
-                        {getDisplayNameAndType(connection).type} : {getDisplayNameAndType(connection).displayName} <br/>
+                {filterAndSortConnections().map((connection,i) => (
+                    <div key={connection.id + " -- " + i}>
+                        {getDisplayNameAndType(connection)} <br/>
                         Min: <input
+                                className="rightBarCardinality"
                                 defaultValue={connection.min}
+                                maxLength={2}
                                 onChange={e => editConnectionNotation(connection.id, ConnectionCardinality.Min, e.target.value)}/>
                         Max: <input
+                                className="rightBarCardinality"
                                 defaultValue={connection.max}
+                                maxLength={2}
                                 onChange={e => editConnectionNotation(connection.id, ConnectionCardinality.Max, e.target.value)}/>
                     </div>
                 ))}
@@ -81,16 +100,16 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
             <React.Fragment>
 
                 <div>Inheritors to:</div>
-                {connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id).map(connection => (
+                {filterAndSortConnections().map(connection => (
                     <div>
-                        {getDisplayNameAndType(connection).type} : {getDisplayNameAndType(connection).displayName} <br/>
+                        {getDisplayNameAndType(connection)} <br/>
                     </div>
                 ))}
 
                 <p>Parent:</p>
-                {connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id).map(connection => (
+                {filterAndSortConnections().map(connection => (
                     <div>
-                        {getDisplayNameAndType(connection).type} : {getDisplayNameAndType(connection).displayName} <br/>
+                        {getDisplayNameAndType(connection)} <br/>
                     </div>
                 ))}
 
