@@ -561,9 +561,9 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
 
         {/* The draw board   */}
-          <Xwrapper>
-        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef} onScroll={updateConnections}>
 
+        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef} onScroll={updateConnections}>
+          <Xwrapper>
           <BackgroundPaging elements={drawBoardElements} amountBackgroundPages={amountBackgroundPages} setAmountBackgroundPages={setAmountBackgroundPages}  ref={backgroundPageRef}/>
 
 
@@ -597,8 +597,19 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
           </svg>
 
+            {connections.map((connection, i) => (
+                <ConnectionElement
+                    key={connection.id + " -- " + i}
+
+                    connections={connections}
+                    thisConnection={connection}
+                    onConnectionSelected={onConnectionSelected}
+
+                />
+            ))}
+          </Xwrapper>
         </div>
-      </Xwrapper>
+
 
 
           {/* The right bar, used for editing the elements in the draw board */}
@@ -609,16 +620,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
           {/* The connections of the elements inside the draw board */}
 
-          {connections.map((connection, i) => (
-            <ConnectionElement
-              key={connection.id + " -- " + i}
 
-              connections={connections}
-              thisConnection={connection}
-              onConnectionSelected={onConnectionSelected}
-
-            />
-          ))}
 
         </div>
 
