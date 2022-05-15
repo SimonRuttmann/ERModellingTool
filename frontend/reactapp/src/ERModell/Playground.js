@@ -431,11 +431,13 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
 
   const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-  const oneBackgroundPageVertical = 810;
-  const oneBackgroundPageHorizontal = 576;
 
   const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
 
+  const backgroundPageSize = {
+    vertical: 810,
+    horizontal: 576
+  }
 
   /**
    * reference to the background pages
@@ -468,6 +470,10 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
             <Xwrapper>
               <BackgroundPaging elements={drawBoardElements}
+
+                                backgroundPageSize={backgroundPageSize}
+                                drawBoardBorderOffset={drawBoardBorderOffset}
+
                                 amountBackgroundPages={amountBackgroundPages}
                                 setAmountBackgroundPages={setAmountBackgroundPages}
                                 ref={backgroundPageRef}/>
@@ -476,9 +482,10 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
               <SvgResizer mostOuterDiagramDivRef={mostOuterDiagramDivRef}
                           backgroundPageRef={backgroundPageRef}
 
-                          backgroundPageSize={ {vertical: oneBackgroundPageVertical, horizontal: oneBackgroundPageHorizontal}}
-                          amountBackgroundPages={amountBackgroundPages}
+                          backgroundPageSize={backgroundPageSize}
                           drawBoardBorderOffset={drawBoardBorderOffset}
+                          amountBackgroundPages={amountBackgroundPages}
+
 
                           addDrawBoardElement={addDrawBoardElement}>
 

@@ -150,22 +150,9 @@ body {
 }
 
 
-/* The background page / grid showed inside the drawable area*/
-
-/**
-Idee 1 Grr mauszeiger
-Wenn nach oben ein element verschoben wird, dann werden alle elemente direkt um die größe einer "ursprünglichen" background page nach unten verschoben
-
-Idee 2
-Nach oben ist immer die größe einer BackgroundPage frei, wenn die aktuelle page nach oben überschritten wird, dann wird oben eine neue seite erstellt.
-
-evlt benötigt: Element.scrollIntoView()
- */
-
-/* DIN-A4 Verhältnis 21 cm zu 29,7 cm*/
-/* height applied: height = 900 * amount of pages from top to bot    */
-/* width  applied: width  = 640 * amount of pages from left to right */
-.drawboardBackgroundPage {
+/* height applied: height = 810 * amount of pages from top to bot    */
+/* width  applied: width  = 576 * amount of pages from left to right */
+.drawBoardBackgroundPage {
   position: absolute !important;
   height: 3000px;
   width: 4000px;
@@ -191,7 +178,7 @@ evlt benötigt: Element.scrollIntoView()
 
 
 /* The area, where elements can be dragged inside */
-.drawboardDragArea {
+.drawBoardDragArea {
   position: absolute !important;
   height: 100%; /* 5000px --> scroll */
   width: 100%;   /* 5000px --> scroll */

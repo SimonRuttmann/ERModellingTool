@@ -64,6 +64,7 @@ export function SaveAndLoad({children, metaInformation}){
     const SaveAndLoadProps = {
         syncContent: syncContent,
         importedContent: importedContent,
+        //eslint-disable-next-line
         triggerImportComplete: triggerImportComplete
     }
 

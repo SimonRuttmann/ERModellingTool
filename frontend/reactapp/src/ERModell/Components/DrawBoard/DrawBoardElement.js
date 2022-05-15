@@ -34,7 +34,7 @@ import { resolveErComponent } from "../../ErType";
 
 const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, updateDrawBoardElementSize}) => {
 
-  const updateXarrow = useXarrow();
+  const updateConnections = useXarrow();
   const [isDragging, setDragging] = useState(false)
 
   //Define properties for er component
@@ -71,7 +71,7 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
 
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
 
-    updateXarrow();
+    updateConnections();
   }
 
   //Question: When the on Drag stop function is executed, there is a "mouseDown" event which will trigger the onClick event.
@@ -127,13 +127,3 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
 
 
 export default DrawBoardElement;
-
-/**
- *          bounds={
- *                   bounds ? {
- *                         left: boundsOffset,
- *                         top: bounds.top + boundsOffset ,
- *                         right: bounds.right-bounds.left - boundsElementWidth - boundsOffset ,
- *                         bottom: bounds.bottom -boundsElementHeight - boundsOffset}
- *                     : undefined}
- */

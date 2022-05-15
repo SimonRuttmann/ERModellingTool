@@ -1,13 +1,17 @@
 import React, {useEffect} from "react";
 
-const BackgroundPaging = React.forwardRef (({elements, children,amountBackgroundPages, setAmountBackgroundPages}, ref) => {
+const BackgroundPaging = React.forwardRef (({elements, children, drawBoardBorderOffset, backgroundPageSize, amountBackgroundPages, setAmountBackgroundPages}, ref) => {
 
     useEffect( () => {
 
         let pos = getMaxXAndYOfElements(elements);
         adjustBounds(pos.x, pos.y, elements)
 
-    },[elements])
+    },
+    //Justification: Performance increase, methods should not be used as callback,
+    //               as they would depend on properties which do not affect the callback
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    [elements])
 
 
     // *****************************  Handle page increment/decrement  *****************************
@@ -20,11 +24,8 @@ const BackgroundPaging = React.forwardRef (({elements, children,amountBackground
     const elementWidthOffset = 150;
     const elementHeightOffset = 75;
 
-
-    const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-    const oneBackgroundPageVertical = 810;
-    const oneBackgroundPageHorizontal = 576;
-
+    const oneBackgroundPageVertical = backgroundPageSize.vertical;
+    const oneBackgroundPageHorizontal = backgroundPageSize.horizontal;
 
 
     function getBackgroundPageBounds(pagesHorizontal, pagesVertical) {
@@ -167,29 +168,16 @@ const BackgroundPaging = React.forwardRef (({elements, children,amountBackground
 
         return amountPages - amountDecreaseOfPages
     }
-    //const backgroundPageRef = useRef(null)
 
-    //const Child = React.cloneElement(children)
-    //const backgroundPageSize = {
-    //    horizontal: oneBackgroundPageHorizontal,
-    //    vertical: oneBackgroundPageVertical
-    //}
-
-    //    <Child 
-    //        backgroundPageRef = {backgroundPageRef}
-    //        backgroundPageSize = {backgroundPageSize}
-    //        amountBackgroundPages = {amountBackgroundPages}
-    //        adjustBounds = {adjustBounds}/>
     return (
-            <div className="drawboardBackgroundPage"
+            <div className="drawBoardBackgroundPage"
                 ref={ref}
                 style={{
                     height: `${oneBackgroundPageVertical * amountBackgroundPages.vertical}px`,
                     width:  `${oneBackgroundPageHorizontal *  amountBackgroundPages.horizontal}px`
             }}/>
     )
-//Attempt 2
-    //    const Child = React.cloneElement(children, {backgroundPageRef: backgroundPageRef})
+
 });
 
 export default BackgroundPaging;

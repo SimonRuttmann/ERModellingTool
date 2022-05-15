@@ -27,24 +27,6 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
     })
 
     /**
-     * reference to the background pages
-     * @type {React.MutableRefObject<null>}
-     */
- //   const backgroundPageRef = useRef(null)
-
-    /**
-     * reference to the most outer div of the draw board element
-     * @type {React.MutableRefObject<null>}
-     */
-  //  const mostOuterDiagramDivRef = useRef(null)
-    // |                   Render                                                   |
-    //We use useLayoutEffect  (AnyStateChange, PropChange) | -> Calculate Dom measurements -> run useLayoutEffect -> prints dom to screen  -> use effect
-    // 1. Runs synchronously after react has performed all dom mutations ! Runs before the dom is printed to the screen
-    // In contrast, useEffect runs after react render
-    // If the effect would mutate the dom (via a dom node ref) and the dom mutation will change the appreacreade of the dom node
-    // We need useLayoutEffect, as use Effect would cause a "flicker" when your dom mutations take effect
-
-    /**
      * If the background pages are not greater than the viewport, the svg area is set
      * to a 100% - the offset of the svg on the top and left
      *
@@ -53,8 +35,6 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
      * background pages (with the border of the page area)
      */
     useLayoutEffect( () => {
-        //BackgroundPage
-
 
         if(backgroundPageRef.current == null ) return;
         if(mostOuterDiagramDivRef.current == null ) return;
@@ -62,7 +42,7 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
 
         //noinspection JSUnresolvedVariable Justification, variable is resolved
         let withPage = backgroundPageRef.current.offsetWidth;
-        //noinspection JSUnresolvedVariable
+        //noinspection JSUnresolvedVariable Justification, variable is resolved
         let heightPage = backgroundPageRef.current.offsetHeight;
 
         //The most outer div
@@ -90,7 +70,11 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
             width: svgWidth
         }))
 
-    }, [
+    },
+    //Justification: Performance increase, methods should not be used as callback,
+    //               as they would depend on properties which do not affect the callback
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    [
         amountBackgroundPages.horizontal,
         amountBackgroundPages.vertical,
         backgroundPageSize.horizontal,
@@ -99,11 +83,10 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
     ])
 
 
-
     return(
         <svg
             id="boxesContainer"
-            className="drawboardDragArea"
+            className="drawBoardDragArea"
             onDragOver={(e) => e.preventDefault()} //enable "dropping"
             onDrop={(e) => addDrawBoardElement(e)}
             style={{
@@ -116,7 +99,6 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
         >
             {children}
         </svg>
-
     )
 
 
