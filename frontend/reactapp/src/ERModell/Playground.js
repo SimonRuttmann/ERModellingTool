@@ -9,6 +9,7 @@ import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
 import BackgroundPaging from "./BackgroundPaging";
+import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 
 const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   const updateConnections = useXarrow();
@@ -523,107 +524,75 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   
 
   return (
+
     <div>
-
-
-
         <div className="canvasStyle" id="canvas" onClick={() => onCanvasSelected(null)}>
 
-
-
           {/* The left toolbar, containing the elements to drag into the draw board  */}
-
-          <div className="leftSidebarContainer">
-
-              <div className="leftSidebarSelectionContainer">
-
-                <div className="leftSidebarMainTitle">Er Objects</div>
-                <hr className="sidebarDivider"/>
-
-                <div className="leftSidebarTitle">Attributes</div>
-                <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.Attribute)}/>
-                <hr className="sidebarDivider"/>
-
-                <div className="leftSidebarTitle">Entities</div>
-                <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.Entity)}/>
-                <hr className="sidebarDivider"/>
-
-                <div className="leftSidebarTitle">Relations</div>
-                <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.Relation)}/>
-                <hr className="sidebarDivider"/>
-
-                <div className="leftSidebarTitle">IsA Structure</div>
-                <DragBarManager erTypes={returnNamesOfCategory(ERTYPECATEGORY.IsAStructure)}/>
-                <hr className="sidebarDivider"/>
-            </div>
-        </div>
+          <LeftSideBar/>
 
 
 
-        {/* The draw board   */}
+          {/* The draw board   */}
 
-        <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef} onScroll={updateConnections}>
-          <Xwrapper>
-          <BackgroundPaging elements={drawBoardElements} amountBackgroundPages={amountBackgroundPages} setAmountBackgroundPages={setAmountBackgroundPages}  ref={backgroundPageRef}/>
+          <div id="mostouter"
+               className="outerDrawboardContainer scrollAble"
+               ref={mostOuterDiagramDivRef}
+               onScroll={updateConnections}>
+
+            <Xwrapper>
+              <BackgroundPaging elements={drawBoardElements} amountBackgroundPages={amountBackgroundPages} setAmountBackgroundPages={setAmountBackgroundPages}  ref={backgroundPageRef}/>
 
 
-          <svg
-            id="boxesContainer"
-            className="drawboardDragArea"
-            onDragOver={(e) => e.preventDefault()} //enable "dropping"
-            onDrop={(e) => addDrawBoardElement(e)}
-            style={{
-              position: "absolute",
-              left: `${drawBoardBorderOffset}px`,
-              top: `${drawBoardBorderOffset}px`,
-              height: svgSize.height,
-              width:  svgSize.width
-            }}
+              <svg
+                id="boxesContainer"
+                className="drawboardDragArea"
+                onDragOver={(e) => e.preventDefault()} //enable "dropping"
+                onDrop={(e) => addDrawBoardElement(e)}
+                style={{
+                  position: "absolute",
+                  left: `${drawBoardBorderOffset}px`,
+                  top: `${drawBoardBorderOffset}px`,
+                  height: svgSize.height,
+                  width:  svgSize.width
+                }}
+              >
 
-          >
+                {drawBoardElements.map((drawBoardElement) => (
+                  <DrawBoardElement  key={drawBoardElement.id}
 
-            {drawBoardElements.map((drawBoardElement) => (
-              <DrawBoardElement  key={drawBoardElement.id}
+                                     onDrawBoardElementSelected={onDrawBoardElementSelected}
+                                     updateDrawBoardElementPosition={updateDrawBoardElementPosition}
 
-                                 onDrawBoardElementSelected={onDrawBoardElementSelected}
-                                 updateDrawBoardElementPosition={updateDrawBoardElementPosition}
+                                     thisObject={drawBoardElement}
+                                     updateDrawBoardElementSize = {updateDrawBoardElementSize}
 
-                                 thisObject={drawBoardElement}
-                                 updateDrawBoardElementSize = {updateDrawBoardElementSize}
-
-                                 svgBounds={drawBoardBorderOffset}
+                                    svgBounds={drawBoardBorderOffset}
                                  />
-            ))}
+                ))}
 
-          </svg>
+              </svg>
 
-            {connections.map((connection, i) => (
-                <ConnectionElement
-                    key={connection.id + " -- " + i}
+              {/* The connections of the elements inside the draw board */}
+              {connections.map((connection, i) => (
+                  <ConnectionElement
+                      key={connection.id + " -- " + i}
 
-                    connections={connections}
-                    thisConnection={connection}
-                    onConnectionSelected={onConnectionSelected}
+                      connections={connections}
+                      thisConnection={connection}
+                      onConnectionSelected={onConnectionSelected}
 
-                />
-            ))}
-          </Xwrapper>
-        </div>
+                  />
+              ))}
 
+            </Xwrapper>
 
+          </div>
 
           {/* The right bar, used for editing the elements in the draw board */}
-
           <RightBar {...rightBarProps} />
 
-
-
-          {/* The connections of the elements inside the draw board */}
-
-
-
         </div>
-
     </div>
   );
 };
