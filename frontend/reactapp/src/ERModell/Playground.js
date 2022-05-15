@@ -10,6 +10,7 @@ import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
 import BackgroundPaging from "./BackgroundPaging";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
+import SvgResizer from "./SvgResizer";
 
 const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   const updateConnections = useXarrow();
@@ -439,28 +440,6 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
 
 
-
-
-
-
-
-
-
-
-
-
-
-  // *****************************  Handle svg size  *****************************
-
-  /**
-   * The svg size must be adjusted depending on the size of the area covered by the background pages
-   * The size itself is stored within this state
-   */
-  const [svgSize, setSvgSize] = useState({
-    width: `calc(100% - ${drawBoardBorderOffset}px)`,
-    height: `calc(100% - ${drawBoardBorderOffset}px)`
-  })
-
   /**
    * reference to the background pages
    * @type {React.MutableRefObject<null>}
@@ -472,56 +451,6 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
    * @type {React.MutableRefObject<null>}
    */
   const mostOuterDiagramDivRef = useRef(null)
-                                                      // |                   Render                                                   |
-  //We use useLayoutEffect  (AnyStateChange, PropChange) | -> Calculate Dom measurements -> run useLayoutEffect -> prints dom to screen  -> use effect
-  // 1. Runs synchronously after react has performed all dom mutations ! Runs before the dom is printed to the screen
-  // In contrast, useEffect runs after react render
-  // If the effect would mutate the dom (via a dom node ref) and the dom mutation will change the appreacreade of the dom node
-  // We need useLayoutEffect, as use Effect would cause a "flicker" when your dom mutations take effect
-
-  /**
-   * If the background pages are not greater than the viewport, the svg area is set
-   * to a 100% - the offset of the svg on the top and left
-   *
-   * If the background pages increase and create an overflow in the parent element
-   * the svg is increased to the size of the area, provided by the
-   * background pages (with the border of the page area)
-   */
-  useLayoutEffect( () => {
-    //BackgroundPage
-
-    //noinspection JSUnresolvedVariable Justification, variable is resolved
-    let withPage = backgroundPageRef.current.offsetWidth;
-    //noinspection JSUnresolvedVariable
-    let heightPage = backgroundPageRef.current.offsetHeight;
-
-    //The most outer div
-
-    //noinspection JSUnresolvedVariable Justification, variable is resolved
-    let mostOuterWidth = mostOuterDiagramDivRef.current.offsetWidth;
-    //noinspection JSUnresolvedVariable Justification, variable is resolved
-    let mostOuterHeight = mostOuterDiagramDivRef.current.offsetHeight;
-
-    //Set the size to 100% - the offset of the svg to the left and top
-    let svgWidth = `calc(100% - ${drawBoardBorderOffset}px)`;
-    let svgHeight = `calc(100% - ${drawBoardBorderOffset}px)`;
-
-    //Override the size, if the background page is greater than the 100% - offset (== pages overflow)
-    if(withPage + oneBackgroundPageHorizontal > mostOuterWidth){
-      svgWidth = `${oneBackgroundPageHorizontal * amountBackgroundPages.horizontal + + oneBackgroundPageHorizontal}px`
-    }
-    
-    if(heightPage + oneBackgroundPageVertical > mostOuterHeight){
-      svgHeight = `${oneBackgroundPageVertical * amountBackgroundPages.vertical + oneBackgroundPageVertical}px`
-    }
-
-    setSvgSize(()=> ({
-        height: svgHeight, 
-        width: svgWidth
-      }))
-    
-    }, [amountBackgroundPages.horizontal, amountBackgroundPages.vertical])
-  
 
   return (
 
@@ -541,37 +470,33 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
                onScroll={updateConnections}>
 
             <Xwrapper>
-              <BackgroundPaging elements={drawBoardElements} amountBackgroundPages={amountBackgroundPages} setAmountBackgroundPages={setAmountBackgroundPages}  ref={backgroundPageRef}/>
+              <BackgroundPaging elements={drawBoardElements}
+                                amountBackgroundPages={amountBackgroundPages}
+                                setAmountBackgroundPages={setAmountBackgroundPages}
+                                ref={backgroundPageRef}/>
 
 
-              <svg
-                id="boxesContainer"
-                className="drawboardDragArea"
-                onDragOver={(e) => e.preventDefault()} //enable "dropping"
-                onDrop={(e) => addDrawBoardElement(e)}
-                style={{
-                  position: "absolute",
-                  left: `${drawBoardBorderOffset}px`,
-                  top: `${drawBoardBorderOffset}px`,
-                  height: svgSize.height,
-                  width:  svgSize.width
-                }}
-              >
+              <SvgResizer mostOuterDiagramDivRef={mostOuterDiagramDivRef}
+                          backgroundPageRef={backgroundPageRef}
+
+                          backgroundPageSize={ {vertical: oneBackgroundPageVertical, horizontal: oneBackgroundPageHorizontal}}
+                          amountBackgroundPages={amountBackgroundPages}
+
+                          addDrawBoardElement={addDrawBoardElement}>
 
                 {drawBoardElements.map((drawBoardElement) => (
-                  <DrawBoardElement  key={drawBoardElement.id}
+                    <DrawBoardElement  key={drawBoardElement.id}
 
-                                     onDrawBoardElementSelected={onDrawBoardElementSelected}
-                                     updateDrawBoardElementPosition={updateDrawBoardElementPosition}
+                                       onDrawBoardElementSelected={onDrawBoardElementSelected}
+                                       updateDrawBoardElementPosition={updateDrawBoardElementPosition}
 
-                                     thisObject={drawBoardElement}
-                                     updateDrawBoardElementSize = {updateDrawBoardElementSize}
+                                       thisObject={drawBoardElement}
+                                       updateDrawBoardElementSize = {updateDrawBoardElementSize}
 
-                                    svgBounds={drawBoardBorderOffset}
-                                 />
+                                       svgBounds={drawBoardBorderOffset}
+                    />
                 ))}
-
-              </svg>
+              </SvgResizer>
 
               {/* The connections of the elements inside the draw board */}
               {connections.map((connection, i) => (

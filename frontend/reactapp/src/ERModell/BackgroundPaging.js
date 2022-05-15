@@ -4,8 +4,8 @@ import {Download, Upload} from "../ContentManager";
 const BackgroundPaging = React.forwardRef (({elements, children,amountBackgroundPages, setAmountBackgroundPages}, ref) => {
 
     useEffect( () => {
-        console.log("Adjust bounds")
-        var pos = getMaxXAndYOfElements(elements);
+
+        let pos = getMaxXAndYOfElements(elements);
         adjustBounds(pos.x, pos.y, elements)
 
     },[elements])
@@ -91,12 +91,10 @@ const BackgroundPaging = React.forwardRef (({elements, children,amountBackground
         //TODO multiple set states
         let updatedIncreasedPages = increasePageIfNecessary(elementX, elementY, currentPagesHorizontal, currentPagesVertical)
 
-        console.log("increase")
-        console.log(updatedIncreasedPages)
+
         let updatedPages = decreasePageIfNecessary(elements, updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
 
-        console.log("decrease")
-        console.log(updatedPages)
+
 
         setAmountBackgroundPages(() => ({
             horizontal: updatedPages.horizontal,
@@ -116,7 +114,7 @@ const BackgroundPaging = React.forwardRef (({elements, children,amountBackground
         let horizontal = pagesHorizontal;
         let vertical = pagesVertical;
 
-        console.log("Before WHILE")
+
         while (x > page.x || y > page.y){
 
 

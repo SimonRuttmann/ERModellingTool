@@ -16,7 +16,7 @@ import DrawBoardElement from "./Components/DrawBoard/DrawBoardElement";
  * @param amountBackgroundPages
  * @constructor
  */
-const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBoardBorderOffset, backgroundPageSize, amountBackgroundPages}) => {
+const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBoardBorderOffset, backgroundPageSize, amountBackgroundPages, addDrawBoardElement}) => {
     
     /**
      * The svg size must be adjusted depending on the size of the area covered by the background pages
@@ -55,6 +55,11 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
      */
     useLayoutEffect( () => {
         //BackgroundPage
+
+
+        if(backgroundPageRef.current == null ) return;
+        if(mostOuterDiagramDivRef.current == null ) return;
+
 
         //noinspection JSUnresolvedVariable Justification, variable is resolved
         let withPage = backgroundPageRef.current.offsetWidth;
@@ -95,18 +100,7 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
         drawBoardBorderOffset
     ])
 
-    const styleProps= {
-        position: "absolute",
-        left: `${drawBoardBorderOffset}px`,
-        top: `${drawBoardBorderOffset}px`,
-        height: svgSize.height,
-        width:  svgSize.width
-    }
 
-    const CardHead = props =>
-        <div>
-            {children}
-        </div>
 
     return(
         <svg
@@ -115,13 +109,12 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
             onDragOver={(e) => e.preventDefault()} //enable "dropping"
             onDrop={(e) => addDrawBoardElement(e)}
             style={{
-                position: "absolute",                   //TODO
+                position: "absolute",
                 left: `${drawBoardBorderOffset}px`,
                 top: `${drawBoardBorderOffset}px`,
                 height: svgSize.height,
                 width:  svgSize.width
             }}
-
         >
             {children}
         </svg>
@@ -130,3 +123,5 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
 
 
 }
+
+export default SvgResizer;
