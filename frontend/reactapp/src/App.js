@@ -1,7 +1,7 @@
 
 import './App.css';
 import React from "react";
-import ContentManager from "./ContentManager";
+import ContentManager from "./ContentManager/ContentManager";
 
 function App() {
 
