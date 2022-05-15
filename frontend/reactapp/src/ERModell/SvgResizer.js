@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 
 /**
  * BackgroundPageSize:
@@ -27,6 +27,54 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
     })
 
     /**
+     * Method to create rerender when the window is resized
+     */
+    const [, setDimensions] = useState({height: window.innerHeight, width: window.innerWidth})
+
+    /**
+     * Method to schedule functions
+     * @param fn The function to execute after a given time
+     * @param ms The amount of time in ms
+     * @returns {(function(*): void)|*}
+     */
+    function debounce(fn, ms) {
+        let timer
+        return _ => {
+            clearTimeout(timer)
+            timer = setTimeout(_ => {
+                timer = null
+                fn.apply(this, arguments)
+            }, ms)
+        };
+    }
+
+    /**
+     * This useEffect is used to detect window resizing (zoom, or making the window smaller)
+     * After a window resize is detected it will trigger a rerender, required for useLayoutEffect
+     * to resize the svg correctly
+     * The method is debounced with 200ms to increase performance
+     */
+    useEffect( () => {
+        console.log("hallo?")
+        const debouncedHandleResize = debounce(function handleResize() {
+            setDimensions({
+                height: window.innerHeight,
+                width: window.innerWidth
+            })
+        }, 200)
+
+        window.addEventListener('resize', debouncedHandleResize)
+
+
+        return () => {
+            window.removeEventListener('resize', debouncedHandleResize)
+
+        }
+    })
+
+
+
+    /**
      * If the background pages are not greater than the viewport, the svg area is set
      * to a 100% - the offset of the svg on the top and left
      *
@@ -36,6 +84,8 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
      */
     useLayoutEffect( () => {
 
+
+        console.log("Layout Effect")
         if(backgroundPageRef.current == null ) return;
         if(mostOuterDiagramDivRef.current == null ) return;
 
@@ -52,6 +102,13 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
         //noinspection JSUnresolvedVariable Justification, variable is resolved
         let mostOuterHeight = mostOuterDiagramDivRef.current.offsetHeight;
 
+            console.log("Most outer widht, height")
+            console.log(mostOuterHeight)
+            console.log(mostOuterWidth)
+
+        console.log("WidthPage")
+        console.log(withPage)
+        console.log(heightPage)
         //Set the size to 100% - the offset of the svg to the left and top
         let svgWidth = `calc(100% - ${drawBoardBorderOffset}px)`;
         let svgHeight = `calc(100% - ${drawBoardBorderOffset}px)`;
