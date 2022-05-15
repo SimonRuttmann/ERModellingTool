@@ -106,7 +106,7 @@ body {
 }
 
 /* The main outer drawboard container */
-.outerDrawboardContainer {
+.outerDrawBoardContainer {
   position: absolute !important;
   display: block;
   left: 300px;

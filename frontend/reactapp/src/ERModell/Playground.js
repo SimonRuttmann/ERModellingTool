@@ -1,18 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
-import {useXarrow, Xwrapper} from 'react-xarrows';
 import {ERTYPE} from './ErType';
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
-import BackgroundPaging from "./BackgroundPaging";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
-import SvgResizer from "./SvgResizer";
+import DrawBoard from "./DrawBoard";
 
 const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
-  const updateConnections = useXarrow();
+
 
   /**
    * Schema for drawBoardElements
@@ -420,37 +418,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   }
 
 
-  // *****************************  Handle page increment/decrement  *****************************
-
-  //TODO replace with correct values of er elements
-  //Work:
-  // 1. Add with and height properties to "drawBoardElement" (depending on text, width is dynamic),
-  // 2. resolve elements instead of positions,
-  // 3. apply offsets
-
-
-
-  const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-
-  const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
-
-  const backgroundPageSize = {
-    vertical: 810,
-    horizontal: 576
-  }
-
-  /**
-   * reference to the background pages
-   * @type {React.MutableRefObject<null>}
-   */
-  const backgroundPageRef = useRef(null)
-
-  /**
-   * reference to the most outer div of the draw board element
-   * @type {React.MutableRefObject<null>}
-   */
-  const mostOuterDiagramDivRef = useRef(null)
-
+  const drawBoardBorderOffset = 30;
   return (
 
     <div>
@@ -460,65 +428,38 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
           <LeftSideBar/>
 
 
-
           {/* The draw board   */}
+          <DrawBoard onDropHandler={addDrawBoardElement} drawBoardElements={drawBoardElements}>
 
-          <div id="mostouter"
-               className="outerDrawboardContainer scrollAble"
-               ref={mostOuterDiagramDivRef}
-               onScroll={updateConnections}>
+            {/* The elements inside the draw board */}
+            {drawBoardElements.map((drawBoardElement) => (
+                <DrawBoardElement  key={drawBoardElement.id}
 
-            <Xwrapper>
-              <BackgroundPaging elements={drawBoardElements}
+                                   onDrawBoardElementSelected={onDrawBoardElementSelected}
+                                   updateDrawBoardElementPosition={updateDrawBoardElementPosition}
 
-                                backgroundPageSize={backgroundPageSize}
-                                drawBoardBorderOffset={drawBoardBorderOffset}
+                                   thisObject={drawBoardElement}
+                                   updateDrawBoardElementSize = {updateDrawBoardElementSize}
 
-                                amountBackgroundPages={amountBackgroundPages}
-                                setAmountBackgroundPages={setAmountBackgroundPages}
-                                ref={backgroundPageRef}/>
-
-
-              <SvgResizer mostOuterDiagramDivRef={mostOuterDiagramDivRef}
-                          backgroundPageRef={backgroundPageRef}
-
-                          backgroundPageSize={backgroundPageSize}
-                          drawBoardBorderOffset={drawBoardBorderOffset}
-                          amountBackgroundPages={amountBackgroundPages}
+                                   svgBounds={drawBoardBorderOffset}
+                />
+            ))}
 
 
-                          onDropHandler={addDrawBoardElement}>
+            {/* The connections of the elements inside the draw board */}
+            {connections.map((connection, i) => (
+                <ConnectionElement
+                    key={connection.id + " -- " + i}
 
-                {drawBoardElements.map((drawBoardElement) => (
-                    <DrawBoardElement  key={drawBoardElement.id}
+                    connections={connections}
+                    thisConnection={connection}
+                    onConnectionSelected={onConnectionSelected}
 
-                                       onDrawBoardElementSelected={onDrawBoardElementSelected}
-                                       updateDrawBoardElementPosition={updateDrawBoardElementPosition}
+                />
+            ))}
 
-                                       thisObject={drawBoardElement}
-                                       updateDrawBoardElementSize = {updateDrawBoardElementSize}
+          </DrawBoard>
 
-                                       svgBounds={drawBoardBorderOffset}
-                    />
-                ))}
-
-              </SvgResizer>
-
-              {/* The connections of the elements inside the draw board */}
-              {connections.map((connection, i) => (
-                  <ConnectionElement
-                      key={connection.id + " -- " + i}
-
-                      connections={connections}
-                      thisConnection={connection}
-                      onConnectionSelected={onConnectionSelected}
-
-                  />
-              ))}
-
-            </Xwrapper>
-
-          </div>
 
           {/* The right bar, used for editing the elements in the draw board */}
           <RightBar {...rightBarProps} />

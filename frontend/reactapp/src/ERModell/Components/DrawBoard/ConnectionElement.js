@@ -10,7 +10,7 @@ import Xarrow from 'react-xarrows';
  */
 const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) => {
 
-
+    //if isA, dann nur oben und unten connection erlauben
 
     let arrowColor = "black"
     if(thisConnection.isSelected) arrowColor="red"
