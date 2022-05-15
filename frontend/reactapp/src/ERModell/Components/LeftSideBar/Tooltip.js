@@ -1,5 +1,5 @@
 import React from 'react'
-import {ERTYPE} from "../../ErType";
+import {ERTYPE} from "../../Model/ErType";
 
 const ToolTip = ({erType}) => {
     return (

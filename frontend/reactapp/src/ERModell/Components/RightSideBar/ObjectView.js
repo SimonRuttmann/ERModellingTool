@@ -1,8 +1,8 @@
 import React from 'react';
 import '../../Playground.css';
-import {ACTIONSTATE, OBJECTTYPE} from "../../ActionState";
-import {ERTYPE} from "../../ErType";
-import {resolveObjectById} from "../../Util";
+import {ACTIONSTATE, OBJECTTYPE} from "../../Model/ActionState";
+import {ERTYPE} from "../../Model/ErType";
+import {resolveObjectById} from "../Util/ObjectUtil";
 
 
 //We hold here the selected object ! when we change anything this will still be the "old" object, the new object is a clone of this one

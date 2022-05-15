@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
-import { resolveErComponent } from "../../ErType";
+import { resolveErComponent } from "../../Model/ErType";
 
 
 /**

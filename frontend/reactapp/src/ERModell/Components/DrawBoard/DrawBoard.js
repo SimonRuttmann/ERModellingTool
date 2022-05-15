@@ -2,8 +2,8 @@ import BackgroundPaging from "./BackgroundPaging";
 import React, {useRef, useState} from "react";
 import {useXarrow, Xwrapper} from "react-xarrows";
 import SvgResizer from "./SvgResizer";
-import DrawBoardElement from "./Components/DrawBoard/DrawBoardElement";
-import ConnectionElement from "./Components/DrawBoard/ConnectionElement";
+import DrawBoardElement from "./DrawBoardElement";
+import ConnectionElement from "./ConnectionElement";
 
 const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderOffset}) => {
 

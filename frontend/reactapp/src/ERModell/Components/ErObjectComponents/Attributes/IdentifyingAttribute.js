@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from "react";
-import {resolveRequiredWidth} from "../../SvgUtil/SvgUtils"
+import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
 function IdentifyingAttribute({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){

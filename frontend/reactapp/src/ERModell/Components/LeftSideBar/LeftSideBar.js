@@ -1,5 +1,5 @@
 import DragBarManager from "./DragBarImageManager";
-import {ERTYPECATEGORY, returnNamesOfCategory} from "../../ErType";
+import {ERTYPECATEGORY, returnNamesOfCategory} from "../../Model/ErType";
 import React from "react";
 
 const LeftSideBar = () => {

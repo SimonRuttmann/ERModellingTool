@@ -3,11 +3,11 @@ import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
-import {ERTYPE} from './ErType';
-import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
-import {resolveObjectById} from "./Util";
+import {ERTYPE} from './Model/ErType';
+import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./Model/ActionState";
+import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
-import DrawBoard from "./DrawBoard";
+import DrawBoard from "./Components/DrawBoard/DrawBoard";
 
 const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 

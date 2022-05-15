@@ -1,9 +1,9 @@
 import React from 'react';
 import '../../Playground.css';
-import {ConnectionCardinality, OBJECTTYPE} from "../../ActionState";
-import {ERTYPE, ERTYPECATEGORY} from "../../ErType";
+import {ConnectionCardinality, OBJECTTYPE} from "../../Model/ActionState";
+import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
-import {resolveObjectById} from "../../Util";
+import {resolveObjectById} from "../Util/ObjectUtil";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, setActionState, drawBoardElements, toAddConnectionState}) => {
 

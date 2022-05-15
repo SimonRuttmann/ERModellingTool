@@ -1,5 +1,5 @@
 import React from "react";
-import {resolveRequiredWidth} from "../../SvgUtil/SvgUtils"
+import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
 function MultivaluedAttribute({id, displayText, color, fontFamily, fontSize}){
