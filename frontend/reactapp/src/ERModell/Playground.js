@@ -405,7 +405,10 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
   }
 
-
+  /**
+   * All properties, which will be passed to the right bar
+   * to perform modifying actions on the diagram
+   */
   const rightBarProps = {
     selectedObjectId: selectedObjectId,
     connections: connections,
@@ -418,7 +421,12 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   }
 
 
+  /**
+   * The offset between the canvas and the inner drawBoard
+   * The "border" of the background page is set to 30 px offset to the mostOuter and therefore canvas
+   */
   const drawBoardBorderOffset = 30;
+
   return (
 
     <div>
@@ -429,7 +437,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
 
 
           {/* The draw board   */}
-          <DrawBoard onDropHandler={addDrawBoardElement} drawBoardElements={drawBoardElements}>
+          <DrawBoard onDropHandler={addDrawBoardElement} drawBoardElements={drawBoardElements} drawBoardBorderOffset={drawBoardBorderOffset}>
 
             {/* The elements inside the draw board */}
             {drawBoardElements.map((drawBoardElement) => (

@@ -5,10 +5,9 @@ import SvgResizer from "./SvgResizer";
 import DrawBoardElement from "./Components/DrawBoard/DrawBoardElement";
 import ConnectionElement from "./Components/DrawBoard/ConnectionElement";
 
-const DrawBoard = ({children, onDropHandler, drawBoardElements}) => {
+const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderOffset}) => {
 
     const updateConnections = useXarrow();
-    const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
 
     const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
 
