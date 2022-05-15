@@ -8,8 +8,9 @@ import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from './ErType';
 import DragBarManager from "./Components/LeftSideBar/DragBarImageManager";
 import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./ActionState";
 import {resolveObjectById} from "./Util";
+import BackgroundPaging from "./BackgroundPaging";
 
-const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => {
+const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
   const updateConnections = useXarrow();
 
   /**
@@ -55,8 +56,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
    * Synchronize data with parent for download and transformation
    */
   useEffect( () => {
-    syncErContent(drawBoardElements, connections);
-  },[drawBoardElements, connections, syncErContent])
+    syncContent(drawBoardElements, connections);
+  },[drawBoardElements, connections, syncContent])
 
 
   /**
@@ -82,16 +83,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
         ])
       }
 
-      let maxX = 0;
-      let maxY = 0;
-      if(Array.isArray(importedContent.drawBoardContent.elements)){
-        let maxPosElements = getMaxXAndYOfElements(importedContent.drawBoardContent.elements)
-        maxX = maxPosElements.x;
-        maxY = maxPosElements.y;
-      }
-      console.log("Adjust bounds with")
-      console.log(maxX, maxY)
-      adjustBounds(maxX, maxY, importedContent.drawBoardContent.elements);
       triggerImportComplete()
     }
 
@@ -200,7 +191,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
       setCounter(counter+1);
 
-      increaseBounds(newDrawBoardElement.x, newDrawBoardElement.y)
+
     }
 
 
@@ -284,7 +275,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
     setSelectedObjectId(null)
 
     let elements = drawBoardElements.filter((element) => !(element.id === elementId));
-    decreaseBounds(elements)
+
   }
 
 
@@ -454,185 +445,15 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
     }
   }
 
-  /**
-   * Standalone function to decrease the bounds,
-   * e.g. minimize the amount of pages displayed, if possible
-   * @required drawBoardElements elements inside the draw board need to be added to the state
-   * @see drawBoardElements
-   * @see setDrawBoardElements
-   */
-  function decreaseBounds(elements){
-
-    let updatedPages = decreasePageIfNecessary(elements, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
-
-    setAmountBackgroundPages(() => ({
-      horizontal: updatedPages.horizontal,
-      vertical: updatedPages.vertical
-    }))
-  }
 
 
-  /**
-   * Standalone function to increase the bounds,
-   * e.g. increase the amount of pages displayed,
-   * when the given coordinates are outside of displayed pages
-   * The element does not need to be added to the state already
-   * @param elementX The x-Coordinate of the element
-   * @param elementY The y-Coordinate of the element
-   */
-  function increaseBounds(elementX, elementY){
-    let updatedPages = increasePageIfNecessary(elementX, elementY, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
-
-    setAmountBackgroundPages(() => ({
-      horizontal: updatedPages.horizontal,
-      vertical: updatedPages.vertical
-    }))
-
-  }
-
-  /**
-   * Function to increase or decrease the amount of pages
-   * displayed depending on the elements within the draw board
-   * @param elementX The x-Coordinate of the element
-   * @param elementY The y-Coordinate of the element
-   * @param elements Optional element object, if set, the current state will not be used (as it could be already updated)
-   * @required drawBoardElements elements inside the draw board need to be added to the state
-   * @see drawBoardElements
-   * @see setDrawBoardElements
-   */
-  function adjustBounds(elementX, elementY, elements){ //elements ist optional!
-
-    if(elements == null) elements = drawBoardElements;
-
-    let currentPagesHorizontal = amountBackgroundPages.horizontal;
-    let currentPagesVertical = amountBackgroundPages.vertical;
-
-    //TODO multiple set states
-    let updatedIncreasedPages = increasePageIfNecessary(elementX, elementY, currentPagesHorizontal, currentPagesVertical)
-
-    console.log("increase")
-    console.log(updatedIncreasedPages)
-    let updatedPages = decreasePageIfNecessary(elements, updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
-
-    console.log("decrease")
-    console.log(updatedPages)
-
-    setAmountBackgroundPages(() => ({
-      horizontal: updatedPages.horizontal,
-      vertical: updatedPages.vertical
-    }))
-
-  }
 
 
-  function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical) {
-    let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
 
 
-    x = x + elementWidthOffset;
-    y = y + elementHeightOffset;
-
-    let horizontal = pagesHorizontal;
-    let vertical = pagesVertical;
-
-    console.log("Before WHILE")
-    while (x > page.x || y > page.y){
 
 
-      console.log("WHILE")
-      console.log("X")
-      console.log(x)
-      console.log(oneBackgroundPageHorizontal)
-      console.log(page.x)
-      if (x > page.x) {
-        horizontal++;
-        x = x - oneBackgroundPageHorizontal;
-      }
 
-      console.log("X")
-      console.log(y)
-      console.log(oneBackgroundPageVertical)
-      console.log(page.y)
-
-      if (y > page.y) {
-        vertical++;
-        y = y - oneBackgroundPageVertical;
-      }
-    }
-
-    return {
-      horizontal: horizontal,
-      vertical: vertical
-    }
-
-  }
-
-  function getMaxXAndYOfElements(elements){
-    let maxX = 0;
-    let maxY = 0;
-
-    //TODO bei delete wird der state gesetzt, hier ist der state aber noch "effektiv". drawboardElements müssen über parameter übergeben werden
-    elements.forEach( element => {
-      if(element.x>maxX) maxX = element.x
-      if(element.y>maxY) maxY = element.y
-    })
-
-    return {x: maxX, y: maxY}
-  }
-
-  function decreasePageIfNecessary(elements, pagesHorizontal, pagesVertical){
-
-    //Get highest x and highest y, which are required to fit within the pages
-
-    let maxX = 0;
-    let maxY = 0;
-
-    //TODO bei delete wird der state gesetzt, hier ist der state aber noch "effektiv". drawboardElements müssen über parameter übergeben werden
-    elements.forEach( element => {
-      if(element.x>maxX) maxX = element.x
-      if(element.y>maxY) maxY = element.y
-    })
-
-
-    maxX = maxX + elementWidthOffset;
-    maxY = maxY + elementHeightOffset;
-
-    return getPageReductionForPosition(maxX, maxY, pagesHorizontal, pagesVertical)
-  }
-
-
-  function getPageReductionForPosition(x, y, pagesHorizontal, pagesVertical){
-
-    let bounds = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
-
-    let newHorizontalPages = getPageReductionForAxis(x, bounds.x, pagesHorizontal, oneBackgroundPageHorizontal)
-    let newVerticalPages = getPageReductionForAxis(y, bounds.y, pagesVertical, oneBackgroundPageVertical)
-
-    return {
-      horizontal: newHorizontalPages,
-      vertical: newVerticalPages
-    }
-  }
-
-  function getPageReductionForAxis(elementPos, pagePos, amountPages, pageSize){
-
-    let amountDecreaseOfPages = 0;
-    let reducedSize = pagePos;
-
-    //Condition: At least 1 pages needs to be remaining
-    while(amountPages > amountDecreaseOfPages){
-
-      reducedSize = reducedSize - pageSize;
-
-      //Reduce page by 1
-      if(reducedSize > elementPos) amountDecreaseOfPages++;
-
-      //No further reduction possible, due to element
-      else break;
-    }
-
-    return amountPages - amountDecreaseOfPages
-  }
 
 
 
@@ -751,12 +572,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
         <div id="mostouter" className="outerDrawboardContainer scrollAble" ref={mostOuterDiagramDivRef} onScroll={updateConnections}>
 
-          <div className="drawboardBackgroundPage"
-               ref={backgroundPageRef}
-               style={{
-                    height: `${oneBackgroundPageVertical * amountBackgroundPages.vertical}px`,
-                    width:  `${oneBackgroundPageHorizontal *  amountBackgroundPages.horizontal}px`
-                }}/>
+          <BackgroundPaging elements={drawBoardElements}  ref={backgroundPageRef}/>
+
 
           <svg
             id="boxesContainer"
@@ -781,8 +598,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
                                  thisObject={drawBoardElement}
                                  updateDrawBoardElementSize = {updateDrawBoardElementSize}
-
-                                 adjustBounds={adjustBounds}
 
                                  svgBounds={drawBoardBorderOffset}
                                  />

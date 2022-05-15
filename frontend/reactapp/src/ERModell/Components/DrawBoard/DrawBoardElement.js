@@ -32,7 +32,7 @@ import { resolveErComponent } from "../../ErType";
  */
 
 
-const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, adjustBounds, updateDrawBoardElementSize}) => {
+const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, updateDrawBoardElementSize}) => {
 
   const updateXarrow = useXarrow();
   const [isDragging, setDragging] = useState(false)
@@ -70,8 +70,6 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     setDragging(true)
 
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
-
-    adjustBounds(thisObject.x, thisObject.y)
 
     updateXarrow();
   }

@@ -11,20 +11,32 @@ function ContentManager() {
     //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     // avoid setting refs during rendering
 
+    const projectType = "erDiagram";
+    const projectVersion = 1.0;
+    const projectName = "notNamed";
 
-    /**
-     * Download logic
-     */
+    const metaInformation = {
+        projectVersion: projectVersion,
+        projectName: projectName,
+        projectType: projectType
+    }
 
+    return (
+        <div className="App">
+            <SaveAndLoad metaInforamtion={metaInformation}>
+                <PlayGround/>
+            </SaveAndLoad>
+        </div>
+    )
+}
 
-    const erContent = useRef({projectversion: 1.0, projectname: "notNamed", elements: [], connections: []})
+export function SaveAndLoad({children, metaInformation}){
 
-    function syncErContent(drawBoardElements, connections){
+    const erContent = useRef({...metaInformation, elements: [], connections: []})
+
+    function syncContent(drawBoardElements, connections){
         erContent.current = {
-
-            projectversion: 1.0,
-            projectname: "notNamed",
-            type: "erDiagram",
+            ...metaInformation,
             drawBoardContent: {elements: drawBoardElements, connections: connections}
         }
     }
@@ -33,7 +45,7 @@ function ContentManager() {
      * Upload logic
      */
 
-    //Import project
+        //Import project
     const [importedContent, setImportedContent] = useState({})
 
     function importDrawBoardData(importedContent){
@@ -49,19 +61,23 @@ function ContentManager() {
     }
 
 
-
+    const SaveAndLoadProps = {
+        syncContent: syncContent,
+        importedContent: importedContent,
+        triggerImportComplete: triggerImportComplete
+    }
 
     return (
-        <div className="App">
-            <div className="Head">
-                <Download erContent={erContent}/>
-                <Upload importDrawBoardData={importDrawBoardData}/>
-            </div>
-            <PlayGround syncErContent={syncErContent} importedContent = {importedContent} triggerImportComplete={triggerImportComplete}/>
+        <React.Fragment>
+
+        <div className="Head">
+            <Download erContent={erContent}/>
+            <Upload importDrawBoardData={importDrawBoardData}/>
         </div>
+            {React.cloneElement(children, { ...SaveAndLoadProps  })}
+        </React.Fragment>
     )
 }
-
 
 export function Download({erContent}){
 
@@ -93,8 +109,7 @@ export function Download({erContent}){
 //     <button onClick={download} className="downloadButton">Download</button>
     return (
         <React.Fragment>
-            <img src={downloadIcon} className="downloadButton" onClick={download} />
-
+            <img src={downloadIcon} className="downloadButton" onClick={download}  alt="Download"/>
         </React.Fragment>
     );
 }
@@ -121,7 +136,7 @@ export function Upload({ importDrawBoardData }) {
     return (
         <React.Fragment>
             <label htmlFor="file-upload">
-                <img src={uploadIcon} className="uploadButton"/>
+                <img src={uploadIcon} className="uploadButton" alt="Upload"/>
             </label>
             <input id="file-upload" type="file" onChange={handleChange} onClick={resetValue} className="uploadButton"/>
         </React.Fragment>
