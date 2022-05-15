@@ -1,6 +1,9 @@
 import React, {useEffect} from "react";
 
-const BackgroundPaging = React.forwardRef (({elements, children, drawBoardBorderOffset, backgroundPageSize, amountBackgroundPages, setAmountBackgroundPages}, ref) => {
+const BackgroundPaging = React.forwardRef ((
+    {   elements, children,
+        drawBoardBorderOffset, backgroundPageSize,
+        amountBackgroundPages, setAmountBackgroundPages}, ref) => {
 
     useEffect( () => {
 

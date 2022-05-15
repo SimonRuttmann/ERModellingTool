@@ -487,7 +487,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
                           amountBackgroundPages={amountBackgroundPages}
 
 
-                          addDrawBoardElement={addDrawBoardElement}>
+                          onDropHandler={addDrawBoardElement}>
 
                 {drawBoardElements.map((drawBoardElement) => (
                     <DrawBoardElement  key={drawBoardElement.id}
@@ -501,6 +501,7 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
                                        svgBounds={drawBoardBorderOffset}
                     />
                 ))}
+
               </SvgResizer>
 
               {/* The connections of the elements inside the draw board */}

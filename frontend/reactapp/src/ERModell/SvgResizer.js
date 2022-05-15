@@ -1,21 +1,22 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
 
 /**
- * BackgroundPageSize:
- * OneBackgroundPageHorizontal
- * OneBackgroundPageVertical
- * AmountBackgroundPages
- * Horizontal
- * Vertical
+ * Component to resize svg based on the windows size, the size of the parent element
+ * and the size of the background pages
+ * This Component will ensure that the svg is always at the maximum height possible,
+ * to ensure all elements inside are displayed
+ * @param children All children, which should be displayed inside the resized svg
+ * @param mostOuterDiagramDivRef The reference to the parent dom element
+ * @param backgroundPageRef The reference to the background page element
+ * @param drawBoardBorderOffset The offset of the svg to the root element in the dom
+ * @param backgroundPageSize The size of the background pages
+ * @param amountBackgroundPages The amount of background pages currently displayed
+ * @param addDrawBoardElement Function to execute on the onDrop event
+ * @returns {JSX.Element}
  */
-/**
- *
- * @param drawBoardBorderOffset
- * @param oneBackgroundPageHorizontal
- * @param amountBackgroundPages
- * @constructor
- */
-const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBoardBorderOffset, backgroundPageSize, amountBackgroundPages, addDrawBoardElement}) => {
+const SvgResizer = ({   children, mostOuterDiagramDivRef, backgroundPageRef,
+                        drawBoardBorderOffset, backgroundPageSize, amountBackgroundPages,
+                        onDropHandler}) => {
     
     /**
      * The svg size must be adjusted depending on the size of the area covered by the background pages
@@ -55,7 +56,7 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
      * The method is debounced with 200ms to increase performance
      */
     useEffect( () => {
-        console.log("hallo?")
+
         const debouncedHandleResize = debounce(function handleResize() {
             setDimensions({
                 height: window.innerHeight,
@@ -65,11 +66,10 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
 
         window.addEventListener('resize', debouncedHandleResize)
 
-
         return () => {
             window.removeEventListener('resize', debouncedHandleResize)
-
         }
+
     })
 
 
@@ -84,8 +84,6 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
      */
     useLayoutEffect( () => {
 
-
-        console.log("Layout Effect")
         if(backgroundPageRef.current == null ) return;
         if(mostOuterDiagramDivRef.current == null ) return;
 
@@ -102,13 +100,6 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
         //noinspection JSUnresolvedVariable Justification, variable is resolved
         let mostOuterHeight = mostOuterDiagramDivRef.current.offsetHeight;
 
-            console.log("Most outer widht, height")
-            console.log(mostOuterHeight)
-            console.log(mostOuterWidth)
-
-        console.log("WidthPage")
-        console.log(withPage)
-        console.log(heightPage)
         //Set the size to 100% - the offset of the svg to the left and top
         let svgWidth = `calc(100% - ${drawBoardBorderOffset}px)`;
         let svgHeight = `calc(100% - ${drawBoardBorderOffset}px)`;
@@ -145,7 +136,7 @@ const SvgResizer = ({children, mostOuterDiagramDivRef, backgroundPageRef, drawBo
             id="boxesContainer"
             className="drawBoardDragArea"
             onDragOver={(e) => e.preventDefault()} //enable "dropping"
-            onDrop={(e) => addDrawBoardElement(e)}
+            onDrop={(e) => onDropHandler(e)}
             style={{
                 position: "absolute",
                 left: `${drawBoardBorderOffset}px`,
