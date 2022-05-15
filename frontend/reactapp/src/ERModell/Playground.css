@@ -11,7 +11,7 @@ body {
   position: absolute;
   background: red;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 60px);
   overflow: hidden;
 }
 
@@ -177,10 +177,10 @@ evlt benötigt: Element.scrollIntoView()
   background-image:
 
           /* the pages from top to bot */
-          repeating-linear-gradient(to bottom, transparent 0px, transparent 900px, rgba(54, 54, 54, 0.75) 900px, rgba(54, 54, 54, 0.75) 904px),
+          repeating-linear-gradient(to bottom, transparent 0px, transparent 810px, rgba(54, 54, 54, 0.75) 810px, rgba(54, 54, 54, 0.75) 814px),
 
           /* the pages from left to right */
-          repeating-linear-gradient(to right, transparent 0px, transparent 640px, rgba(54, 54, 54, 0.75) 640px, rgba(54, 54, 54, 0.75) 644px),
+          repeating-linear-gradient(to right, transparent 0px, transparent 576px, rgba(54, 54, 54, 0.75) 576px, rgba(54, 54, 54, 0.75) 580px),
 
           /* grid from top to bottom,    from transparent 0px to transparent 99px,  from 99px to 100px "#ccc = white line" */
           repeating-linear-gradient(to bottom, transparent 1px, transparent 30px, #e5e5e5 30px, #e5e5e5 32px),

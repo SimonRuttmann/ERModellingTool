@@ -40,9 +40,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
    */
   const [connections, setConnections] = useState([]);
 
-  console.log(drawBoardElements)
-
-
 
   //Adding the default display name based on this counter
   const [counter, setCounter] = useState(0);
@@ -63,7 +60,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
 
   /**
-   *
+   * Import functionality
    */
   useEffect( () => {
 
@@ -78,13 +75,23 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
          ])
        }
 
-      if(Array.isArray(importedContent.drawBoardContent.connections)) {
+      if(Array.isArray(importedContent.drawBoardContent.elements)) {
 
         setDrawBoardElements(() => [
           ...importedContent.drawBoardContent.elements
         ])
       }
 
+      let maxX = 0;
+      let maxY = 0;
+      if(Array.isArray(importedContent.drawBoardContent.elements)){
+        let maxPosElements = getMaxXAndYOfElements(importedContent.drawBoardContent.elements)
+        maxX = maxPosElements.x;
+        maxY = maxPosElements.y;
+      }
+      console.log("Adjust bounds with")
+      console.log(maxX, maxY)
+      adjustBounds(maxX, maxY, importedContent.drawBoardContent.elements);
       triggerImportComplete()
     }
 
@@ -276,7 +283,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
     setSelectedObjectId(null)
 
-    decreaseBounds()
+    let elements = drawBoardElements.filter((element) => !(element.id === elementId));
+    decreaseBounds(elements)
   }
 
 
@@ -434,8 +442,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
 
   const drawBoardBorderOffset = 30; //the "border" of the background page, 30 px offset to the svg in height and width
-  const oneBackgroundPageVertical = 900;
-  const oneBackgroundPageHorizontal = 640;
+  const oneBackgroundPageVertical = 810;
+  const oneBackgroundPageHorizontal = 576;
 
   const [amountBackgroundPages,setAmountBackgroundPages] = useState({horizontal: 1, vertical: 1})
 
@@ -453,9 +461,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
    * @see drawBoardElements
    * @see setDrawBoardElements
    */
-  function decreaseBounds(){
+  function decreaseBounds(elements){
 
-    let updatedPages = decreasePageIfNecessary(amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
+    let updatedPages = decreasePageIfNecessary(elements, amountBackgroundPages.horizontal, amountBackgroundPages.vertical)
 
     setAmountBackgroundPages(() => ({
       horizontal: updatedPages.horizontal,
@@ -487,11 +495,14 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
    * displayed depending on the elements within the draw board
    * @param elementX The x-Coordinate of the element
    * @param elementY The y-Coordinate of the element
+   * @param elements Optional element object, if set, the current state will not be used (as it could be already updated)
    * @required drawBoardElements elements inside the draw board need to be added to the state
    * @see drawBoardElements
    * @see setDrawBoardElements
    */
-  function adjustBounds(elementX, elementY){
+  function adjustBounds(elementX, elementY, elements){ //elements ist optional!
+
+    if(elements == null) elements = drawBoardElements;
 
     let currentPagesHorizontal = amountBackgroundPages.horizontal;
     let currentPagesVertical = amountBackgroundPages.vertical;
@@ -499,7 +510,12 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
     //TODO multiple set states
     let updatedIncreasedPages = increasePageIfNecessary(elementX, elementY, currentPagesHorizontal, currentPagesVertical)
 
-    let updatedPages = decreasePageIfNecessary(updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
+    console.log("increase")
+    console.log(updatedIncreasedPages)
+    let updatedPages = decreasePageIfNecessary(elements, updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
+
+    console.log("decrease")
+    console.log(updatedPages)
 
     setAmountBackgroundPages(() => ({
       horizontal: updatedPages.horizontal,
@@ -509,38 +525,62 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
   }
 
 
-  function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical){
+  function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical) {
     let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
 
 
     x = x + elementWidthOffset;
     y = y + elementHeightOffset;
 
+    let horizontal = pagesHorizontal;
+    let vertical = pagesVertical;
 
-    if(x > page.x && y > page.y) return {
-        horizontal: pagesHorizontal + 1,
-        vertical: pagesVertical + 1
+    console.log("Before WHILE")
+    while (x > page.x || y > page.y){
+
+
+      console.log("WHILE")
+      console.log("X")
+      console.log(x)
+      console.log(oneBackgroundPageHorizontal)
+      console.log(page.x)
+      if (x > page.x) {
+        horizontal++;
+        x = x - oneBackgroundPageHorizontal;
       }
 
-    else if(x > page.x) return {
-      horizontal: pagesHorizontal + 1,
-      vertical: pagesVertical
-    }
+      console.log("X")
+      console.log(y)
+      console.log(oneBackgroundPageVertical)
+      console.log(page.y)
 
-    else if(y > page.y) return {
-      horizontal: pagesHorizontal,
-      vertical: pagesVertical + 1
+      if (y > page.y) {
+        vertical++;
+        y = y - oneBackgroundPageVertical;
+      }
     }
 
     return {
-      horizontal: pagesHorizontal,
-      vertical: pagesVertical
+      horizontal: horizontal,
+      vertical: vertical
     }
 
   }
 
+  function getMaxXAndYOfElements(elements){
+    let maxX = 0;
+    let maxY = 0;
 
-  function decreasePageIfNecessary(pagesHorizontal, pagesVertical){
+    //TODO bei delete wird der state gesetzt, hier ist der state aber noch "effektiv". drawboardElements müssen über parameter übergeben werden
+    elements.forEach( element => {
+      if(element.x>maxX) maxX = element.x
+      if(element.y>maxY) maxY = element.y
+    })
+
+    return {x: maxX, y: maxY}
+  }
+
+  function decreasePageIfNecessary(elements, pagesHorizontal, pagesVertical){
 
     //Get highest x and highest y, which are required to fit within the pages
 
@@ -548,7 +588,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
     let maxY = 0;
 
     //TODO bei delete wird der state gesetzt, hier ist der state aber noch "effektiv". drawboardElements müssen über parameter übergeben werden
-    drawBoardElements.forEach( element => {
+    elements.forEach( element => {
       if(element.x>maxX) maxX = element.x
       if(element.y>maxY) maxY = element.y
     })
