@@ -9,7 +9,7 @@ body {
 /* Root element of the website*/
 .canvasStyle {
   position: absolute;
-  background: red;
+  background: #222222;
   width: 100%;
   height: calc(100% - 60px);
   overflow: hidden;
@@ -19,12 +19,16 @@ body {
 
 /* Toolbox left side */
 .leftSidebarContainer {
+  top: 10px;
   position: absolute;
   width: 300px;
-  height: 100%;
-  min-height: 100%;
+  height: calc(100% - 20px);
+  min-height: calc(100% - 20px);
   background: #3c3f41;
   text-align: center;
+  bottom: 10px;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 
@@ -113,7 +117,7 @@ body {
   height: 100%;
   width: calc(100% - 300px);
   text-align: left;
-  background-color: #363636;
+  background-color: #222222;
 }
 
 /* Scrollbar*/
@@ -156,9 +160,9 @@ body {
   position: absolute !important;
   height: 3000px;
   width: 4000px;
-  border: #363636 30px solid;
-  border-bottom: #363636 900px solid;
-  border-right: #363636 640px solid;
+  border: #222222 30px solid;
+  border-bottom: #222222 900px solid;
+  border-right: #222222 640px solid;
   background-color: white;
 
   background-image:
@@ -251,7 +255,7 @@ input[type="file"] {
   display: none;
 }
 .uploadButton{
-  float:right; display:inline;
+  float:right;
   text-align: unset;
   width: 40px;
   height: 40px;
@@ -260,7 +264,7 @@ input[type="file"] {
 }
 
 .downloadButton{
-  float:right; display:inline;
+  float:right;
   text-align: unset;
   width: 40px;
   height: 40px;
@@ -269,13 +273,12 @@ input[type="file"] {
 }
 
 .Head{
-  text-align: unset;
-  justify-content: center;
-  height: 60px;
-  min-height: 60px;
+  height: 58px;
+  min-height: 58px;
   width: 100%;
   min-width: 100%;
-  background-color: #222222;
+  background-color: #3c3f41;
+  border-bottom: 2px solid #222222;
 }
 
 .rightBarCardinality{
@@ -290,4 +293,32 @@ input[type="file"] {
   font-family: 'Ultra', sans-serif;
   color:white;
   margin: 20px 5% 50px 5%;  /* top, right, bot, left */
+}
+
+.TabsButton{
+  font-size: 20px;
+  font-family: 'Ultra', sans-serif;
+  height: 100%;
+  color: white;
+  min-height: 100%;
+  width: 200px;
+  float: left;
+  margin-left: 10px;
+  border-top: 2px solid #222222;
+  border-left: 2px solid #222222;
+  border-right: 2px solid #222222;
+  border-bottom: none;
+  background-color: #222222
+}
+
+.TabsButtonActive{
+  background-color: #222222
+}
+
+.TabsButtonNotActive{
+  background-color: #323232;
+}
+
+.TabsButton:hover{
+  background-color: #3c3f41;
 }
