@@ -65,11 +65,11 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
     useEffect( () => {
 
         if(importedContent == null) return;
-        console.log("IMPORT ")
-        console.log(importedContent)
+      //  console.log("IMPORT REL")
+      //  console.log(importedContent)
         if(importedContent.drawBoardContent != null){
 
-            console.log("Imporitng")
+        //    console.log("Importing Rel")
             if(Array.isArray(importedContent.drawBoardContent.connections)) {
                 setConnections(() => [
                     ...importedContent.drawBoardContent.connections
@@ -435,7 +435,6 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
                 {/* The left toolbar, containing the elements to drag into the draw board  */}
                 <LeftSideBar/>
-
 
                 {/* The draw board   */}
                 <DrawBoard onDropHandler={addDrawBoardElement} drawBoardElements={drawBoardElements} drawBoardBorderOffset={drawBoardBorderOffset}>

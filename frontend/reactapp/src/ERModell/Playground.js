@@ -55,6 +55,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
    * Synchronize data with parent for download and transformation
    */
   useEffect( () => {
+
     syncErContent(drawBoardElements, connections);
   },[drawBoardElements, connections, syncErContent])
 
@@ -65,10 +66,11 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
   useEffect( () => {
 
     if(importedContent == null) return;
-    console.log("IMPORT ")
-    console.log(importedContent)
+    //console.log("IMPORT ER")
+    //console.log(importedContent)
     if(importedContent.drawBoardContent != null){
 
+      //console.log("Importing ER")
        if(Array.isArray(importedContent.drawBoardContent.connections)) {
          setConnections(() => [
            ...importedContent.drawBoardContent.connections
