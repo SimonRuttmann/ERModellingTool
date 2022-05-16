@@ -1,10 +1,8 @@
 
 import '../App.css';
 import PlayGround from '../ERModell/Playground';
-import {useRef, useState} from "react";
 import React from "react";
-import Download from "./Download";
-import Upload from "./Upload";
+import SaveAndLoad from "./SaveAndLoad";
 
 function ContentManager() {
 
@@ -30,54 +28,7 @@ function ContentManager() {
     )
 }
 
-export function SaveAndLoad({children, metaInformation}){
 
-    const erContent = useRef({...metaInformation, elements: [], connections: []})
-
-    function syncContent(drawBoardElements, connections){
-        erContent.current = {
-            ...metaInformation,
-            drawBoardContent: {elements: drawBoardElements, connections: connections}
-        }
-    }
-
-    /**
-     * Upload logic
-     */
-
-        //Import project
-    const [importedContent, setImportedContent] = useState({})
-
-    function importDrawBoardData(importedContent){
-        console.log("parsing...")
-        let importedJson = JSON.parse(importedContent)
-        console.log("parsed")
-        console.log(importedJson)
-        setImportedContent(importedJson)
-    }
-
-    function triggerImportComplete(){
-        setImportedContent(null);
-    }
-
-
-    const SaveAndLoadProps = {
-        syncContent: syncContent,
-        importedContent: importedContent,
-        triggerImportComplete: triggerImportComplete
-    }
-
-    return (
-        <React.Fragment>
-
-        <div className="Head">
-            <Download erContent={erContent}/>
-            <Upload importDrawBoardData={importDrawBoardData}/>
-        </div>
-            {React.cloneElement(children, { ...SaveAndLoadProps  })}
-        </React.Fragment>
-    )
-}
 
 
 export default ContentManager;
