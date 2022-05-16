@@ -20,6 +20,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
 
     function syncErContent(drawBoardElements, connections){
+
         if(loadProcessIsActive) return;
 
         erContent.current = {
@@ -31,6 +32,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
 
     function syncRelContent(drawBoardElements, connections){
+
         if(loadProcessIsActive) return;
 
         relationalContent.current = {
@@ -70,14 +72,10 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
     useEffect( () => {
 
-        //console.log("REIMPORT OF ")
-        //console.log(diagramType)
-        //console.log("ERDATA")
-        //console.log(erContent.current)
-        //console.log("RELDATA")
-        //console.log(relationalContent.current)
         if(diagramType === diagramTypes.erDiagram)  setImportedContent(erContent.current)
         if(diagramType === diagramTypes.relationalDiagram) setImportedContent(relationalContent.current)
+
+        setLoadProcessStatus(false)
 
     },[diagramType])
 
