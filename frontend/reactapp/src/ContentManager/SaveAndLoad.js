@@ -13,7 +13,6 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         setLoadProcessStatus(true)
     }
 
-
     //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     // avoid setting refs during rendering
     const erContent = useRef({...metaInformation, projectType: diagramTypes.erDiagram, elements: [], connections: []})
@@ -21,8 +20,6 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
 
     function syncErContent(drawBoardElements, connections){
-        console.log("sync er content")
-        console.log(erContent.current)
         if(loadProcessIsActive) return;
 
         erContent.current = {
@@ -32,14 +29,8 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         }
     }
 
-    console.log("ER")
-    console.log(erContent.current)
-    console.log("Relational")
-    console.log(relationalContent.current)
 
     function syncRelContent(drawBoardElements, connections){
-        console.log("sync rel content")
-        console.log(relationalContent.current)
         if(loadProcessIsActive) return;
 
         relationalContent.current = {

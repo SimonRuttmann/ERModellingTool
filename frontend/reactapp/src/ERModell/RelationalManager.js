@@ -56,7 +56,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
      */
     useEffect( () => {
         syncRelContent(drawBoardElements, connections);
-    },[drawBoardElements, connections, syncRelContent])
+    },[drawBoardElements, connections])
 
 
     /**
@@ -65,11 +65,9 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
     useEffect( () => {
 
         if(importedContent == null) return;
-      //  console.log("IMPORT REL")
-      //  console.log(importedContent)
+
         if(importedContent.drawBoardContent != null){
 
-        //    console.log("Importing Rel")
             if(Array.isArray(importedContent.drawBoardContent.connections)) {
                 setConnections(() => [
                     ...importedContent.drawBoardContent.connections
