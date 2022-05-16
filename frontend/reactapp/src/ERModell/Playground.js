@@ -9,7 +9,7 @@ import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
 
-const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
+const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => {
 
 
   /**
@@ -55,8 +55,8 @@ const PlayGround = ({syncContent, importedContent, triggerImportComplete}) => {
    * Synchronize data with parent for download and transformation
    */
   useEffect( () => {
-    syncContent(drawBoardElements, connections);
-  },[drawBoardElements, connections, syncContent])
+    syncErContent(drawBoardElements, connections);
+  },[drawBoardElements, connections, syncErContent])
 
 
   /**

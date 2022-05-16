@@ -1,28 +1,42 @@
 
 import '../App.css';
 import PlayGround from '../ERModell/Playground';
-import React from "react";
+import React, {useState} from "react";
 import SaveAndLoad from "./SaveAndLoad";
+import {diagramTypes} from "../ERModell/Model/Diagram";
+import RelationalManager from "../ERModell/RelationalManager";
 
 function ContentManager() {
 
-    //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
-    // avoid setting refs during rendering
+    const [diagramType, setDiagramType] = useState(diagramTypes.erDiagram)
 
-    const projectType = "erDiagram";
+    function changeToErDiagram(){
+        if(diagramType === diagramTypes.erDiagram) return;
+        setDiagramType(diagramTypes.erDiagram);
+    }
+
+    function changeToRelationalDiagram(){
+        if(diagramType === diagramTypes.relationalDiagram) return;
+        setDiagramType(diagramTypes.relationalDiagram);
+    }
+
     const projectVersion = 1.0;
     const projectName = "notNamed";
 
     const metaInformation = {
         projectVersion: projectVersion,
         projectName: projectName,
-        projectType: projectType
     }
 
     return (
         <div className="App">
-            <SaveAndLoad metaInforamtion={metaInformation}>
-                <PlayGround/>
+            <SaveAndLoad metaInforamtion={metaInformation}
+                         diagramType={diagramType}
+                         changeToErDiagram={changeToErDiagram}
+                         changeToRelationalDiagram={changeToRelationalDiagram}>
+
+                {diagramType === diagramTypes.erDiagram ? <PlayGround/> : <RelationalManager/>}
+
             </SaveAndLoad>
         </div>
     )
@@ -33,7 +47,7 @@ function ContentManager() {
 
 export default ContentManager;
 
-/*
+/*export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 useEffect(() => {
     window.addEventListener('mousemove', () => {});
 

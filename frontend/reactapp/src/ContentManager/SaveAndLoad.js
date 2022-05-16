@@ -1,14 +1,27 @@
 import React, {useRef, useState} from "react";
 import Download from "./Download";
 import Upload from "./Upload";
+import {diagramTypes} from "../ERModell/Model/Diagram";
 
-export function SaveAndLoad({children, metaInformation}){
+export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
-    const erContent = useRef({...metaInformation, elements: [], connections: []})
+    //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
+    // avoid setting refs during rendering
+    const erContent = useRef({...metaInformation, projectType: diagramTypes.erDiagram, elements: [], connections: []})
+    const relationalContent = useRef({...metaInformation, projectType: diagramTypes.relationalDiagram, elements: [], connections: []})
 
-    function syncContent(drawBoardElements, connections){
+    function syncErContent(drawBoardElements, connections){
         erContent.current = {
             ...metaInformation,
+            projectType: diagramTypes.erDiagram,
+            drawBoardContent: {elements: drawBoardElements, connections: connections}
+        }
+    }
+
+    function syncRelContent(drawBoardElements, connections){
+        relationalContent.current = {
+            ...metaInformation,
+            projectType: diagramTypes.relationalDiagram,
             drawBoardContent: {elements: drawBoardElements, connections: connections}
         }
     }
@@ -34,17 +47,24 @@ export function SaveAndLoad({children, metaInformation}){
 
 
     const SaveAndLoadProps = {
-        syncContent: syncContent,
+        syncErContent: syncErContent,
+        syncRelContent: syncRelContent,
         importedContent: importedContent,
         triggerImportComplete: triggerImportComplete
     }
-//TODO! buttons gehören hier nicht hin! Injezieren oder Komponente refactorn
+
+    const erTabActive = diagramType === diagramTypes.erDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
+    const relationalTabActive = diagramType === diagramTypes.relationalDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
+
+    let erTabStyle = `TabsButton ${erTabActive}`;
+    let relationalTabStyle = `TabsButton ${relationalTabActive}`;
+
     return (
         <React.Fragment>
 
             <div className="Head">
-                <button className="TabsButton TabsButtonActive">Er Diagram</button>
-                <button className="TabsButton TabsButtonNotActive">Relational Diagram</button>
+                <button className={erTabStyle} onClick={changeToErDiagram}>Er Diagram</button>
+                <button className={relationalTabStyle} onClick={changeToRelationalDiagram}>Relational Diagram</button>
 
                 <Download erContent={erContent}/>
                 <Upload importDrawBoardData={importDrawBoardData}/>
