@@ -8,8 +8,9 @@ import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./Model/ActionStat
 import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
+import TransformButton from "./TransformButton";
 
-const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => {
+const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
 
   /**
@@ -431,10 +432,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
     <div>
         <div className="canvasStyle" id="canvas" onClick={() => onCanvasSelected(null)}>
-
           {/* The left toolbar, containing the elements to drag into the draw board  */}
           <LeftSideBar/>
-
 
           {/* The draw board   */}
           <DrawBoard onDropHandler={addDrawBoardElement} drawBoardElements={drawBoardElements} drawBoardBorderOffset={drawBoardBorderOffset}>
@@ -468,10 +467,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete}) => 
 
           </DrawBoard>
 
-
           {/* The right bar, used for editing the elements in the draw board */}
           <RightBar {...rightBarProps} />
-
+          <TransformButton transformToRel={transformToRel}/>
         </div>
     </div>
   );

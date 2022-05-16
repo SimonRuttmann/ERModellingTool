@@ -328,3 +328,20 @@ input[type="file"] {
   background-color: #3c3f41;
 }
 
+.TransformButton{
+  font-size: 20px;
+  font-family: 'Ultra', sans-serif;
+  color: black;
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  right: 30px;
+  bottom: 20px;
+  padding: 10px 10px 10px 10px;
+  border-radius: 10px;
+}
+
+.TransformButton:hover{
+  background-color: #3c3f41;
+}
+

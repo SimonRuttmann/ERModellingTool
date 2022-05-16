@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from "react";
 import Download from "./Download";
 import Upload from "./Upload";
 import {diagramTypes} from "../ERModell/Model/Diagram";
+import transformButton from "../ERModell/TransformButton";
+import axios from "axios";
 
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
@@ -62,11 +64,23 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         setLoadProcessStatus(false)
     }
 
+    const url = "localhost:8080/transform"
+    const [serverResult, setServerResult] = useState({})
+    const [error, setError] = useState(false)
+    function transformToRel(){
+        let content = JSON.stringify(erContent.current);
+        console.log("Hallo")
+        axios.post(url, {...content}).
+        then((response) => {setServerResult(response.data);}).
+        catch(error => setError(true));
+    }
+
     const SaveAndLoadProps = {
         syncErContent: syncErContent,
         syncRelContent: syncRelContent,
         importedContent: importedContent,
-        triggerImportComplete: triggerImportComplete
+        triggerImportComplete: triggerImportComplete,
+        transformToRel: transformToRel
     }
 
 
@@ -78,7 +92,6 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         setLoadProcessStatus(false)
 
     },[diagramType])
-
 
 
     const erTabActive = diagramType === diagramTypes.erDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
