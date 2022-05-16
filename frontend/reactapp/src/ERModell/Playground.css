@@ -19,16 +19,12 @@ body {
 
 /* Toolbox left side */
 .leftSidebarContainer {
-  top: 10px;
   position: absolute;
   width: 300px;
-  height: calc(100% - 20px);
-  min-height: calc(100% - 20px);
+  height: 100%;
+  min-height: 100%;
   background: #3c3f41;
   text-align: center;
-  bottom: 10px;
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
 }
 
 
@@ -260,25 +256,33 @@ input[type="file"] {
   width: 40px;
   height: 40px;
   cursor: pointer;
-  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 5px 10px;
+  border-radius: 10px;
 }
-
+.uploadButton:hover{
+  background-color: #222222;
+}
 .downloadButton{
   float:right;
   text-align: unset;
   width: 40px;
   height: 40px;
   cursor: pointer;
-  margin: 10px 50px 10px 10px;
+  margin: 0 40px 0 0;
+  padding: 10px 10px 5px 10px;
+  border-radius: 10px;
+}
+.downloadButton:hover{
+  background-color: #222222;
 }
 
 .Head{
-  height: 58px;
-  min-height: 58px;
+  height: 55px;
+  min-height: 55px;
   width: 100%;
   min-width: 100%;
   background-color: #3c3f41;
-  border-bottom: 2px solid #222222;
+  border-bottom: 5px solid #222222;
 }
 
 .rightBarCardinality{
@@ -308,7 +312,8 @@ input[type="file"] {
   border-left: 2px solid #222222;
   border-right: 2px solid #222222;
   border-bottom: none;
-  background-color: #222222
+  background-color: #222222;
+  cursor: pointer;
 }
 
 .TabsButtonActive{
