@@ -51,10 +51,8 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
     const minMaxLabels = {
         middle: (
             <div
-                contentEditable
-                suppressContentEditableWarning={true}
-                style={{ font: 'italic 1.5em serif', color: 'black', left: '30px' }}>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ({thisConnection.min},{thisConnection.max})
+                style={{ position: 'relative', marginLeft: '30px', font: 'italic 1.5em serif', color: 'black', left: '30px' }}>
+                 ({thisConnection.min},{thisConnection.max})
             </div>
         )
     }
@@ -65,6 +63,7 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
         onMouseEnter: () => setColorIfNotSelected("green"),
         onMouseLeave: () => setColorIfNotSelected("black"),
         onClick: (e) => {
+            console.log("a")
             e.stopPropagation();
             onConnectionSelected(thisConnection.id);
         },
@@ -73,11 +72,11 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
         end: thisConnection.end,
         showHead: thisConnection.withArrow,
         showTail: false,
-        strokeWidth: 3,
+        strokeWidth: 30,
         //endAnchor: offset,
         path: "straight",
         color: arrowColor,
-        labels: minMaxLabels
+       // labels: minMaxLabels
 
     }
 

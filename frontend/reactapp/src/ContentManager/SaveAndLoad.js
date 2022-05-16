@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from "react";
 import Download from "./Download";
 import Upload from "./Upload";
 import {diagramTypes} from "../ERModell/Model/Diagram";
-import transformButton from "../ERModell/TransformButton";
 import axios from "axios";
 
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){

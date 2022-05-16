@@ -141,6 +141,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   const onConnectionSelected = (e, selectedElement) => {
 
+    console.log("connection selected")
+
     if( actionState === ACTIONSTATE.Default ||
         actionState === ACTIONSTATE.AddConnection) {
 
