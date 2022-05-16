@@ -44,7 +44,6 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 
     }
 
-    //TODO ... .map((connection,id) => (..... <div key = {...} ... ) überall einbauen
     const RelationMenu = () => {
         return (
 
@@ -99,16 +98,19 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 
             <React.Fragment>
 
-                <div>Inheritors to:</div>
-                {filterAndSortConnections().map(connection => (
-                    <div>
+
+                {filterAndSortConnections().length > 0 ? <div>Inheritors to:</div>: <div>No inheritors</div> }
+
+                {filterAndSortConnections().map((connection,i) => (
+                    <div key={connection.id + " -- " + i}>
                         {getDisplayNameAndType(connection)} <br/>
                     </div>
                 ))}
 
-                <p>Parent:</p>
-                {filterAndSortConnections().map(connection => (
-                    <div>
+                {filterAndSortConnections().length > 0 ? <div>Parent</div>: <div>No parent</div> }
+
+                {filterAndSortConnections().map((connection,i) => (
+                    <div key={connection.id + " -- " + i}>
                         {getDisplayNameAndType(connection)} <br/>
                     </div>
                 ))}

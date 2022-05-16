@@ -16,7 +16,7 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
 
 
     const isConnection = selectedObject.type === OBJECTTYPE.Connection
-    const isIsAStructure = selectedObject.erType ? selectedObject.erType === ERTYPE.IsAStructure : false;
+    const isIsAStructure = selectedObject.erType ? selectedObject.erType === ERTYPE.IsAStructure.name : false;
 
     if(isIsAStructure) {
         return (
@@ -39,8 +39,8 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
             <div>
                 <label htmlFor="rightBarInputField" className="rightBarInputFieldLabel">Name:</label>
                 <input  type="text" className="rightBarInput" id="rightBarInputField"
-                       onChange={(e) => { setDisplayName(selectedObject.id, e.target.value)}}
-                        defaultValue={selectedObject.displayName}/></div>
+                        onChange={(e) => { setDisplayName(selectedObject.id, e.target.value)}}
+                        value={selectedObject.displayName}/></div>
             <hr className="spacer"/>
         </React.Fragment>
     )
