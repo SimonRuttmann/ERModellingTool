@@ -139,25 +139,36 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   };
 
 
-  const onConnectionSelected = (e, selectedElement) => {
-
-    console.log("connection selected")
+  const onConnectionSelected = (connectionId) => {
 
     if( actionState === ACTIONSTATE.Default ||
         actionState === ACTIONSTATE.AddConnection) {
 
-      //TODO 1. Unselected prev. Arrow object 2. set state object selected 3. Select this object e.target.id,
       const elements = unselectPreviousDrawBoardElement();
+      console.log(elements)
       setDrawBoardElements(() => [
           ...elements
       ])
-      let connection = connections.find(connection => connection.id === e.target.id)
-      setSelectedObjectId(connection.id);
 
-      const updatedElements = selectElement(drawBoardElements, e.target.id)
-      setDrawBoardElements(() => [
-        ...updatedElements
-      ])
+
+
+//      let connection = connections.find(connection => connection.id === connectionId)
+//      console.log(connection)
+     // setSelectedObjectId(connection.id);
+
+      //const updatedConnections = selectElement(connections, connectionId)
+      let shallowCopy = [...connections];
+      let selectedElement = shallowCopy.find(element => element.id === connectionId)
+
+      var a = Object.assign({},selectedElement)
+      console.log(a)
+       selectedElement.isSelected = true;
+
+      //return[...shallowCopy];
+      //console.log(updatedConnections)
+    //  setConnections(() => [
+    //    {...selectedElement, isSelected: true}
+    //  ])
 
     }
 
@@ -347,17 +358,11 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   const selectElement = (elements, id) => {
 
-    let selectedElement = elements.find(element => element.id === id)
+    let shallowCopy = [...elements];
+    let selectedElement = shallowCopy.find(element => element.id === id)
     selectedElement.isSelected = true;
 
-    let copy = Object.assign({},selectedElement)
-
-    let notSelectedElements = elements.filter(element => !(element.id === id))
-
-    return[
-      copy,
-      ...notSelectedElements
-    ];
+    return[...shallowCopy];
 
   }
 

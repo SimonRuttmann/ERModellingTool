@@ -10,22 +10,44 @@ import Xarrow from 'react-xarrows';
  */
 const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) => {
 
-    //if isA, dann nur oben und unten connection erlauben
+    const defaultColor = "black"
+    const onHoverColor = "blue"
+    const onSelectedColor = "red"
+    const paths={smooth: "smooth", grid: "grid", straight: "straight"}
 
-    let arrowColor = "black"
-    if(thisConnection.isSelected) arrowColor="red"
+    /**
+     * Color
+     */
 
-    //Color setting for on mouse enter, on mouse leave
-    const [, setState] = useState({ color: 'black' });
+    const [color, setState] = useState('black');
+
+    //FIXME This will cause an inifine loop, when clicked at the connection
+   // if(thisConnection.isSelected) setState(onSelectedColor)
 
     const setColorIfNotSelected = (color) => {
         if(!thisConnection.isSelected)
-            setState({ color: color })
+            setState(color)
     }
 
+    /**
+     * (Min,Max) Label
+     */
+
+    const minMaxLabels = {
+        middle: (
+            <div
+                style={{ position: 'relative', marginLeft: '30px', marginTop: "30px", font: 'italic 1.5em serif', color: 'black', left: '30px' }}>
+                ({thisConnection.min},{thisConnection.max})
+            </div>
+        )
+    }
+
+    /**
+     * Offset
+     */
 
     //Create offset, if there is already a line
-    let offsetValue = 0;
+/*    let offsetValue = 0;
     let connectionSameDestinations = connections.filter(
      connection =>
         connection.id !== thisConnection &&
@@ -46,45 +68,47 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
                 {position: "right", offset:{y: offsetValue} },
                 {position: "top",   offset:{x: offsetValue} },
                 {position: "bottom",offset:{x: offsetValue} }] }
+*/
 
+    /**
+     * Interaction and props passed to the underlying svg`s
+     */
 
-    const minMaxLabels = {
-        middle: (
-            <div
-                style={{ position: 'relative', marginLeft: '30px', font: 'italic 1.5em serif', color: 'black', left: '30px' }}>
-                 ({thisConnection.min},{thisConnection.max})
-            </div>
-        )
+    const handleClick = (e) => {
+        e.preventDefault();
+        onConnectionSelected(thisConnection.id);
+    }
+
+    const ConnectionPassedProps = {
+
+        //Interaction
+        onMouseEnter: () => setColorIfNotSelected(onHoverColor),
+        onMouseLeave: () => setColorIfNotSelected(defaultColor),
+        onClick: handleClick,
+
+        //Styling
+        className: "xarrow",
+        cursor: 'pointer',
+        //endAnchor: offset,
+
     }
 
 
-    const ConnectionProps = {
-
-        start: thisConnection.start,
-        end: thisConnection.end,
-        passProps: {
-            className: "xarrow",
-            onMouseEnter: () => setColorIfNotSelected("green"),
-            onMouseLeave: () => setColorIfNotSelected("black"),
-            onClick: (e) => {
-                console.log("a")
-                e.stopPropagation();
-                onConnectionSelected(thisConnection.id);
-            },
-            cursor: 'pointer',
-            showHead: thisConnection.withArrow,
-            showTail: true,
-            strokeWidth: 10,
-            //endAnchor: offset,
-            path: "straight",
-            color: arrowColor,
-            // labels: minMaxLabels
-
-        }
-  }
-
-
-  return <Xarrow {...{...ConnectionProps}} />;
+  return <Xarrow
+                start={thisConnection.start}
+                end={thisConnection.end}
+                path={paths.grid}
+                labels={minMaxLabels}
+                dashness={false}
+                strokeWidth={5}
+                headSize={5}
+                tailSize={5}
+                showHead={false}
+                showTail={false}
+                showXarrow={true}
+                color={color}
+                gridBreak={"50%"}
+                passProps={ConnectionPassedProps} />;
 };
 
 export default ConnectionElement;
