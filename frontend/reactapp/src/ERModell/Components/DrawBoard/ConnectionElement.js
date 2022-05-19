@@ -59,29 +59,32 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
 
 
     const ConnectionProps = {
-        className: "xarrow",
-        onMouseEnter: () => setColorIfNotSelected("green"),
-        onMouseLeave: () => setColorIfNotSelected("black"),
-        onClick: (e) => {
-            console.log("a")
-            e.stopPropagation();
-            onConnectionSelected(thisConnection.id);
-        },
-        cursor: 'pointer',
+
         start: thisConnection.start,
         end: thisConnection.end,
-        showHead: thisConnection.withArrow,
-        showTail: false,
-        strokeWidth: 30,
-        //endAnchor: offset,
-        path: "straight",
-        color: arrowColor,
-       // labels: minMaxLabels
+        passProps: {
+            className: "xarrow",
+            onMouseEnter: () => setColorIfNotSelected("green"),
+            onMouseLeave: () => setColorIfNotSelected("black"),
+            onClick: (e) => {
+                console.log("a")
+                e.stopPropagation();
+                onConnectionSelected(thisConnection.id);
+            },
+            cursor: 'pointer',
+            showHead: thisConnection.withArrow,
+            showTail: true,
+            strokeWidth: 10,
+            //endAnchor: offset,
+            path: "straight",
+            color: arrowColor,
+            // labels: minMaxLabels
 
-    }
+        }
+  }
 
 
-  return <Xarrow {...ConnectionProps} />;
+  return <Xarrow {...{...ConnectionProps}} />;
 };
 
 export default ConnectionElement;
