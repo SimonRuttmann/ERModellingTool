@@ -16,6 +16,7 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
     let associationType;
     let withArrow = false;
 
+
     //Connections to attributes do not have cardinality
     if(isPartOfAttribute(startElement, endElement)) {
         withLabel = false;
@@ -36,7 +37,7 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
                 associationType = AssociationType.parent;
 
                 //Ensure (start) IsA -- Parent --> Entity (end)
-                if(endElement.type === ERTYPECATEGORY.IsAStructure){
+                if(endElement.erType === ERTYPECATEGORY.IsAStructure){
 
                     let temp = startId;
                     startId = endId;
@@ -50,7 +51,7 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
                 associationType = AssociationType.inheritor;
 
                 //Ensure (start) Parent -- Inheritor --> IsA (end)
-                if(startElement.type === ERTYPECATEGORY.IsAStructure){
+                if(startElement.erType === ERTYPECATEGORY.IsAStructure){
 
                     let temp = startId;
                     startId = endId;
@@ -77,10 +78,10 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
 }
 
 const isPartOfAttribute = (startElement, endElement) => {
-    return startElement.type === ERTYPECATEGORY.Attribute || endElement === ERTYPECATEGORY.Attribute;
+    return startElement.erType === ERTYPECATEGORY.Attribute || endElement.erType === ERTYPECATEGORY.Attribute;
 }
 const isPartOfIsA = (startElement, endElement) => {
-    return startElement.type === ERTYPECATEGORY.IsAStructure || endElement === ERTYPECATEGORY.IsAStructure;
+    return startElement.erType === ERTYPECATEGORY.IsAStructure || endElement.erType === ERTYPECATEGORY.IsAStructure;
 }
 
 
