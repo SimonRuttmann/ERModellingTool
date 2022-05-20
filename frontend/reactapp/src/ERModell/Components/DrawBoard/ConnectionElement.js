@@ -103,10 +103,10 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
   return <Xarrow
                 start={thisConnection.start}
                 end={thisConnection.end}
-                path={paths.straight}
+                path={paths.smooth}
                 labels={minMaxLabels}
                 dashness={false}
-                strokeWidth={5}
+                strokeWidth={6}
                 headSize={5}
                 tailSize={5}
                 showHead={false}
