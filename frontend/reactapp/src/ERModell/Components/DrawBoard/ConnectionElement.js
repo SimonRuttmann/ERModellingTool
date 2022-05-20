@@ -117,17 +117,16 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
 
     }
 
-
   return <Xarrow
                 start={thisConnection.start}
                 end={thisConnection.end}
                 path={paths.smooth}
-                labels={minMaxLabels}
+                labels={thisConnection.withLabel ? minMaxLabels : null}
                 dashness={false}
                 strokeWidth={6}
                 headSize={5}
                 tailSize={5}
-                showHead={false}
+                showHead={thisConnection.withArrow}
                 showTail={false}
                 showXarrow={true}
                 color={color}
