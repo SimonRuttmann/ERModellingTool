@@ -203,6 +203,7 @@ body {
 /* Right edit bar */
 
 .rightSidebarContainer {
+  overflow: auto;
   position: relative;
   width: 300px;
   float: right;

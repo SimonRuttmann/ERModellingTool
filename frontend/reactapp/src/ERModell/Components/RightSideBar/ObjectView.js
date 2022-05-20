@@ -36,6 +36,7 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
     return (
         <React.Fragment>
             {ERTYPE[selectedObject.erType].displayName}
+            <div className={"spacerSmall"}/>
             <div className="rightBarCurrentName">{selectedObject.displayName}</div>
             <hr className="spacer"/>
             <div>

@@ -4,6 +4,7 @@ import {ConnectionCardinality, OBJECTTYPE} from "../../Model/ActionState";
 import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../Util/ObjectUtil";
+import {AssociationType} from "../../Model/Diagram";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState}) => {
 
@@ -43,6 +44,16 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
             });
 
     }
+
+    function filterAndSortParentConnections(){
+        return filterAndSortConnections().filter(connection => connection.associationType === AssociationType.parent);
+    }
+
+    function filterAndSortInheritorConnections(){
+        return filterAndSortConnections().filter(connection => connection.associationType === AssociationType.inheritor);
+    }
+
+
 
     const RelationMenu = () => {
         return (
@@ -106,24 +117,34 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
         return null
     }
 
-    //TODO überlegen ob der graph gerichtet wird oder ein zusätzliches property eingefügt wird
+
     const IsAMenu = () => {
+
+        const parents = filterAndSortParentConnections();
+        const inheritors = filterAndSortInheritorConnections();
+
         return (
 
             <React.Fragment>
 
+                <div className={"spacerBig"}/>
+                {parents.length > 0 ? <div>Parent</div>: <div>No parent</div> }
 
-                {filterAndSortConnections().length > 0 ? <div>Inheritors to:</div>: <div>No inheritors</div> }
+                <div className={"spacerSmall"}/>
 
-                {filterAndSortConnections().map((connection,i) => (
+                {parents.map((connection,i) => (
                     <div key={connection.id + " -- " + i}>
                         {getDisplayNameAndType(connection)} <br/>
                     </div>
                 ))}
 
-                {filterAndSortConnections().length > 0 ? <div>Parent</div>: <div>No parent</div> }
+                <div className={"spacerBig"}/>
 
-                {filterAndSortConnections().map((connection,i) => (
+                {inheritors.length > 0 ? <div>Inheritors:</div>: <div>No inheritors</div> }
+
+                <div className={"spacerSmall"}/>
+
+                {inheritors.map((connection,i) => (
                     <div key={connection.id + " -- " + i}>
                         {getDisplayNameAndType(connection)} <br/>
                     </div>
@@ -171,6 +192,7 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 
         {getDisplayMenu()}
 
+        <div className={"spacerBig"}/>
         <Footer selectedObjectId={selectedObjectId}
                 removeElement={removeElement}
                 drawBoardElements={drawBoardElements}
