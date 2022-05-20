@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Xarrow from 'react-xarrows';
 
 /**
@@ -21,8 +21,14 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
 
     const [color, setState] = useState('black');
 
-    //FIXME This will cause an inifine loop, when clicked at the connection
-   // if(thisConnection.isSelected) setState(onSelectedColor)
+
+    if(thisConnection.isSelected && color !== onSelectedColor) {
+        setState(onSelectedColor)
+    }
+
+    if(!thisConnection.isSelected && color === onSelectedColor){
+        setState(defaultColor)
+    }
 
     const setColorIfNotSelected = (color) => {
         if(!thisConnection.isSelected)
@@ -75,7 +81,7 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
      */
 
     const handleClick = (e) => {
-        e.preventDefault();
+        e.stopPropagation();
         onConnectionSelected(thisConnection.id);
     }
 
@@ -97,7 +103,7 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
   return <Xarrow
                 start={thisConnection.start}
                 end={thisConnection.end}
-                path={paths.grid}
+                path={paths.straight}
                 labels={minMaxLabels}
                 dashness={false}
                 strokeWidth={5}

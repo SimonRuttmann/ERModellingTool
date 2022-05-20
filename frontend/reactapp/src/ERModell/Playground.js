@@ -52,6 +52,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
 
 
+
   /**
    * Synchronize data with parent for download and transformation
    */
@@ -93,45 +94,93 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     if(selectedObjectId == null) return;
 
-    const newElementState = unselectPreviousDrawBoardElement();
+    const newElementState = unselectPreviousElement();
     setSelectedObjectId(null);
 
     setActionState(ACTIONSTATE.Default);
 
-    setDrawBoardElements(() => [
-        ...newElementState
-    ])
+    setElementState(newElementState.type, newElementState.elements)
+
   }
 
+  const setElementState = (type, elements) => {
+
+    if (type === OBJECTTYPE.Connection)
+      setConnections( () => [
+          ...elements
+      ])
+
+    if(type === OBJECTTYPE.DrawBoardElement)
+      setDrawBoardElements(() => [
+          ...elements
+      ])
+
+  }
 
   const onDrawBoardElementSelected = (e, selectedElement) => {
 
+    let targetId = e.target.id;
+
     //click on draw board element
-    let selectedObject = drawBoardElements.find(element => element.id === e.target.id)
+    let selectedObject = drawBoardElements.find(element => element.id === targetId);
+
+    if(selectedObject == null) return;
+
+
     if( actionState === ACTIONSTATE.Default) {
 
-      const unselectedElements = unselectPreviousDrawBoardElement();
+      if(selectedObjectId == null){
 
-      setSelectedObjectId(selectedObject.id);
-      const updatedElements = selectElement(unselectedElements, e.target.id)
+        const updatedElements = selectElement(drawBoardElements, targetId)
 
-      setDrawBoardElements(() => [
-        ...updatedElements
-      ])
+        setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
+
+        setSelectedObjectId(selectedObject.id);
+
+      }
+      else{
+
+        const unselectedElements = unselectPreviousElement();
+
+        if(unselectedElements.type === OBJECTTYPE.Connection){
+          setElementState(OBJECTTYPE.Connection, unselectedElements.elements)
+
+          const updatedElements = selectElement(drawBoardElements, targetId)
+          setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
+        }
+
+        if(unselectedElements.type === OBJECTTYPE.DrawBoardElement){
+
+          const updatedElements = selectElement(unselectedElements.elements, targetId)
+          setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
+
+        }
+
+
+        setSelectedObjectId(selectedObject.id);
+      }
+
+
+
     }
 
 
     if( actionState === ACTIONSTATE.AddConnection) {
 
-      const unselectedElements = unselectPreviousDrawBoardElement();
-      //Selected Object ID is the previously selected element
-      addConnection(selectedObjectId,e.target.id) //TODO von wo nach wo? vom bisher selectierten zum neu selektierten
-      setSelectedObjectId(null);
       setActionState(ACTIONSTATE.Default)
-      //setDrawBoardElementSelected(e.target.id)
+
+      let previousSelectedObject = selectedObjectId;
+      setSelectedObjectId(null);
+
+      const unselectedElements = unselectPreviousElement();
+
+      if(unselectedElements.type === OBJECTTYPE.Connection) return;
+
+      //Selected Object ID is the previously selected element
+      addConnection(previousSelectedObject,e.target.id)
 
       setDrawBoardElements(() => [
-          ...unselectedElements
+          ...unselectedElements.elements
       ])
 
     }
@@ -141,30 +190,57 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   const onConnectionSelected = (connectionId) => {
 
+
     if( actionState === ACTIONSTATE.Default ||
         actionState === ACTIONSTATE.AddConnection) {
-
-      const elements = unselectPreviousDrawBoardElement();
-      setDrawBoardElements(() => [
-          ...elements
-      ])
-
 
       let connection = connections.find(connection => connection.id === connectionId)
       setSelectedObjectId(connection.id);
 
-      const updatedConnections = selectElement(connections, connectionId)
-      setConnections(() => [
+
+      if(selectedObjectId == null){
+
+        const updatedConnections = selectElement(connections, connectionId)
+        setConnections(() => [
           ...updatedConnections
-      ])
+        ])
+
+        return;
+      }
+
+
+      const unselectedElements = unselectPreviousElement();
+
+      if(unselectedElements.type === OBJECTTYPE.Connection) {
+
+        const updatedConnections = selectElement(unselectedElements.elements, connectionId)
+        setConnections(() => [
+          ...updatedConnections
+        ])
+
+        return;
+      }
+
+
+
+      if(unselectedElements.type === OBJECTTYPE.DrawBoardElement){
+        setElementState(OBJECTTYPE.DrawBoardElement, unselectedElements.elements)
+
+        const updatedConnections = selectElement(connections, connectionId)
+        setConnections(() => [
+          ...updatedConnections
+        ])
+
+
+      }
 
     }
 
   };
 
 
+
   const addDrawBoardElement = (e) => {
-    console.log("Add a new draw board element")
 
     let erType = e.dataTransfer.getData('erType');
 
@@ -252,7 +328,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   const removeElement = (id) => {
 
-    console.log("remove")
+
 
     let selectedObject = resolveObjectById(id, drawBoardElements, connections)
 
@@ -262,7 +338,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
   const removeDrawBoardElement = (elementId) => {
-    console.log("Removing draw board element with id: " + elementId)
 
     setConnections((prevState => [
         ...prevState.filter(connection => !(connection.start === elementId || connection.end === elementId))
@@ -280,8 +355,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
 
   const addConnection = (idStart, idEnd) => {
-
-    console.log("Creating a new connection from: " + idStart + " to " + idEnd)
 
     let newConnection =
         {
@@ -302,7 +375,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
   const removeConnectionByObjectIds = (idStart, idEnd) => {
-    console.log("Removing a connection from: " + idStart + " to " + idEnd)
 
     setConnections((prevState) => [
         ...prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
@@ -310,7 +382,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
   const removeConnectionDirect = (connectionToRemove) => {
-    console.log("Removing a connection with id: " + connectionToRemove.id)
 
     setConnections( (prevState => [
         ...prevState.filter((connection)=>!(connectionToRemove.id === connection.id))
@@ -325,18 +396,22 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
 
 
-  const unselectPreviousDrawBoardElement = () => {
+  const unselectPreviousElement = () => {
 
-    if(selectedObjectId == null) return drawBoardElements;
+    let selectedObject = resolveObjectById(selectedObjectId, connections, drawBoardElements);
 
-    return setDrawBoardElementNotSelectedNotHighlighted(selectedObjectId)
-
+    if(selectedObject.objectType === OBJECTTYPE.Connection)
+      return { type: OBJECTTYPE.Connection,
+               elements: setElementNotSelectedNotHighlighted(selectedObjectId, connections)}
+    else
+      return { type: OBJECTTYPE.DrawBoardElement,
+               elements: setElementNotSelectedNotHighlighted(selectedObjectId, drawBoardElements)}
 
   }
 
-  const setDrawBoardElementNotSelectedNotHighlighted = (id) => {
+  const setElementNotSelectedNotHighlighted = (id, elements) => {
 
-    return drawBoardElements.map(element => {
+    return elements.map(element => {
       if (element.id === id) return {...element, isSelected: false, isHighlighted: false}
       return {...element, isHighlighted: false}
     });
