@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import Xarrow from 'react-xarrows';
-import {AssociationType} from "../../Model/Diagram";
 import {calculateOffsets} from "./OffsetCalculator";
 
 /**
