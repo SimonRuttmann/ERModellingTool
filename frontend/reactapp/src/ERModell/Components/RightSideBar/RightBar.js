@@ -74,11 +74,25 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 
 
   const AssociationMenu = () => {
+        let start = resolveObjectById(selectedObject.start, drawBoardElements)
+        let end = resolveObjectById(selectedObject.end, drawBoardElements)
     return (
 
       <React.Fragment>
-        <div>Cardinality</div>
-        <div>Min: {selectedObject.min} Max: {selectedObject.max} </div>
+
+          <div className={"spacerBig"}/>
+
+          <div>Cardinality</div>
+          <div className={"spacerSmall"}/>
+          <div>Min: {selectedObject.min} Max: {selectedObject.max} </div>
+
+          <div className={"spacerBig"}/>
+
+          <div>Connected between:</div>
+          <div className={"spacerSmall"}/>
+          <div>{start.displayName}</div>
+          <div>{end.displayName}</div>
+
       </React.Fragment>
 
     )
@@ -149,7 +163,7 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
       className="rightSidebarContainer"
       onClick={(e) => e.stopPropagation()}>
 
-
+        <div className={"spacerBig"}/>
         <Header selectedObjectId={selectedObjectId}
                 setDisplayName={setDisplayName}
                 drawBoardElements={drawBoardElements}

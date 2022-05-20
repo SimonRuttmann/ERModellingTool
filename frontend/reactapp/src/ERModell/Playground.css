@@ -50,6 +50,19 @@ body {
   margin-bottom: 20px;
 }
 
+.spacerBig {
+  visibility: hidden;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+
+.spacerSmall {
+  visibility: hidden;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 .sidebarDivider {
   border-top: 2px solid whitesmoke;
   border-radius: 15px;

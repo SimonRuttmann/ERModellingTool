@@ -145,30 +145,18 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
         actionState === ACTIONSTATE.AddConnection) {
 
       const elements = unselectPreviousDrawBoardElement();
-      console.log(elements)
       setDrawBoardElements(() => [
           ...elements
       ])
 
 
+      let connection = connections.find(connection => connection.id === connectionId)
+      setSelectedObjectId(connection.id);
 
-//      let connection = connections.find(connection => connection.id === connectionId)
-//      console.log(connection)
-     // setSelectedObjectId(connection.id);
-
-      //const updatedConnections = selectElement(connections, connectionId)
-      let shallowCopy = [...connections];
-      let selectedElement = shallowCopy.find(element => element.id === connectionId)
-
-      var a = Object.assign({},selectedElement)
-      console.log(a)
-       selectedElement.isSelected = true;
-
-      //return[...shallowCopy];
-      //console.log(updatedConnections)
-    //  setConnections(() => [
-    //    {...selectedElement, isSelected: true}
-    //  ])
+      const updatedConnections = selectElement(connections, connectionId)
+      setConnections(() => [
+          ...updatedConnections
+      ])
 
     }
 
@@ -321,11 +309,11 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     ])
   }
 
-  const removeConnectionDirect = (connectionId) => {
-    console.log("Removing a connection with id: " + connectionId)
+  const removeConnectionDirect = (connectionToRemove) => {
+    console.log("Removing a connection with id: " + connectionToRemove.id)
 
     setConnections( (prevState => [
-        ...prevState.filter((connection)=>!(connectionId === connection.id))
+        ...prevState.filter((connection)=>!(connectionToRemove.id === connection.id))
     ]))
   }
 

@@ -15,14 +15,15 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
     if (selectedObject == null) return null;
 
 
-    const isConnection = selectedObject.type === OBJECTTYPE.Connection
+    const isConnection = selectedObject.objectType === OBJECTTYPE.Connection
     const isIsAStructure = selectedObject.erType ? selectedObject.erType === ERTYPE.IsAStructure.name : false;
 
     if(isIsAStructure) {
         return (
-            <div>{ERTYPE[selectedObject.erType].toolTipTitle}</div>
+            <div>{ERTYPE[selectedObject.erType].displayName}</div>
         )
     }
+
 
     if(isConnection) {
         return (
@@ -33,7 +34,7 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
 
     return (
         <React.Fragment>
-            {ERTYPE[selectedObject.erType].toolTipTitle}
+            {ERTYPE[selectedObject.erType].displayName}
             <div className="rightBarCurrentName">{selectedObject.displayName}</div>
             <hr className="spacer"/>
             <div>
