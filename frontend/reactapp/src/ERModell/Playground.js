@@ -117,12 +117,10 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   }
 
-  const onDrawBoardElementSelected = (e, selectedElement) => {
-
-    let targetId = e.target.id;
+  const onDrawBoardElementSelected = (drawBoardElementId) => {
 
     //click on draw board element
-    let selectedObject = drawBoardElements.find(element => element.id === targetId);
+    let selectedObject = drawBoardElements.find(element => element.id === drawBoardElementId);
 
     if(selectedObject == null) return;
 
@@ -131,7 +129,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
       if(selectedObjectId == null){
 
-        const updatedElements = selectElement(drawBoardElements, targetId)
+        const updatedElements = selectElement(drawBoardElements, drawBoardElementId)
 
         setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
 
@@ -145,13 +143,13 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
         if(unselectedElements.type === OBJECTTYPE.Connection){
           setElementState(OBJECTTYPE.Connection, unselectedElements.elements)
 
-          const updatedElements = selectElement(drawBoardElements, targetId)
+          const updatedElements = selectElement(drawBoardElements, drawBoardElementId)
           setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
         }
 
         if(unselectedElements.type === OBJECTTYPE.DrawBoardElement){
 
-          const updatedElements = selectElement(unselectedElements.elements, targetId)
+          const updatedElements = selectElement(unselectedElements.elements, drawBoardElementId)
           setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
 
         }
@@ -177,7 +175,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
       if(unselectedElements.type === OBJECTTYPE.Connection) return;
 
       //Selected Object ID is the previously selected element
-      addConnection(previousSelectedObject,e.target.id)
+      addConnection(previousSelectedObject,drawBoardElementId)
 
       setDrawBoardElements(() => [
           ...unselectedElements.elements

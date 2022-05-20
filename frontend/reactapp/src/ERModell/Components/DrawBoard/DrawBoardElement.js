@@ -61,7 +61,7 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
 
     //Prevent click event, when drag is stopped
     if (isDragging===true) return;
-    onDrawBoardElementSelected(e, thisObject);
+    onDrawBoardElementSelected(thisObject.id);
   };
 
   //Handle drag and drop
