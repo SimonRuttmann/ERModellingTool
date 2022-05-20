@@ -3,6 +3,7 @@ import '../../Playground.css';
 import {ACTIONSTATE, OBJECTTYPE} from "../../Model/ActionState";
 import {ERTYPE} from "../../Model/ErType";
 import {resolveObjectById} from "../Util/ObjectUtil";
+import {AssociationType} from "../../Model/Diagram";
 
 
 //We hold here the selected object ! when we change anything this will still be the "old" object, the new object is a clone of this one
@@ -47,7 +48,7 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
     )
 }
 
-export const Footer = ({selectedObjectId, removeElement, setActionState, drawBoardElements, connections, toAddConnectionState}) => {
+export const Footer = ({selectedObjectId, removeElement, drawBoardElements, connections, toAddConnectionState}) => {
 
     if(selectedObjectId == null) return null;
 
@@ -55,28 +56,38 @@ export const Footer = ({selectedObjectId, removeElement, setActionState, drawBoa
     if (selectedObject == null) return null;
 
     if(selectedObject.objectType === OBJECTTYPE.Connection){
-        return ( <FooterDelete removeElement={removeElement} selectedObjectId={selectedObjectId} />)
+        return ( <FooterDelete removeElement={removeElement} selectedObject={selectedObject} />)
     }
 
-    return (
 
+    return (
         <React.Fragment>
-            <FooterAddConnection toAddConnectionState={toAddConnectionState} selectedObjectId={selectedObjectId}/>
-            <FooterDelete removeElement={removeElement} selectedObjectId={selectedObjectId}/>
+            <FooterAddConnection toAddConnectionState={toAddConnectionState} selectedObject={selectedObject}/>
+            <FooterDelete removeElement={removeElement} selectedObject={selectedObject}/>
         </React.Fragment>
 
     )
 }
 
-const FooterDelete = ({removeElement, selectedObjectId}) => {
+const FooterDelete = ({removeElement, selectedObject}) => {
     return(
-        <button className="rightBarButton" onClick={() => removeElement(selectedObjectId)}>Delete</button>
+        <button className="rightBarButton" onClick={() => removeElement(selectedObject.id)}>Delete</button>
     )
 };
 
 //bad setState
-const FooterAddConnection = ({toAddConnectionState, selectedObjectId}) => {
+const FooterAddConnection = ({toAddConnectionState, selectedObject}) => {
+
+
+    if(selectedObject.erType === ERTYPE.IsAStructure.name)
+        return(
+            <React.Fragment>
+                <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, AssociationType.parent)}>Add Parent</button>
+                <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, AssociationType.inheritor)}>Add Inheritor</button>
+            </React.Fragment>
+        )
+
     return(
-        <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObjectId)}>Add Association</button>
+        <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, AssociationType.association)}>Add Association</button>
     )
 }

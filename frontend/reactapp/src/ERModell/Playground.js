@@ -9,6 +9,8 @@ import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import TransformButton from "./TransformButton";
+import {AssociationType} from "./Model/Diagram";
+import {createConnection} from "./ConnectionCreationRules";
 
 const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
@@ -37,7 +39,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
    * max: 1,
    * objectType: OBJECTTYPE.Connection,
    * isSelected: false,
-   * withArrow: false
+   * withArrow: false,
+   * withLabel: true,
    */
   const [connections, setConnections] = useState([]);
 
@@ -50,8 +53,27 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
+  //This state only indicate which kind of connection should be added
+  const [connectionInformation, addConnectionInformation] = useState(AssociationType.association)
 
+  /**
+   * Method to change the current ActionState
+   *
+   * @param state The state to change to
+   * @param associationType Optional definition of connection type to add
+   *
+   * @see ACTIONSTATE
+   * @see AssociationType
+   */
+  const changeActionState = (state, associationType) => {
 
+    if(state == null) return;
+    if(associationType == null) associationType = AssociationType.association;
+
+    setActionState(state);
+    addConnectionInformation(associationType);
+
+  }
 
   /**
    * Synchronize data with parent for download and transformation
@@ -97,7 +119,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     const newElementState = unselectPreviousElement();
     setSelectedObjectId(null);
 
-    setActionState(ACTIONSTATE.Default);
+    changeActionState(ACTIONSTATE.Default);
 
     setElementState(newElementState.type, newElementState.elements)
 
@@ -165,7 +187,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     if( actionState === ACTIONSTATE.AddConnection) {
 
-      setActionState(ACTIONSTATE.Default)
+      changeActionState(ACTIONSTATE.Default)
 
       let previousSelectedObject = selectedObjectId;
       setSelectedObjectId(null);
@@ -175,7 +197,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
       if(unselectedElements.type === OBJECTTYPE.Connection) return;
 
       //Selected Object ID is the previously selected element
-      addConnection(previousSelectedObject,drawBoardElementId)
+      addConnection(previousSelectedObject,drawBoardElementId, connectionInformation)
 
       setDrawBoardElements(() => [
           ...unselectedElements.elements
@@ -352,19 +374,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
 
 
-  const addConnection = (idStart, idEnd) => {
+  const addConnection = (idStart, idEnd, connectionInformation) => {
 
-    let newConnection =
-        {
-          id: `${idStart} --> ${idEnd} - ${Date.now()}`,
-          start: idStart,
-          end: idEnd,
-          min: 1,
-          max: 1,
-          objectType: OBJECTTYPE.Connection,
-          isSelected: false,
-          withArrow: false,
-        }
+    let newConnection = createConnection(drawBoardElements, idStart, idEnd, connectionInformation);
 
     setConnections((prevState) => [
       ...prevState,
@@ -458,9 +470,11 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
 
-  const toAddConnectionState = (id) => {
 
-    setActionState(ACTIONSTATE.AddConnection)
+  const toAddConnectionState = (id, type) => {
+
+    changeActionState(ACTIONSTATE.AddConnection, type)
+
     let selectedObject = resolveObjectById(id, drawBoardElements, connections)
     //TODO Some logic regarding the selected object, what will be seletected etc
 
@@ -485,8 +499,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     removeElement: removeElement,
     setDisplayName: setDisplayName,
     editConnectionNotation: editConnectionNotation,
-    toAddConnectionState: toAddConnectionState,
-    setActionState: setActionState,
+    toAddConnectionState: toAddConnectionState
   }
 
 

@@ -5,7 +5,7 @@ import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../Util/ObjectUtil";
 
-const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, setActionState, drawBoardElements, toAddConnectionState}) => {
+const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState}) => {
 
     if(selectedObjectId == null) return null;
 
@@ -173,7 +173,6 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 
         <Footer selectedObjectId={selectedObjectId}
                 removeElement={removeElement}
-                setActionState={setActionState}
                 drawBoardElements={drawBoardElements}
                 connections={connections}
                 toAddConnectionState={toAddConnectionState}/>
