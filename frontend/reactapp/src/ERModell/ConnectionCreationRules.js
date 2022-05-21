@@ -1,7 +1,7 @@
 import {OBJECTTYPE} from "./Model/ActionState";
 import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import {ERTYPECATEGORY} from "./Model/ErType";
-import {AssociationType} from "./Model/Diagram";
+import {AssociationTypeDetails, ConnectionType} from "./Model/Diagram";
 
 
 export const createConnection = (drawBoardElements, idStart, idEnd, connectionInformation) => {
@@ -13,14 +13,15 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
     let endElement = resolveObjectById(idEnd, drawBoardElements);
 
     let withLabel = true;
-    let associationType;
+    let connectionType;
     let withArrow = false;
-
+    let associationTypeDetails = AssociationTypeDetails.association;
 
     //Connections to attributes do not have cardinality
     if(isPartOfAttribute(startElement, endElement)) {
         withLabel = false;
-        associationType = AssociationType.attributeConnector;
+        connectionType = ConnectionType.association;
+        associationTypeDetails = AssociationTypeDetails.attributeConnector;
     }
 
     //Connections to/from IsA-Structures do not have cardinality
@@ -32,9 +33,9 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
         withArrow = true;
 
         switch (connectionInformation){
-            case AssociationType.parent:
+            case ConnectionType.parent:
 
-                associationType = AssociationType.parent;
+                connectionType = ConnectionType.parent;
 
                 //Ensure (start) IsA -- Parent --> Entity (end)
                 if(endElement.erType === ERTYPECATEGORY.IsAStructure){
@@ -45,10 +46,10 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
                 }
                 break;
 
-            case AssociationType.association:
-            case AssociationType.inheritor:
+            case ConnectionType.association:
+            case ConnectionType.inheritor:
 
-                associationType = AssociationType.inheritor;
+                connectionType = ConnectionType.inheritor;
 
                 //Ensure (start) Parent -- Inheritor --> IsA (end)
                 if(startElement.erType === ERTYPECATEGORY.IsAStructure){
@@ -72,7 +73,8 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
         isSelected: false,
         withArrow: withArrow,
         withLabel: withLabel,
-        associationType: associationType
+        connectionType: connectionType,
+        associationTypeDetails: associationTypeDetails
     };
 
 }

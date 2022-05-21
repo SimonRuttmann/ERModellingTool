@@ -4,7 +4,7 @@ import {ConnectionCardinality, OBJECTTYPE} from "../../Model/ActionState";
 import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../Util/ObjectUtil";
-import {AssociationType} from "../../Model/Diagram";
+import {ConnectionType} from "../../Model/Diagram";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState}) => {
 
@@ -46,11 +46,11 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     }
 
     function filterAndSortParentConnections(){
-        return filterAndSortConnections().filter(connection => connection.associationType === AssociationType.parent);
+        return filterAndSortConnections().filter(connection => connection.connectionType === ConnectionType.parent);
     }
 
     function filterAndSortInheritorConnections(){
-        return filterAndSortConnections().filter(connection => connection.associationType === AssociationType.inheritor);
+        return filterAndSortConnections().filter(connection => connection.connectionType === ConnectionType.inheritor);
     }
 
 

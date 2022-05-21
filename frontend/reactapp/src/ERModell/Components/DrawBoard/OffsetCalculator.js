@@ -1,4 +1,4 @@
-import {AssociationType} from "../../Model/Diagram";
+import {ConnectionType} from "../../Model/Diagram";
 
 /**
  * Offset
@@ -46,7 +46,7 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
     let endOffset = defaultOffset;
 
     //It is ensured: (start) IsA -- Parent --> Entity (end)
-    if(thisConnection.withArrow && thisConnection.associationType === AssociationType.parent){
+    if(thisConnection.withArrow && thisConnection.connectionType === ConnectionType.parent){
 
         let connectionsSameDestination = connections.filter(connection => connection.start === thisConnection.start).
         sort((a,b) => { return a.id < b.id ? -1 : 1 } );
@@ -57,7 +57,7 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
     }
 
     //It is ensured: (start) Parent -- Inheritor --> IsA (end)
-    if(thisConnection.withArrow && thisConnection.associationType === AssociationType.inheritor){
+    if(thisConnection.withArrow && thisConnection.connectionType === ConnectionType.inheritor){
 
         let connectionsSameDestination = connections.filter(connection => connection.end === thisConnection.end).
                                                      sort((a,b) => { return a.id < b.id ? -1 : 1 } );

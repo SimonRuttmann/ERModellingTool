@@ -3,7 +3,7 @@ import '../../Playground.css';
 import {ACTIONSTATE, OBJECTTYPE} from "../../Model/ActionState";
 import {ERTYPE} from "../../Model/ErType";
 import {resolveObjectById} from "../Util/ObjectUtil";
-import {AssociationType} from "../../Model/Diagram";
+import {ConnectionType} from "../../Model/Diagram";
 
 
 //We hold here the selected object ! when we change anything this will still be the "old" object, the new object is a clone of this one
@@ -83,12 +83,12 @@ const FooterAddConnection = ({toAddConnectionState, selectedObject}) => {
     if(selectedObject.erType === ERTYPE.IsAStructure.name)
         return(
             <React.Fragment>
-                <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, AssociationType.parent)}>Add Parent</button>
-                <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, AssociationType.inheritor)}>Add Inheritor</button>
+                <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, ConnectionType.parent)}>Add Parent</button>
+                <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, ConnectionType.inheritor)}>Add Inheritor</button>
             </React.Fragment>
         )
 
     return(
-        <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, AssociationType.association)}>Add Association</button>
+        <button className="rightBarButton" onClick={() => toAddConnectionState(selectedObject.id, ConnectionType.association)}>Add Association</button>
     )
 }

@@ -9,7 +9,7 @@ import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import TransformButton from "./TransformButton";
-import {AssociationType} from "./Model/Diagram";
+import {ConnectionType} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
 import {createSelection} from "./ErDrawingRules";
 
@@ -55,24 +55,24 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
   //This state only indicate which kind of connection should be added
-  const [connectionInformation, addConnectionInformation] = useState(AssociationType.association)
+  const [connectionInformation, addConnectionInformation] = useState(ConnectionType.association)
 
   /**
    * Method to change the current ActionState
    *
    * @param state The state to change to
-   * @param associationType Optional definition of connection type to add
+   * @param connectionType Optional definition of connection type to add
    *
    * @see ACTIONSTATE
-   * @see AssociationType
+   * @see ConnectionType
    */
-  const changeActionState = (state, associationType) => {
+  const changeActionState = (state, connectionType) => {
 
     if(state == null) return;
-    if(associationType == null) associationType = AssociationType.association;
+    if(connectionType == null) connectionType = ConnectionType.association;
 
     setActionState(state);
-    addConnectionInformation(associationType);
+    addConnectionInformation(connectionType);
 
   }
 
