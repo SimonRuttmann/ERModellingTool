@@ -7,7 +7,8 @@ import {
     applyRules,
     ifDestinationIsaPathDoesNotExist,
     ifDestinationAttributePathDoesNotExist,
-    onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection
+    onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+    checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure
 } from "./ErRulesUtil";
 
 
@@ -18,7 +19,8 @@ export const handleSelectIdentifyingAttribute = (selectedObject, connectionType,
     return applyRules(drawBoardElements, connections, selectedObject,
                         identifyingAttributeRule,
                         pathDoesNotAlreadyExist,
-                        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection)
+                        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+                        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -47,7 +49,11 @@ export const handleSelectNormalAttribute = (selectedObject, connectionType, draw
 
     if(! isAssociationConnectionType(connectionType)) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, normalAttributeRule, pathDoesNotAlreadyExist)
+    return applyRules(drawBoardElements, connections, selectedObject,
+        normalAttributeRule,
+        pathDoesNotAlreadyExist,
+        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -76,7 +82,11 @@ export const handleSelectMultivaluedAttribute = (selectedObject, connectionType,
 
     if(! isAssociationConnectionType(connectionType)) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, multivaluedAttributeRule, pathDoesNotAlreadyExist)
+    return applyRules(drawBoardElements, connections, selectedObject,
+        multivaluedAttributeRule,
+        pathDoesNotAlreadyExist,
+        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -105,7 +115,11 @@ export const handleSelectWeakIdentifyingAttribute = (selectedObject, connectionT
 
     if(! isAssociationConnectionType(connectionType)) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, weakIdentifyingAttributeRule, pathDoesNotAlreadyExist)
+    return applyRules(drawBoardElements, connections, selectedObject,
+        weakIdentifyingAttributeRule,
+        pathDoesNotAlreadyExist,
+        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
