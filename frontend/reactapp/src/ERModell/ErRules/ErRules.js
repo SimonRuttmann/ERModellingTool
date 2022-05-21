@@ -8,7 +8,8 @@ import {
     ifDestinationIsaPathDoesNotExist,
     ifDestinationAttributePathDoesNotExist,
     onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-    checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure
+    checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure,
+    relationOrEntityToAttributeIfAttributeHasNoRoot
 } from "./ErRulesUtil";
 
 
@@ -28,9 +29,9 @@ const identifyingAttributeRule = (element) => {
 
     switch (element.erType) {
 
-        case ERTYPE.IdentifyingAttribute.name:       return true;
-        case ERTYPE.NormalAttribute.name:            return true;
-        case ERTYPE.MultivaluedAttribute.name:       return true;
+        case ERTYPE.IdentifyingAttribute.name:       return false;
+        case ERTYPE.NormalAttribute.name:            return false;
+        case ERTYPE.MultivaluedAttribute.name:       return false;
         case ERTYPE.WeakIdentifyingAttribute.name:   return false;
 
         case ERTYPE.StrongEntity.name:               return true;
@@ -61,10 +62,10 @@ const normalAttributeRule = (element) => {
 
     switch (element.erType) {
 
-        case ERTYPE.IdentifyingAttribute.name:       return true;
+        case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return true;
         case ERTYPE.MultivaluedAttribute.name:       return true;
-        case ERTYPE.WeakIdentifyingAttribute.name:   return true;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
 
         case ERTYPE.StrongEntity.name:               return true;
         case ERTYPE.WeakEntity.name:                 return true;
@@ -94,10 +95,10 @@ const multivaluedAttributeRule = (element) => {
 
     switch (element.erType) {
 
-        case ERTYPE.IdentifyingAttribute.name:       return true;
+        case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return true;
         case ERTYPE.MultivaluedAttribute.name:       return true;
-        case ERTYPE.WeakIdentifyingAttribute.name:   return true;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
 
         case ERTYPE.StrongEntity.name:               return true;
         case ERTYPE.WeakEntity.name:                 return true;
@@ -128,15 +129,15 @@ const weakIdentifyingAttributeRule = (element) => {
     switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return false;
-        case ERTYPE.NormalAttribute.name:            return true;
-        case ERTYPE.MultivaluedAttribute.name:       return true;
-        case ERTYPE.WeakIdentifyingAttribute.name:   return true;
+        case ERTYPE.NormalAttribute.name:            return false;
+        case ERTYPE.MultivaluedAttribute.name:       return false;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
 
         case ERTYPE.StrongEntity.name:               return false;
         case ERTYPE.WeakEntity.name:                 return true;
 
         case ERTYPE.StrongRelation.name:             return false;
-        case ERTYPE.WeakRelation.name:               return true;
+        case ERTYPE.WeakRelation.name:               return false;
 
         case ERTYPE.IsAStructure.name:               return false;
     }
@@ -151,7 +152,8 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
     return applyRules(drawBoardElements, connections, selectedObject,
                         strongEntityRule,
                         ifDestinationAttributePathDoesNotExist,
-                        ifDestinationIsaPathDoesNotExist)
+                        ifDestinationIsaPathDoesNotExist,
+                        relationOrEntityToAttributeIfAttributeHasNoRoot)
 }
 
 
@@ -193,7 +195,8 @@ export const handleSelectWeakEntity = (selectedObject, connectionType, drawBoard
     return applyRules(drawBoardElements, connections, selectedObject,
                         weakEntityRule,
                         ifDestinationAttributePathDoesNotExist,
-                        ifDestinationIsaPathDoesNotExist)
+                        ifDestinationIsaPathDoesNotExist,
+                        relationOrEntityToAttributeIfAttributeHasNoRoot)
 
 }
 
@@ -223,7 +226,8 @@ export const handleSelectStrongRelation = (selectedObject, connectionType, drawB
 
     return applyRules(drawBoardElements, connections, selectedObject,
                         strongRelationRule,
-                        ifDestinationAttributePathDoesNotExist)
+                        ifDestinationAttributePathDoesNotExist,
+                        relationOrEntityToAttributeIfAttributeHasNoRoot)
 }
 
 const strongRelationRule = (element) => {
@@ -252,7 +256,8 @@ export const handleSelectWeakRelation = (selectedObject, connectionType, drawBoa
 
     return applyRules(drawBoardElements, connections, selectedObject,
                         weakRelationRule,
-                        ifDestinationAttributePathDoesNotExist)
+                        ifDestinationAttributePathDoesNotExist,
+                        relationOrEntityToAttributeIfAttributeHasNoRoot)
 }
 
 const weakRelationRule = (element) => {
