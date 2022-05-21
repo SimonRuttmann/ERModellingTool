@@ -11,6 +11,7 @@ import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import TransformButton from "./TransformButton";
 import {AssociationType} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
+import {createSelection} from "./ErDrawingRules";
 
 const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
@@ -384,12 +385,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     ])
   }
 
-  const removeConnectionByObjectIds = (idStart, idEnd) => {
-
-    setConnections((prevState) => [
-        ...prevState.filter((connection)=>!(connection.start === idStart && connection.end === idEnd))
-    ])
-  }
 
   const removeConnectionDirect = (connectionToRemove) => {
 
@@ -397,13 +392,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
         ...prevState.filter((connection)=>!(connectionToRemove.id === connection.id))
     ]))
   }
-
-
-
-  const setConnectionSelected = (id, isSelected) => {
-
-  }
-
 
 
   const unselectPreviousElement = () => {
@@ -475,9 +463,14 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     changeActionState(ACTIONSTATE.AddConnection, type)
 
-    let selectedObject = resolveObjectById(id, drawBoardElements, connections)
     //TODO Some logic regarding the selected object, what will be seletected etc
+    const selectionElements = createSelection(id, type, drawBoardElements, connections)
 
+    //setDrawBoardElements(( () => [
+    //  ...selectionElements
+    //]))
+
+    //TODO below code can be deleted
     let changedElements = drawBoardElements.map( (element) =>  {
         return {...element, isHighlighted: true};
     } )
