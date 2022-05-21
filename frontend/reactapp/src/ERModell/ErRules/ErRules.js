@@ -1,102 +1,8 @@
-import {resolveObjectById} from "./Components/Util/ObjectUtil";
-import {ERTYPE} from "./Model/ErType";
-import {ConnectionType} from "./Model/Diagram";
+import {ERTYPE} from "../Model/ErType";
+import {isAssociationConnectionType,isInheritorConnectionType, isParentConnectionType, pathDoesNotAlreadyExist, applyRules} from "./ErRulesUtil";
 
 
-export const createSelection = (id, connectionType, drawBoardElements, connections) => {
-    let selectedObject = resolveObjectById(id, drawBoardElements, connections)
-
-
-    const type = selectedObject.erType;
-    let appliedRule;
-
-    switch (type) {
-
-        case ERTYPE.IdentifyingAttribute.name:       appliedRule = handleSelectIdentifyingAttribute;    break;
-        case ERTYPE.NormalAttribute.name:            appliedRule = handleSelectNormalAttribute;         break;
-        case ERTYPE.MultivaluedAttribute.name:       appliedRule = handleSelectMultivaluedAttribute;    break;
-        case ERTYPE.WeakIdentifyingAttribute.name:   appliedRule = handleSelectWeakIdentifyingAttribute;break;
-
-        case ERTYPE.StrongEntity.name:               appliedRule = handleSelectStrongEntity;            break;
-        case ERTYPE.WeakEntity.name:                 appliedRule = handleSelectWeakEntity;              break;
-
-        case ERTYPE.StrongRelation.name:             appliedRule = handleSelectStrongRelation;          break;
-        case ERTYPE.WeakRelation.name:               appliedRule = handleSelectWeakRelation;            break;
-
-        case ERTYPE.IsAStructure.name:               appliedRule = handleSelectIsAStructure;            break;
-    }
-
-    const copiedDrawBoardElements = [...drawBoardElements]
-    const selectableDrawBoardElements = appliedRule(selectedObject, connectionType, copiedDrawBoardElements, connections)
-
-    //MARK ELEMENTS!
-    console.log(selectableDrawBoardElements)
-    return selectableDrawBoardElements;
-
-}
-/*
-switch (connectionType){
-    case ConnectionType.inheritor:
-    case ConnectionType.parent:
-    case ConnectionType.association:
-}
-
- */
-
-const isAssociationConnectionType = (connectionType) => {
-    return connectionType === ConnectionType.association;
-}
-
-const isParentConnectionType = (connectionType) => {
-    return connectionType === ConnectionType.parent;
-}
-
-const isInheritorConnectionType = (connectionType) => {
-    return connectionType === ConnectionType.inheritor;
-}
-
-
-const pathDoesNotAlreadyExist = (element, connections, selectedObject) => {
-
-    //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
-
-    const samePathConnections  =
-        connections.filter(connection => connection.start === element.id        && connection.end === selectedObject.id)
-            .filter(connection => connection.start === selectedObject.id && connection.end === element.id)
-
-    return samePathConnections.length === 0
-}
-
-
-/**
- * Filters all elements based on the given rules as callback functions
- * @param elements The elements to apply the rule to
- * @param connections All connections which already persist
- * @param selectedObject The origin object
- * @param rules Callback functions which define specific rules every element has to pass
- *              Those callback functions will be executed with each element, the provided connections and the selectedObject
- * @returns {*} All elements, which pass all rules
- */
-const applyRules = (elements, connections, selectedObject, ...rules) => {
-
-    return elements.filter(element => {
-
-        for (let rule of rules){
-
-            if(! rule(element, connections, selectedObject)) {
-                //Element did not pass a rule
-                return false;
-            }
-
-        }
-
-        //Element did pass all rules
-        return true;
-    })
-}
-
-
-const handleSelectIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
@@ -126,7 +32,7 @@ const identifyingAttributeRule = (element) => {
 }
 
 
-const handleSelectNormalAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectNormalAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
@@ -155,7 +61,7 @@ const normalAttributeRule = (element) => {
 }
 
 
-const handleSelectMultivaluedAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectMultivaluedAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
@@ -184,7 +90,7 @@ const multivaluedAttributeRule = (element) => {
 }
 
 
-const handleSelectWeakIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectWeakIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
@@ -213,7 +119,7 @@ const weakIdentifyingAttributeRule = (element) => {
 }
 
 
-const handleSelectStrongEntity = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if( !(isAssociationConnectionType(connectionType) || isInheritorConnectionType(connectionType))) return;
 
@@ -242,7 +148,7 @@ const strongEntityRule = (element) => {
 
 }
 
-const handleSelectWeakEntity = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectWeakEntity = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if( !(isAssociationConnectionType(connectionType) || isInheritorConnectionType(connectionType))) return;
 
@@ -270,7 +176,7 @@ const weakEntityRule = (element) => {
 
 }
 
-const handleSelectStrongRelation = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectStrongRelation = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
@@ -296,7 +202,8 @@ const strongRelationRule = (element) => {
     }
 
 }
-const handleSelectWeakRelation = (selectedObject, connectionType, drawBoardElements, connections) => {
+
+export const handleSelectWeakRelation = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
@@ -323,7 +230,7 @@ const weakRelationRule = (element) => {
 
 }
 
-const handleSelectIsAStructure = (selectedObject, connectionType, drawBoardElements, connections) => {
+export const handleSelectIsAStructure = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if( !(isParentConnectionType(connectionType) || isInheritorConnectionType(connectionType))) return;
 
@@ -345,16 +252,9 @@ const isAStructureRule = (element) => {
         case ERTYPE.StrongRelation.name:             return false;
         case ERTYPE.WeakRelation.name:               return false;
 
-        case ERTYPE.IsAStructure.name:               return true;
+        case ERTYPE.IsAStructure.name:               return false;
     }
 
 }
 
 
-
-
-
-
-
-
-//Todo Ein to do ist noch offen, es muss noch die breite / höhe abhängig von der anzahl der zeichen ermittellt werden

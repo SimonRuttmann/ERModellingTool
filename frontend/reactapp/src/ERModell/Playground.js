@@ -11,7 +11,7 @@ import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import TransformButton from "./TransformButton";
 import {ConnectionType} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
-import {createSelection} from "./ErDrawingRules";
+import {createSelection} from "./ErRules/ErDrawingRuleEnforcer";
 
 const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
