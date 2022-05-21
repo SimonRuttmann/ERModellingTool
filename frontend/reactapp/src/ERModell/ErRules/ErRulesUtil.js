@@ -251,3 +251,14 @@ export const checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStruct
     return false;
 
 }
+
+
+export const relationOrEntityToAttributeIfAttributeHasNoRoot = (element, connections, selectedObject) => {
+
+    //Rule only applies, if element to connect is of type attribute
+    if(!isElementOfCategoryAttribute(element)) return true;
+
+    const possibleRoot = resolveRootElementOfAttribute(element, connections);
+
+    return possibleRoot == null;
+}
