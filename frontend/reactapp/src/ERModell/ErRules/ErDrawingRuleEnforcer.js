@@ -39,10 +39,17 @@ export const createSelection = (id, connectionType, drawBoardElements, connectio
     let copiedDrawBoardElements = [...drawBoardElements]
     const selectableDrawBoardElements = appliedRule(selectedObject, connectionType, copiedDrawBoardElements, connections)
 
+    //Nothing did pass the tests, therefore return the elements not marked
+    if (selectableDrawBoardElements == null) return copiedDrawBoardElements;
 
-    //MARK ELEMENTS!
-    console.log(selectableDrawBoardElements)
-    return selectableDrawBoardElements;
+    //For each element in selectableDrawBoardElements set the highlighted flag to true
+    return copiedDrawBoardElements.map( (element) =>  {
+        let isHighlighted = false;
+
+        if(selectableDrawBoardElements.indexOf(element) !== -1)  isHighlighted = true;
+
+        return {...element, isHighlighted: isHighlighted}
+    } )
 
 }
 

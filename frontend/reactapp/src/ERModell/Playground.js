@@ -463,20 +463,10 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     changeActionState(ACTIONSTATE.AddConnection, type)
 
-    //TODO Some logic regarding the selected object, what will be seletected etc
     const selectionElements = createSelection(id, type, drawBoardElements, connections)
 
-    //setDrawBoardElements(( () => [
-    //  ...selectionElements
-    //]))
-
-    //TODO below code can be deleted
-    let changedElements = drawBoardElements.map( (element) =>  {
-        return {...element, isHighlighted: true};
-    } )
-
     setDrawBoardElements(( () => [
-      ...changedElements
+      ...selectionElements
     ]))
 
   }

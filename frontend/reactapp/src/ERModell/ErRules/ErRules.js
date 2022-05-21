@@ -13,7 +13,7 @@ export const handleSelectIdentifyingAttribute = (selectedObject, connectionType,
 
 const identifyingAttributeRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return true;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -42,7 +42,7 @@ export const handleSelectNormalAttribute = (selectedObject, connectionType, draw
 
 const normalAttributeRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return true;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -71,7 +71,7 @@ export const handleSelectMultivaluedAttribute = (selectedObject, connectionType,
 
 const multivaluedAttributeRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return true;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -100,7 +100,7 @@ export const handleSelectWeakIdentifyingAttribute = (selectedObject, connectionT
 
 const weakIdentifyingAttributeRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -130,7 +130,7 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
 
 const strongEntityRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return true;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -158,7 +158,7 @@ export const handleSelectWeakEntity = (selectedObject, connectionType, drawBoard
 
 const weakEntityRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -185,7 +185,7 @@ export const handleSelectStrongRelation = (selectedObject, connectionType, drawB
 
 const strongRelationRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return true;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -212,7 +212,7 @@ export const handleSelectWeakRelation = (selectedObject, connectionType, drawBoa
 
 const weakRelationRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return true;
@@ -239,7 +239,7 @@ export const handleSelectIsAStructure = (selectedObject, connectionType, drawBoa
 
 const isAStructureRule = (element) => {
 
-    switch (element.erType.name) {
+    switch (element.erType) {
 
         case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return false;
