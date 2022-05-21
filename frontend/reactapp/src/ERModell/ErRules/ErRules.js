@@ -1,13 +1,24 @@
 import {ERTYPE} from "../Model/ErType";
-import {isAssociationConnectionType,isInheritorConnectionType, isParentConnectionType, pathDoesNotAlreadyExist, applyRules} from "./ErRulesUtil";
+import {
+    isAssociationConnectionType,
+    isInheritorConnectionType,
+    isParentConnectionType,
+    pathDoesNotAlreadyExist,
+    applyRules,
+    ifDestinationIsaPathDoesNotExist,
+    ifDestinationAttributePathDoesNotExist,
+    onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection
+} from "./ErRulesUtil";
 
 
 export const handleSelectIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
 
     if(! isAssociationConnectionType(connectionType)) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, identifyingAttributeRule, pathDoesNotAlreadyExist)
-    //TODO keine zyklischen verbindungen!
+    return applyRules(drawBoardElements, connections, selectedObject,
+                        identifyingAttributeRule,
+                        pathDoesNotAlreadyExist,
+                        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection)
 }
 
 
@@ -123,10 +134,23 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
 
     if( !(isAssociationConnectionType(connectionType) || isInheritorConnectionType(connectionType))) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, strongEntityRule)
-    //TODO path to isa does not already exist or attribute
+    return applyRules(drawBoardElements, connections, selectedObject,
+                        strongEntityRule,
+                        ifDestinationAttributePathDoesNotExist,
+                        ifDestinationIsaPathDoesNotExist)
 }
 
+
+export const pathDoesNotAlreadyExist = (element, connections, selectedObject) => {
+
+    //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
+
+    const samePathConnections  =
+        connections.filter(connection => connection.start === element.id        && connection.end === selectedObject.id)
+            .filter(connection => connection.start === selectedObject.id && connection.end === element.id)
+
+    return samePathConnections.length === 0
+}
 
 const strongEntityRule = (element) => {
 
@@ -152,7 +176,10 @@ export const handleSelectWeakEntity = (selectedObject, connectionType, drawBoard
 
     if( !(isAssociationConnectionType(connectionType) || isInheritorConnectionType(connectionType))) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, weakEntityRule)
+    return applyRules(drawBoardElements, connections, selectedObject,
+                        weakEntityRule,
+                        ifDestinationAttributePathDoesNotExist,
+                        ifDestinationIsaPathDoesNotExist)
 
 }
 
@@ -180,7 +207,9 @@ export const handleSelectStrongRelation = (selectedObject, connectionType, drawB
 
     if(! isAssociationConnectionType(connectionType)) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, strongRelationRule)
+    return applyRules(drawBoardElements, connections, selectedObject,
+                        strongRelationRule,
+                        ifDestinationAttributePathDoesNotExist)
 }
 
 const strongRelationRule = (element) => {
@@ -207,7 +236,9 @@ export const handleSelectWeakRelation = (selectedObject, connectionType, drawBoa
 
     if(! isAssociationConnectionType(connectionType)) return;
 
-    return applyRules(drawBoardElements, connections, selectedObject, weakRelationRule)
+    return applyRules(drawBoardElements, connections, selectedObject,
+                        weakRelationRule,
+                        ifDestinationAttributePathDoesNotExist)
 }
 
 const weakRelationRule = (element) => {
