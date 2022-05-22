@@ -10,7 +10,7 @@ import {
     onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
     checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure,
     relationOrEntityToAttributeIfAttributeHasNoRoot,
-    checkWeakTypesConsistency
+    checkWeakTypesConsistency, getConnectorsOfObject, getOtherElementsOfConnectors
 } from "./ErRulesUtil";
 
 
@@ -155,7 +155,8 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
                         ifDestinationAttributePathDoesNotExist,
                         ifDestinationIsaPathDoesNotExist,
                         relationOrEntityToAttributeIfAttributeHasNoRoot,
-                        checkWeakTypesConsistency)
+                        checkWeakTypesConsistency,
+                        checkIfToWeakRelationItOnlyHasDeg2)
 }
 
 
@@ -188,7 +189,9 @@ export const handleSelectWeakEntity = (selectedObject, connectionType, drawBoard
                         ifDestinationAttributePathDoesNotExist,
                         ifDestinationIsaPathDoesNotExist,
                         relationOrEntityToAttributeIfAttributeHasNoRoot,
-                        checkWeakTypesConsistency)
+                        checkWeakTypesConsistency,
+                        checkIfToWeakRelationItOnlyHasDeg2,
+                        pathDoesNotAlreadyExist)
 
 }
 
@@ -250,7 +253,34 @@ export const handleSelectWeakRelation = (selectedObject, connectionType, drawBoa
                         weakRelationRule,
                         ifDestinationAttributePathDoesNotExist,
                         relationOrEntityToAttributeIfAttributeHasNoRoot,
-                        checkWeakTypesConsistency)
+                        checkWeakTypesConsistency,
+                        checkWeakRelationHasOnly2Entities,
+                        pathDoesNotAlreadyExist)
+}
+
+const checkWeakRelationHasOnly2Entities = (element, connections, selectedObject, drawBoardElements) => {
+
+    //Rule applies only if element to connect is of type StrongEntity or WeakEntity
+    if( element.erType !== ERTYPE.StrongEntity.name && element.erType !== ERTYPE.WeakEntity.name) return true;
+
+    const connectionsToElement = getConnectorsOfObject(selectedObject, connections);
+    const connectedElements = getOtherElementsOfConnectors(selectedObject, connectionsToElement, drawBoardElements)
+    const entities = connectedElements.filter(connectedElement => connectedElement.erType === ERTYPE.StrongEntity.name || connectedElement.erType === ERTYPE.WeakEntity.name)
+    return entities.length < 2;
+
+}
+
+//Rule for weak and storn gentity
+const checkIfToWeakRelationItOnlyHasDeg2 = (element, connections, selectedObject, drawBoardElements) => {
+
+    //Rule applies only if element to connect is of type StrongEntity or WeakEntity
+    if( selectedObject.erType !== ERTYPE.StrongEntity.name && selectedObject.erType !== ERTYPE.WeakEntity.name) return true;
+
+    const connectionsToElement = getConnectorsOfObject(element, connections);
+    const connectedElements = getOtherElementsOfConnectors(element, connectionsToElement, drawBoardElements)
+    const entities = connectedElements.filter(connectedElement => connectedElement.erType === ERTYPE.StrongEntity.name || connectedElement.erType === ERTYPE.WeakEntity.name)
+    return entities.length < 2;
+
 }
 
 const weakRelationRule = (element) => {

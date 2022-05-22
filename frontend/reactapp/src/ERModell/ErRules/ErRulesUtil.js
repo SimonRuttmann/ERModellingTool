@@ -156,7 +156,7 @@ export const applyRules = (elements, connections, selectedObject, ...rules) => {
 }
 
 //Tested
-const getConnectorsOfObject = (element, connections) => {
+export const getConnectorsOfObject = (element, connections) => {
     return connections.filter(connection => connection.end === element.id || connection.start === element.id)
 }
 
@@ -169,7 +169,7 @@ const getConnectorsOfObject = (element, connections) => {
  * @param drawBoardElements All elements on the draw board
  * @returns {*[]} A list of elements
  */
-const getOtherElementsOfConnectors = (element, connections, drawBoardElements) => {
+export const getOtherElementsOfConnectors = (element, connections, drawBoardElements) => {
     let otherElements = [];
     for (let connection of connections){
         if(connection.start === element.id) otherElements.push(resolveObjectById(connection.end, drawBoardElements))
