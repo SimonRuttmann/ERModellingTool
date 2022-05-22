@@ -86,12 +86,13 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
 
   useEffect( () => {
+    //TODO
     //Connections and DrawBoardElements are not empty
     //For every attribute -> Root != null
     //For every Entity -> Key (top level)
-    //For every Relation -> >= 2 connections
+    //For every Relation -> >= 2 connections to entity category
     //For every ISa Parent + Inheritor is present
-
+    //Every weak entity identified
 
     //--> Then button enable, else button disable
   },[drawBoardElements, connections])

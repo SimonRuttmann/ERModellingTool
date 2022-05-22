@@ -9,7 +9,8 @@ import {
     ifDestinationAttributePathDoesNotExist,
     onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
     checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure,
-    relationOrEntityToAttributeIfAttributeHasNoRoot
+    relationOrEntityToAttributeIfAttributeHasNoRoot,
+    checkWeakTypesConsistency
 } from "./ErRulesUtil";
 
 
@@ -153,7 +154,8 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
                         strongEntityRule,
                         ifDestinationAttributePathDoesNotExist,
                         ifDestinationIsaPathDoesNotExist,
-                        relationOrEntityToAttributeIfAttributeHasNoRoot)
+                        relationOrEntityToAttributeIfAttributeHasNoRoot,
+                        checkWeakTypesConsistency)
 }
 
 
@@ -196,7 +198,8 @@ export const handleSelectWeakEntity = (selectedObject, connectionType, drawBoard
                         weakEntityRule,
                         ifDestinationAttributePathDoesNotExist,
                         ifDestinationIsaPathDoesNotExist,
-                        relationOrEntityToAttributeIfAttributeHasNoRoot)
+                        relationOrEntityToAttributeIfAttributeHasNoRoot,
+                        checkWeakTypesConsistency)
 
 }
 
@@ -257,7 +260,8 @@ export const handleSelectWeakRelation = (selectedObject, connectionType, drawBoa
     return applyRules(drawBoardElements, connections, selectedObject,
                         weakRelationRule,
                         ifDestinationAttributePathDoesNotExist,
-                        relationOrEntityToAttributeIfAttributeHasNoRoot)
+                        relationOrEntityToAttributeIfAttributeHasNoRoot,
+                        checkWeakTypesConsistency)
 }
 
 const weakRelationRule = (element) => {
