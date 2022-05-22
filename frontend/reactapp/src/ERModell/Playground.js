@@ -95,6 +95,10 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     //Every weak entity identified
 
     //--> Then button enable, else button disable
+
+    let isValid = true;
+
+
   },[drawBoardElements, connections])
 
 

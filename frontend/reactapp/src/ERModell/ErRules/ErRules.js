@@ -12,6 +12,7 @@ import {
     relationOrEntityToAttributeIfAttributeHasNoRoot,
     checkWeakTypesConsistency, getConnectorsOfObject, getOtherElementsOfConnectors
 } from "./ErRulesUtil";
+import {ConnectionType} from "../Model/Diagram";
 
 
 export const handleSelectIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {
@@ -271,10 +272,13 @@ const checkWeakRelationHasOnly2Entities = (element, connections, selectedObject,
 }
 
 //Rule for weak and storn gentity
+//Rule applied from weak and strong entity
 const checkIfToWeakRelationItOnlyHasDeg2 = (element, connections, selectedObject, drawBoardElements) => {
 
-    //Rule applies only if element to connect is of type StrongEntity or WeakEntity
+    //Rule applies only if element to connect is of type Weak relation and
+    // the selected Objects is of type StrongEntity or WeakEntity
     if( selectedObject.erType !== ERTYPE.StrongEntity.name && selectedObject.erType !== ERTYPE.WeakEntity.name) return true;
+    if(element.erType !== ERTYPE.WeakRelation) return true;
 
     const connectionsToElement = getConnectorsOfObject(element, connections);
     const connectedElements = getOtherElementsOfConnectors(element, connectionsToElement, drawBoardElements)
@@ -307,7 +311,18 @@ export const handleSelectIsAStructure = (selectedObject, connectionType, drawBoa
 
     if( !(isParentConnectionType(connectionType) || isInheritorConnectionType(connectionType))) return;
 
+    if( isParentConnectionType(connectionType))
+    return applyRules(drawBoardElements, connections, selectedObject, isAStructureRule, pathDoesNotAlreadyExist, onlyOneParentAllowed)
+
     return applyRules(drawBoardElements, connections, selectedObject, isAStructureRule, pathDoesNotAlreadyExist)
+}
+
+const onlyOneParentAllowed = (element, connections, selectedObject, drawBoardElements) => {
+
+    const connectionsToElement = getConnectorsOfObject(selectedObject, connections);
+    const parents = connectionsToElement.filter(connection => connection.connectionType === ConnectionType.parent)
+
+    return parents.length < 1;
 }
 
 const isAStructureRule = (element) => {
@@ -329,3 +344,11 @@ const isAStructureRule = (element) => {
     }
 
 }
+//TODO Einfache regel. Entity entweder eine inheritor oder parent beziehung!
+
+const connectToIsAWhenNoOtherConnectionToIsA = (selectedObject, connectionType, drawBoardElements, connections) => {
+    //Caller Fall 1 StrongEntity, WeakEntity
+
+    //Caller Fall 2 IsA Parent/Inheritor
+}
+

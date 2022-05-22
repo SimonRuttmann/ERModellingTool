@@ -58,7 +58,7 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
                                                      sort((a,b) => { return a.id < b.id ? -1 : 1 } );
 
         let offsetValueEnd = calculateOffsetValue(connectionsSameDestination, thisConnection, offsetFactor)
-        endOffset = [{position: "bottom",   offset:{x: offsetValueEnd} }]
+        endOffset = [{position: "bottom",   offset:{x: offsetValueEnd} }]   //TODO maybe offsetValueEnd = 0 oder, da die koordinaten bekannt sind, schauen das das linke element den offset mit dem größten linkswert kriegt
     }
 
     return {endOffset: endOffset, startOffset: startOffset};

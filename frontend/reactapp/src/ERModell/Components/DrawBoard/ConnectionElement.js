@@ -93,6 +93,7 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
                 showTail={false}
                 showXarrow={true}
                 color={color}
+                curveness={0.9}
                 gridBreak={"50%"}
                 startAnchor={startOffset}
                 endAnchor={endOffset}
