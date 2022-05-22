@@ -1,7 +1,8 @@
 import {OBJECTTYPE} from "./Model/ActionState";
 import {resolveObjectById} from "./Components/Util/ObjectUtil";
-import {ERTYPECATEGORY} from "./Model/ErType";
+import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "./Model/ErType";
 import {AssociationTypeDetails, ConnectionType} from "./Model/Diagram";
+import {isElementOfCategoryAttribute} from "./ErRules/ErRulesUtil";
 
 
 export const createConnection = (drawBoardElements, idStart, idEnd, connectionInformation) => {
@@ -80,10 +81,10 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
 }
 
 const isPartOfAttribute = (startElement, endElement) => {
-    return startElement.erType === ERTYPECATEGORY.Attribute || endElement.erType === ERTYPECATEGORY.Attribute;
+    return isElementOfCategoryAttribute(startElement) || isElementOfCategoryAttribute(endElement);
 }
 const isPartOfIsA = (startElement, endElement) => {
-    return startElement.erType === ERTYPECATEGORY.IsAStructure || endElement.erType === ERTYPECATEGORY.IsAStructure;
+    return startElement.erType === ERTYPE.IsAStructure.name || endElement.erType === ERTYPE.IsAStructure.name;
 }
 
 

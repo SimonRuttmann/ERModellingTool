@@ -120,7 +120,7 @@ const isElementOfCategoryEntityOrRelation = (element) => {
     return isEntityCategory || isRelationCategory;
 }
 
-const isElementOfCategoryAttribute = (element) => {
+export const isElementOfCategoryAttribute = (element) => {
     const attributeTypes = returnNamesOfCategory(ERTYPECATEGORY.Attribute);
     const isNoAttribute = attributeTypes.indexOf(element.erType) === -1;
     return !isNoAttribute;
