@@ -85,6 +85,18 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   },[drawBoardElements, connections, syncErContent])
 
 
+  useEffect( () => {
+    //Connections and DrawBoardElements are not empty
+    //For every attribute -> Root != null
+    //For every Entity -> Key (top level)
+    //For every Relation -> >= 2 connections
+    //For every ISa Parent + Inheritor is present
+
+
+    //--> Then button enable, else button disable
+  },[drawBoardElements, connections])
+
+
   /**
    * Import functionality
    */

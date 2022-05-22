@@ -59,3 +59,7 @@ export const createSelection = (id, connectionType, drawBoardElements, connectio
 
 
 //Todo Ein to do ist noch offen, es muss noch die breite / höhe abhängig von der anzahl der zeichen ermittellt werden
+
+//TODO im backend zu prüfen
+// jedes attribut hat eine verbindung
+// jede relation hat mind. 2 verbindungen

@@ -164,7 +164,10 @@ const resolveRootElementOfAttributeRecursive = (element, connections) => {
 
     //Search through all neighbours
     for(let connectedElement of connectedElements){
-        resolveRootElementOfAttributeRecursive(connectedElement, connections)
+
+        const returnValue = resolveRootElementOfAttributeRecursive(connectedElement, connections)
+        if(returnValue != null) return returnValue;
+
     }
 
 }
@@ -262,3 +265,172 @@ export const relationOrEntityToAttributeIfAttributeHasNoRoot = (element, connect
 
     return possibleRoot == null;
 }
+
+
+export const checkWeakTypesConsistency = (element, connections, selectedObject) => {
+
+    let isElementIdentified;
+    let isSelectedObjectIdentified;
+
+    if(element.erType === ERTYPE.StrongEntity.name ){
+        isElementIdentified = true;
+    }
+    else{
+        const elementSubGraph = collectWeakTypesSubgraph(element, connections);
+        isElementIdentified = collectionContainsStrongEntity(elementSubGraph);
+    }
+
+    if(selectedObject.erType === ERTYPE.StrongEntity.name){
+        isSelectedObjectIdentified = true;
+    }
+    else{
+        const selectedObjectSubGraph = collectWeakTypesSubgraph(selectedObject, connections);
+        isSelectedObjectIdentified = collectionContainsStrongEntity(selectedObjectSubGraph);
+    }
+
+    if(exclusiveOr(isElementIdentified, isSelectedObjectIdentified)) return true;
+
+    if(isElementIdentified && isSelectedObjectIdentified) return false;
+
+    if(!isElementIdentified && !isSelectedObjectIdentified) return true;
+
+}
+
+const exclusiveOr = (fistExpression, secondExpression) => {
+    return (fistExpression && !secondExpression) || (!fistExpression && secondExpression);
+}
+
+const collectionContainsStrongEntity = (collection) => {
+    collection.filter(element => element.erType === ERTYPE.StrongEntity.name);
+    return collection.length > 0;
+}
+
+const collectWeakTypesSubgraph = (element, connections) => {
+    return collectElementsOfSubgraph(element, connections, weakTypesSubgraphBounds)
+}
+
+const collectElementsOfSubgraph = (element, connections, subgraphBounds) => {
+    let collectedElements = [];
+    collectElementsOfSubgraphRecursive(element, connections, collectedElements, subgraphBounds)
+    return collectedElements;
+}
+
+const collectElementsOfSubgraphRecursive = (element, connections, collectedElements, subgraphBounds) => {
+
+    //if already added stop execution
+    if(! addIfNotExists(element, collectedElements)) return;
+
+    const connectorsOfElement = getConnectorsOfObject(element, connections);
+    const connectedElements = getOtherElementsOfConnectors(element, connectorsOfElement);
+
+    const elementsInGraph = connectedElements.filter(connectedElement => subgraphBounds(connectedElement))
+
+    for (let elementInGraph of elementsInGraph){
+        collectElementsOfSubgraphRecursive(elementInGraph)
+    }
+
+}
+
+const addIfNotExists = (element, collection) => {
+    if(collection.indexOf(element) !== -1) return false;
+    collection.push(element)
+    return true;
+}
+
+const weakTypesSubgraphBounds = (element) => {
+
+    switch (element.erType) {
+
+        case ERTYPE.IdentifyingAttribute.name:       return false;
+        case ERTYPE.NormalAttribute.name:            return false;
+        case ERTYPE.MultivaluedAttribute.name:       return false;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
+
+        case ERTYPE.StrongEntity.name:               return true;
+        case ERTYPE.WeakEntity.name:                 return true;
+
+        case ERTYPE.StrongRelation.name:             return false;
+        case ERTYPE.WeakRelation.name:               return true;
+
+        case ERTYPE.IsAStructure.name:               return false;
+    }
+
+}
+/*
+//TODO This is too complex, there must be an easier way
+
+//WEnn schwache entität auf schwache relation --> Prüfen ob doppelte identifiziert
+//Wenn starke entität auf schwache relation -> prüfen ob doppelt identifiziert
+
+// | STRONG A --> WeakRelationAB -> WEAK B <- WeakRelationBC <-- STRONG C
+
+
+//Selected object == weakEntity|strongEntity TODO momentan nur logik für strong entity
+//Element is weakRelation
+export const weakEntityReferencingWeakRelationKeepsUnambiguousIdentification = (element, connections, selectedObject) => {
+    if(element.erType !== ERTYPE.WeakRelation.name) return true;
+
+    const resultToConnect = resolveIdentifyingElementOfWeakEntityRecursive(element, connections, []);
+
+    //weak Relation is not defined yet
+    if(resultToConnect == null) return true;
+
+    return false;
+}
+
+
+const resolveIdentifyingElementOfWeakEntityRecursive = (element, connections, checkedElements) => {
+
+    //element here is of type weak relation
+
+    const connectorsOfElement = getConnectorsOfObject(element, connections);
+    const connectedElements = getOtherElementsOfConnectors(element, connectorsOfElement);
+
+
+    //if weak relation has a connection to a strong entity, return it
+    const strongEntities = connectedElements.filter(connectedElement => connectedElement.erType === ERTYPE.StrongEntity);
+    if(strongEntities.length > 0) return strongEntities[0];
+
+    //resolve connection to other weak entities
+    const weakEntities = connectedElements.filter(connectedElement => connectedElement.erType === ERTYPE.WeakEntity);
+
+    if(weakEntities.length === 0) return;
+
+    //If all weak entities are already checked we return
+    let notCheckedElements = []
+    for(let entities of weakEntities){
+        if(checkedElements.indexOf(entities) === -1) {
+            notCheckedElements.push(entities)
+        }
+    }
+
+    if(notCheckedElements.length === 0) return;
+
+    //Add not checked elements to the checked Array, as they will be checked in the below for
+    for (let willBeCheckedElements of notCheckedElements) {
+        checkedElements.push(willBeCheckedElements)
+    }
+
+
+    for(let weakEntity of notCheckedElements){
+
+        //For each weak entity get their weak relations
+        const connectorsOfWeakEntity = getConnectorsOfObject(weakEntity, connections);
+        const connectedElementsOfWeekEntity = getOtherElementsOfConnectors(weakEntity, connectorsOfWeakEntity);
+
+        const weakRelations = connectedElementsOfWeekEntity.
+                              filter(connectedElement => connectedElement.erType === ERTYPE.WeakRelation);
+
+        if(weakRelations.length === 0) continue;
+
+        //For each weak relation try to find the strong entity
+        for(let weakRelation of weakRelations){
+            const returnValue = resolveIdentifyingElementOfWeakEntityRecursive(weakRelation, connections)
+            if(returnValue != null) return returnValue;
+        }
+
+    }
+
+}
+
+*/

@@ -306,5 +306,3 @@ const isAStructureRule = (element) => {
     }
 
 }
-
-
