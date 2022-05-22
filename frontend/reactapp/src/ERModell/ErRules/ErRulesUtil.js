@@ -312,8 +312,18 @@ export const relationOrEntityToAttributeIfAttributeHasNoRoot = (element, connect
     return possibleRoot == null;
 }
 
+const isElementOfWeakType = (element) => {
+    return element.erType === ERTYPE.WeakRelation.name || element.erType === ERTYPE.WeakEntity.name;
+}
+
+const isElementStrongEntityType = (element) => {
+    return element.erType === ERTYPE.StrongEntity.name;
+}
 
 export const checkWeakTypesConsistency = (element, connections, selectedObject, drawBoardElements) => {
+
+    //Rule only applied to weak types and strong entities
+    if( !isElementOfWeakType(element) && !isElementStrongEntityType(element) ) return true;
 
     let isElementIdentified;
     let isSelectedObjectIdentified;
@@ -347,8 +357,8 @@ const exclusiveOr = (fistExpression, secondExpression) => {
 }
 
 const collectionContainsStrongEntity = (collection) => {
-    collection.filter(element => element.erType === ERTYPE.StrongEntity.name);
-    return collection.length > 0;
+    const entities = collection.filter(element => element.erType === ERTYPE.StrongEntity.name);
+    return entities.length > 0;
 }
 
 const collectWeakTypesSubgraph = (element, connections, drawBoardElements) => {
