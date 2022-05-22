@@ -20,9 +20,9 @@ export const handleSelectIdentifyingAttribute = (selectedObject, connectionType,
 
     return applyRules(drawBoardElements, connections, selectedObject,
                         identifyingAttributeRule,
-                        pathDoesNotAlreadyExist)
-                        //onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-                        //checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+                        pathDoesNotAlreadyExist,
+                        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+                        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -54,8 +54,8 @@ export const handleSelectNormalAttribute = (selectedObject, connectionType, draw
     return applyRules(drawBoardElements, connections, selectedObject,
         normalAttributeRule,
         pathDoesNotAlreadyExist,
-        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection)
-       // checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 

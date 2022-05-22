@@ -155,29 +155,50 @@ export const applyRules = (elements, connections, selectedObject, ...rules) => {
     return currentlyPassedElements;
 }
 
+//Tested
 const getConnectorsOfObject = (element, connections) => {
     return connections.filter(connection => connection.end === element.id || connection.start === element.id)
 }
 
-
+//TEsted
+/**
+ * Returns all elements the connections are connected two,
+ * except the one which is given
+ * @param element The element to exclude from the result set
+ * @param connections The connections to query for
+ * @param drawBoardElements All elements on the draw board
+ * @returns {*[]} A list of elements
+ */
 const getOtherElementsOfConnectors = (element, connections, drawBoardElements) => {
     let otherElements = [];
     for (let connection of connections){
-        if(connections.start === element.start) otherElements.push(resolveObjectById(connection.end, drawBoardElements))
+        if(connection.start === element.id) otherElements.push(resolveObjectById(connection.end, drawBoardElements))
         else otherElements.push(resolveObjectById(connection.start, drawBoardElements))
     }
     return otherElements;
 }
 
 //null oder element des roots
+//Tested
+/**
+ * Resolves the root element
+ * @param element
+ * @param connections
+ * @param drawBoardElements
+ * @returns {*}
+ */
 const resolveRootElementOfAttribute = (element, connections, drawBoardElements) => {
     console.log("resolve root element of attribute")
-    return resolveRootElementOfAttributeRecursive(element, connections, drawBoardElements)
+    let checkedElements = []
+    return resolveRootElementOfAttributeRecursive(element, connections, drawBoardElements, checkedElements)
 }
 
 //TODO while testing check if any circles are possible
 //TODO THIS IS IMPORTANT to prevent infinite loops
-const resolveRootElementOfAttributeRecursive = (element, connections, drawBoardElements) => {
+const resolveRootElementOfAttributeRecursive = (element, connections, drawBoardElements, checkedElements) => {
+
+    //if element is already checked, terminate
+    if(!addIfNotExists(element, checkedElements)) return;
 
     //If element is already entity or relation terminate
     if(isElementOfCategoryEntityOrRelation(element)) return element;
@@ -188,20 +209,20 @@ const resolveRootElementOfAttributeRecursive = (element, connections, drawBoardE
     //Search through all neighbours
     for(let connectedElement of connectedElements){
 
-        const returnValue = resolveRootElementOfAttributeRecursive(connectedElement, connections, drawBoardElements)
+        const returnValue = resolveRootElementOfAttributeRecursive(connectedElement, connections, drawBoardElements, checkedElements)
         if(returnValue != null) return returnValue;
 
     }
 
 }
-
+/*
 const getAllElementsOfSubGraph = (element, connections, drawBoardElements) => {
     let subGraphElements = [];
     getAllElementsOfSubGraphRecursive(element, connections, subGraphElements, drawBoardElements)
 
     return subGraphElements;
 }
-
+//das ist nicht gut, wir holen uns hier alle elements
 const getAllElementsOfSubGraphRecursive = (element, connections, subGraphElements, drawBoardElements) => {
 
     //Check element is not already traversed
@@ -218,7 +239,7 @@ const getAllElementsOfSubGraphRecursive = (element, connections, subGraphElement
     }
 
 }
-
+*/
 
 
 
@@ -244,14 +265,14 @@ export const checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStruct
     //Rule is only applied if both elements are attributes
     if( ! (isElementOfCategoryAttribute(element) && isElementOfCategoryAttribute(selectedObject) ) ) return true;
 
-    const possibleOwnRoot = resolveRootElementOfAttribute(selectedObject, connections);
-    const possibleToConnectRoot = resolveRootElementOfAttribute(element, connections);
+    const possibleOwnRoot = resolveRootElementOfAttribute(selectedObject, connections, drawBoardElements);
+    const possibleToConnectRoot = resolveRootElementOfAttribute(element, connections, drawBoardElements);
 
     //Regardless if the own root is the same as the other, there can no connection established
     //as both have already a chain to a root and a connection would lead to a circle
     //if the root would be the same or otherwise two roots would be connected
 
-    if(possibleOwnRoot != null && possibleToConnectRoot == null) return false;
+    if(possibleOwnRoot != null && possibleToConnectRoot != null) return false;
 
     //When the selected attribute is part of a tree with an entity or relation as root and the other element has no root
     //then we can allow the connection, as they can not create a circle
@@ -262,9 +283,11 @@ export const checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStruct
 
     if(possibleOwnRoot == null && possibleToConnectRoot != null) return true;
 
+    //If both attributes have no entity or relation root,
+    //it needs to be checked if one element is part of the subgraph of the other element
     if(possibleOwnRoot == null && possibleToConnectRoot == null){
-        const elementsOfSubgraph = getAllElementsOfSubGraph(possibleOwnRoot, connections, drawBoardElements)
-        if(elementsOfSubgraph.indexOf(possibleToConnectRoot) === -1) {
+        const elementsOfSubgraph = collectAttributesSubgraph(selectedObject, connections, drawBoardElements)
+        if(elementsOfSubgraph.indexOf(element) === -1) {
             //The element is not in the subgraph, it can be added
             return true;
         }
@@ -332,6 +355,10 @@ const collectWeakTypesSubgraph = (element, connections, drawBoardElements) => {
     return collectElementsOfSubgraph(element, connections, weakTypesSubgraphBounds, drawBoardElements)
 }
 
+const collectAttributesSubgraph = (element, connections, drawBoardElements) => {
+    return collectElementsOfSubgraph(element, connections, attributeTypesSubgraphBounds, drawBoardElements)
+}
+
 const collectElementsOfSubgraph = (element, connections, subgraphBounds, drawBoardElements) => {
     let collectedElements = [];
     collectElementsOfSubgraphRecursive(element, connections, collectedElements, subgraphBounds, drawBoardElements)
@@ -374,6 +401,27 @@ const weakTypesSubgraphBounds = (element) => {
 
         case ERTYPE.StrongRelation.name:             return false;
         case ERTYPE.WeakRelation.name:               return true;
+
+        case ERTYPE.IsAStructure.name:               return false;
+    }
+
+}
+
+
+const attributeTypesSubgraphBounds = (element) => {
+
+    switch (element.erType) {
+
+        case ERTYPE.IdentifyingAttribute.name:       return true;
+        case ERTYPE.NormalAttribute.name:            return true;
+        case ERTYPE.MultivaluedAttribute.name:       return true;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return true;
+
+        case ERTYPE.StrongEntity.name:               return false;
+        case ERTYPE.WeakEntity.name:                 return false;
+
+        case ERTYPE.StrongRelation.name:             return false;
+        case ERTYPE.WeakRelation.name:               return false;
 
         case ERTYPE.IsAStructure.name:               return false;
     }
