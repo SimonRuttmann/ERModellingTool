@@ -68,7 +68,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     const [error, setError] = useState(false)
     function transformToRel(){
         let content = JSON.stringify(erContent.current);
-        console.log("Hallo")
+        console.log("Call to backend")
         axios.post(url, {...content}).
         then((response) => {setServerResult(response.data);}).
         catch(error => setError(true));

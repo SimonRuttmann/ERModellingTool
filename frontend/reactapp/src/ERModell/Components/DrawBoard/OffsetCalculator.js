@@ -9,7 +9,7 @@ import {ConnectionType} from "../../Model/Diagram";
 export const calculateOffsets = (connections, thisConnection, offsetFactor) => {
 
     const offset = calculateDefaultOffsets(connections, thisConnection, offsetFactor)
-    console.log(offset)
+
     const specificOffsets = calculateOffsetsIsA(offset, connections, thisConnection, offsetFactor)
 
     return {startOffset: specificOffsets.startOffset, endOffset: specificOffsets.endOffset}
@@ -25,11 +25,6 @@ const calculateDefaultOffsets = (connections, thisConnection, offsetFactor) => {
     if(connectionsSamePath.length > 1){
         let sortedConnectionsSamePath = connectionsSamePath.sort((a,b) => { return a.id < b.id ? -1 : 1 } );
         offsetValue = calculateOffsetValue(sortedConnectionsSamePath, thisConnection, offsetFactor);
-    }
-
-    if(offsetValue !== 0) {
-        console.log("CHANGED")
-        console.log(offsetValue)
     }
 
 

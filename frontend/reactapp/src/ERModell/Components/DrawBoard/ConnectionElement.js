@@ -56,10 +56,7 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
     let calculatedOffsets = calculateOffsets(connections, thisConnection, offsetFactor)
     const startOffset = calculatedOffsets.startOffset;
     const endOffset = calculatedOffsets.endOffset;
-    console.log("startoffset")
-    console.log(startOffset)
-    console.log("endoffset")
-    console.log(endOffset)
+
 
     /**
      * Interaction and props passed to the underlying svg`s

@@ -20,9 +20,9 @@ export const handleSelectIdentifyingAttribute = (selectedObject, connectionType,
 
     return applyRules(drawBoardElements, connections, selectedObject,
                         identifyingAttributeRule,
-                        pathDoesNotAlreadyExist,
-                        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-                        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+                        pathDoesNotAlreadyExist)
+                        //onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+                        //checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -54,8 +54,8 @@ export const handleSelectNormalAttribute = (selectedObject, connectionType, draw
     return applyRules(drawBoardElements, connections, selectedObject,
         normalAttributeRule,
         pathDoesNotAlreadyExist,
-        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection)
+       // checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -158,17 +158,6 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
                         checkWeakTypesConsistency)
 }
 
-
-export const pathDoesNotAlreadyExist = (element, connections, selectedObject) => {
-
-    //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
-
-    const samePathConnections  =
-        connections.filter(connection => connection.start === element.id        && connection.end === selectedObject.id)
-            .filter(connection => connection.start === selectedObject.id && connection.end === element.id)
-
-    return samePathConnections.length === 0
-}
 
 const strongEntityRule = (element) => {
 

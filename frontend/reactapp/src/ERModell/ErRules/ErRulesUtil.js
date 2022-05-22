@@ -14,17 +14,30 @@ export const isParentConnectionType = (connectionType) => {
 export const isInheritorConnectionType = (connectionType) => {
     return connectionType === ConnectionType.inheritor;
 }
-
-
+//Tested from iden -> rest
+/**
+ * This method checks if there is already a connection between the two elements
+ * @param element The element to check, if it is possible to be connected to
+ * @param connections The connections on the draw board
+ * @param selectedObject The selected object
+ * @returns {boolean} True, if there is no line between selectedObject <-> element
+ */
 export const pathDoesNotAlreadyExist = (element, connections, selectedObject) => {
 
     //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
 
     const samePathConnections  =
-        connections.filter(connection => connection.start === element.id        && connection.end === selectedObject.id)
-            .filter(connection => connection.start === selectedObject.id && connection.end === element.id)
+        connections.filter(connection => connectionSamePath(connection, element, selectedObject));
 
     return samePathConnections.length === 0
+}
+
+const connectionSamePath = (connection, elementOne, elementTwo) => {
+
+    const isSamePath =          (connection.start === elementOne.id && connection.end === elementTwo.id)
+    const isSamePathReversed =  (connection.start === elementTwo.id && connection.end === elementOne.id)
+
+    return isSamePath || isSamePathReversed;
 }
 
 export const ifDestinationAttributePathDoesNotExist = (element, connections, selectedObject) => {
@@ -60,7 +73,7 @@ export const onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnec
     if(! isElementOfCategoryEntityOrRelation(element)) return true;
 
 
-    const possibleRoot = resolveRootElementOfAttribute(selectedObject)
+    const possibleRoot = resolveRootElementOfAttribute(selectedObject, connections)
 
     if(possibleRoot == null) return true;
 
@@ -117,20 +130,21 @@ const isElementOfCategoryAttribute = (element) => {
  */
 export const applyRules = (elements, connections, selectedObject, ...rules) => {
 
-    return elements.filter(element => {
+    let currentlyPassedElements = [];
+    currentlyPassedElements.push(...elements)
 
-        for (let rule of rules){
+    for (let rule of rules){
 
-            if(! rule(element, connections, selectedObject)) {
-                //Element did not pass a rule
-                return false;
-            }
+        //Filter elements based on rule
+        currentlyPassedElements = currentlyPassedElements.filter(
+            element => {
+                return rule(element, connections, selectedObject);
+            })
 
-        }
+    }
 
-        //Element did pass all rules
-        return true;
-    })
+    //All elements which passed all rules
+    return currentlyPassedElements;
 }
 
 const getConnectorsOfObject = (element, connections) => {
@@ -174,7 +188,7 @@ const resolveRootElementOfAttributeRecursive = (element, connections) => {
 
 const getAllElementsOfSubGraph = (element, connections) => {
     let subGraphElements = [];
-    getAllElementsOfSubGraph(element, connections, subGraphElements )
+    getAllElementsOfSubGraphRecursive(element, connections, subGraphElements )
 
     return subGraphElements;
 }
