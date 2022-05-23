@@ -197,7 +197,7 @@ export const getOtherElementsOfConnectors = (element, connections, drawBoardElem
  * @param drawBoardElements
  * @returns {*}
  */
-const resolveRootElementOfAttribute = (element, connections, drawBoardElements) => {
+export const resolveRootElementOfAttribute = (element, connections, drawBoardElements) => {
     console.log("resolve root element of attribute")
     let checkedElements = []
     return resolveRootElementOfAttributeRecursive(element, connections, drawBoardElements, checkedElements)
@@ -366,12 +366,12 @@ const exclusiveOr = (fistExpression, secondExpression) => {
     return (fistExpression && !secondExpression) || (!fistExpression && secondExpression);
 }
 
-const collectionContainsStrongEntity = (collection) => {
+export const collectionContainsStrongEntity = (collection) => {
     const entities = collection.filter(element => element.erType === ERTYPE.StrongEntity.name);
     return entities.length > 0;
 }
 
-const collectWeakTypesSubgraph = (element, connections, drawBoardElements) => {
+export const collectWeakTypesSubgraph = (element, connections, drawBoardElements) => {
     return collectElementsOfSubgraph(element, connections, weakTypesSubgraphBounds, drawBoardElements)
 }
 

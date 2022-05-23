@@ -12,6 +12,7 @@ import TransformButton from "./TransformButton";
 import {ConnectionType} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
 import {createSelection} from "./ErRules/ErDrawingRuleEnforcer";
+import {validateErDiagram} from "./ErRules/ErValidator";
 
 const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
@@ -85,7 +86,17 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   },[drawBoardElements, connections, syncErContent])
 
 
+  const [invalidMessages, setInvalidMessages] = useState([])
+
+  console.log(invalidMessages);
   useEffect( () => {
+
+    //--> Then button enable, else button disable
+    const errorMessages = validateErDiagram(connections, drawBoardElements)
+
+    setInvalidMessages([...errorMessages])
+
+
     //TODO
     //Connections and DrawBoardElements are not empty
     //For every attribute -> Root != null
@@ -96,7 +107,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     //--> Then button enable, else button disable
 
-    let isValid = true;
 
 
   },[drawBoardElements, connections])
