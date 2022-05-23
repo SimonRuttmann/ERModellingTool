@@ -91,23 +91,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   console.log(invalidMessages);
   useEffect( () => {
 
-    //--> Then button enable, else button disable
     const errorMessages = validateErDiagram(connections, drawBoardElements)
 
     setInvalidMessages([...errorMessages])
-
-
-    //TODO
-    //Connections and DrawBoardElements are not empty
-    //For every attribute -> Root != null
-    //For every Entity -> Key (top level)
-    //For every Relation -> >= 2 connections to entity category
-    //For every ISa Parent + Inheritor is present
-    //Every weak entity identified
-
-    //--> Then button enable, else button disable
-
-
 
   },[drawBoardElements, connections])
 
@@ -560,7 +546,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
           {/* The right bar, used for editing the elements in the draw board */}
           <RightBar {...rightBarProps} />
-          <TransformButton transformToRel={transformToRel}/>
+          <TransformButton transformToRel={transformToRel} invalidMessages={invalidMessages}/>
         </div>
     </div>
   );

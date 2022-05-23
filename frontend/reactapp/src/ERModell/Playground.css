@@ -342,6 +342,18 @@ input[type="file"] {
   background-color: #3c3f41;
 }
 
+.TransformInvalidValidIcon {
+  font-size: 20px;
+  font-family: 'Ultra', sans-serif;
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  right: 100px;
+  bottom: 20px;
+  padding: 10px 10px 10px 10px;
+  border-radius: 10px;
+}
+
 .TransformButton{
   font-size: 20px;
   font-family: 'Ultra', sans-serif;
@@ -355,7 +367,19 @@ input[type="file"] {
   border-radius: 10px;
 }
 
-.TransformButton:hover{
+
+.TransformButtonEnabled{
+
+}
+
+.TransformButtonEnabled:hover{
   background-color: #3c3f41;
 }
 
+.TransformButtonDisabled{
+
+}
+
+.invalidMessage{
+  text-align: left;
+}
