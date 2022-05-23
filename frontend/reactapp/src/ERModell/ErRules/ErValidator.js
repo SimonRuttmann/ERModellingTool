@@ -13,6 +13,13 @@ export const validateErDiagram = (connections, drawBoardElements) => {
 
     let invalidMessages = [];
 
+    //Check if all elements (except isa) have a name
+    const nonIsa = drawBoardElements.filter(element => element.erType !== ERTYPE.IsAStructure.name);
+    for (let namedElement of nonIsa){
+        if(namedElement.displayName == null || namedElement.displayName === "" || namedElement.displayName.trim().length === 0)
+            invalidMessages.push(`The element of type "${namedElement.erType}" has no name!`)
+    }
+
     if(connections.length === 0 && drawBoardElements.length === 0)
         invalidMessages.push("Diagram is empty!")
 
