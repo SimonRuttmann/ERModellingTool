@@ -32,6 +32,16 @@ export const pathDoesNotAlreadyExist = (element, connections, selectedObject) =>
     return samePathConnections.length === 0
 }
 
+export const pathDoesMax2TimesExist = (element, connections, selectedObject) => {
+
+    //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
+
+    const samePathConnections  =
+        connections.filter(connection => connectionSamePath(connection, element, selectedObject));
+
+    return samePathConnections.length < 2;
+}
+
 const connectionSamePath = (connection, elementOne, elementTwo) => {
 
     const isSamePath =          (connection.start === elementOne.id && connection.end === elementTwo.id)
@@ -369,6 +379,10 @@ const collectAttributesSubgraph = (element, connections, drawBoardElements) => {
     return collectElementsOfSubgraph(element, connections, attributeTypesSubgraphBounds, drawBoardElements)
 }
 
+const collectIsATypesSubgraph = (element, connections, drawBoardElements) => {
+    return collectElementsOfSubgraph(element, connections, isATypesSubgraphBounds, drawBoardElements)
+}
+
 const collectElementsOfSubgraph = (element, connections, subgraphBounds, drawBoardElements) => {
     let collectedElements = [];
     collectElementsOfSubgraphRecursive(element, connections, collectedElements, subgraphBounds, drawBoardElements)
@@ -436,4 +450,49 @@ const attributeTypesSubgraphBounds = (element) => {
         case ERTYPE.IsAStructure.name:               return false;
     }
 
+}
+
+
+const isATypesSubgraphBounds = (element) => {
+
+    switch (element.erType) {
+
+        case ERTYPE.IdentifyingAttribute.name:       return false;
+        case ERTYPE.NormalAttribute.name:            return false;
+        case ERTYPE.MultivaluedAttribute.name:       return false;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
+
+        case ERTYPE.StrongEntity.name:               return true;
+        case ERTYPE.WeakEntity.name:                 return false;
+
+        case ERTYPE.StrongRelation.name:             return false;
+        case ERTYPE.WeakRelation.name:               return false;
+
+        case ERTYPE.IsAStructure.name:               return true;
+    }
+
+}
+
+//TODO jede entity<->Relation max 2 connections zu sich selbst (Reflexive...)
+
+//TODO Einfache regel. Entity entweder eine inheritor oder parent beziehung! Weak entity ist nicht in der IsA-Struktur vorhanden!
+
+export const ensureIsACircleFree = (element, connections, selectedObject, drawBoardElements) => {
+
+    //Rule only applies if selected object and element of type StrongEntity and IsA
+    if( selectedObject.erType === ERTYPE.IsAStructure.name && element.erType === ERTYPE.StrongEntity.name ||
+        selectedObject.erType === ERTYPE.StrongEntity.name && element.erType === ERTYPE.IsAStructure.name)      {
+
+        const typesIsAGraph = collectIsATypesSubgraph(selectedObject, connections, drawBoardElements);
+        const elementPartOfIsaGraph = collectionContains(typesIsAGraph, element)
+        return !elementPartOfIsaGraph;
+
+    }
+
+    return true;
+}
+
+
+const collectionContains = (collection, element) => {
+    return collection.indexOf(element) !== -1;
 }
