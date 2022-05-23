@@ -58,7 +58,8 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
                                                      sort((a,b) => { return a.id < b.id ? -1 : 1 } );
 
         let offsetValueEnd = calculateOffsetValue(connectionsSameDestination, thisConnection, offsetFactor)
-        endOffset = [{position: "bottom",   offset:{x: offsetValueEnd} }]   //TODO maybe offsetValueEnd = 0 oder, da die koordinaten bekannt sind, schauen das das linke element den offset mit dem größten linkswert kriegt
+        endOffset = [{position: "bottom",   offset:{x: offsetValueEnd} }]
+        //TODO maybe offsetValueEnd = 0 oder, da die koordinaten bekannt sind, schauen das das linke element den offset mit dem größten linkswert kriegt
     }
 
     return {endOffset: endOffset, startOffset: startOffset};
@@ -67,10 +68,27 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
 
 const calculateOffsetValue = (sortedCollection, thisConnection, offsetFactor) => {
 
+    let amountSamePaths = sortedCollection.length;
     let index = sortedCollection.indexOf(thisConnection)
 
     //Enable offset to the left/right and top/bottom
     let directionOffset = index % 2 ? 1 : -1;
+
+
+    //Balancing of 2 will result into
+    //   | ----Index 0----- |
+    // A |                  | B
+    //   | ----Index 1----- |
+    if(amountSamePaths === 2){
+        return directionOffset * offsetFactor
+    }
+
+    //Balancing of more than 2 will result into
+    //   | ----Index 2----- |
+    //   |                  |
+    // A | ----Index 0----- | B
+    //   |                  |
+    //   | ----Index 1----- |
 
     //Balance offset correctly, by reducing the amount of offset values by 1,
     //when a line is on the opposite site of the previously added
