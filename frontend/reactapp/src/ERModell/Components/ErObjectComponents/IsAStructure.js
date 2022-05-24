@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 //import {resolveRequiredWidth} from "../Util/SvgUtils"
 
 
-function IsAStructure({id, displayText, color, fontFamily, fontSize}){
+function IsAStructure({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     let width = 100;
     const widthHeightRatio = (2/3);
@@ -23,6 +23,13 @@ function IsAStructure({id, displayText, color, fontFamily, fontSize}){
     let pointRight =  {x: width,    y: height}
 
     let path = `M ${pointTop.x} ${pointTop.y} L ${pointLeft.x} ${pointLeft.y} L ${pointRight.x} ${pointRight.y} Z`
+
+    useLayoutEffect( () => {
+
+        console.log("update size")
+        updateDrawBoardElementSize(id, width, height)
+
+    },[width, height])
 
     return (
         <React.Fragment>

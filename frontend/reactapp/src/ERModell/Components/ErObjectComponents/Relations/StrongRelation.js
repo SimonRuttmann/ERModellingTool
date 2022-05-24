@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function StrongRelation({id, displayText, color, fontFamily, fontSize}){
+function StrongRelation({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     let width = 150;
     const widthHeightRatio = (2/3);
@@ -23,6 +23,13 @@ function StrongRelation({id, displayText, color, fontFamily, fontSize}){
     let path = `M ${pointLeft.x} ${pointLeft.y} L ${pointTop.x} ${pointTop.y}` +
                `L ${pointRight.x} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y} Z`
 
+
+    useLayoutEffect( () => {
+
+        console.log("update size")
+        updateDrawBoardElementSize(id, width, height)
+
+    },[width, height])
 
     return (
         <React.Fragment>

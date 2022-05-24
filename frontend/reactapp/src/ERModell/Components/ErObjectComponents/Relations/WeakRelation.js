@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function WeakRelation({id, displayText, color, fontFamily, fontSize}){
+function WeakRelation({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     let width = 150;
     const widthHeightRatio = (2/3);
@@ -28,6 +28,12 @@ function WeakRelation({id, displayText, color, fontFamily, fontSize}){
     let innerPath = `M ${pointLeft.x + offsetX} ${pointLeft.y}   L ${pointTop.x} ${pointTop.y + offsetY}` +
         `            L ${pointRight.x - offsetX} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y - offsetY} Z`
 
+    useLayoutEffect( () => {
+
+        console.log("update size")
+        updateDrawBoardElementSize(id, width, height)
+
+    },[width, height])
 
     return (
         <React.Fragment>

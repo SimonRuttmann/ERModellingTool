@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function NormalAttribute({id, displayText, color, fontFamily, fontSize}){
+function NormalAttribute({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     const xCenterPosition = 122;         const yCenterPosition = 37;
 
@@ -11,6 +11,9 @@ function NormalAttribute({id, displayText, color, fontFamily, fontSize}){
     //If necessary, increase width to fit text
     xRadiusOuter = resolveRequiredWidth(xRadiusOuter * 2, displayText, fontSize, fontFamily) / 2
 
+    useLayoutEffect(() => {
+        updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
+    },[xRadiusOuter, yRadiusOuter]);
 
     return (
         <React.Fragment>

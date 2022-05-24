@@ -1,18 +1,25 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function WeakEntity({id, displayText, color, fontFamily, fontSize}){
+function WeakEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     const xOuter = 0;       const yOuter = 0;
     let widthOuter = 137;   const heightOuter = 67;
 
     const xInner = xOuter + 5;                  const yInner = yOuter + 5;
-    let widthInner = widthOuter - 10;   const heightInner = heightOuter - 10;
+    let widthInner = widthOuter - 10;           const heightInner = heightOuter - 10;
 
     //If necessary, increase width to fit text
     widthInner = resolveRequiredWidth(widthInner, displayText, fontSize, fontFamily)
     widthOuter = widthInner + 10;
+
+    useLayoutEffect( () => {
+
+        console.log("update size")
+        updateDrawBoardElementSize(id, widthOuter, heightOuter)
+
+    },[widthOuter, heightOuter])
 
 
     return (

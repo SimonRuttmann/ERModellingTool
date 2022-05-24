@@ -3,6 +3,7 @@ import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
 function IdentifyingAttribute({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
+
     const xCenterPosition = 122;         const yCenterPosition = 37;
 
     let xRadiusOuter = 100;              const yRadiusOuter = 33;
@@ -16,7 +17,7 @@ function IdentifyingAttribute({id, displayText, color, fontFamily, fontSize, upd
 
     useLayoutEffect(() => {
         updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
-    },[displayText]);
+    },[xRadiusOuter, yRadiusOuter]);
 
     return (
         <React.Fragment>

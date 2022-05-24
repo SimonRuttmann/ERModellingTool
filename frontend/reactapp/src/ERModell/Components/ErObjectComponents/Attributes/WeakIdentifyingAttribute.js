@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function WeakIdentifyingAttribute({id, displayText, color, fontFamily, fontSize}){
+function WeakIdentifyingAttribute({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     const xCenterPosition = 122;         const yCenterPosition = 37;
 
@@ -15,6 +15,9 @@ function WeakIdentifyingAttribute({id, displayText, color, fontFamily, fontSize}
     let xLinePositionStart = xCenterPosition - xRadiusOuter * 0.85;
     let xLinePositionEnd = xCenterPosition + xRadiusOuter * 0.85;
 
+    useLayoutEffect(() => {
+        updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
+    },[xRadiusOuter, yRadiusOuter]);
 
     return (
         <React.Fragment>

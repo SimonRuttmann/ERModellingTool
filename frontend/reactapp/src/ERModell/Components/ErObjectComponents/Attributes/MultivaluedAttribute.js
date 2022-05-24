@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function MultivaluedAttribute({id, displayText, color, fontFamily, fontSize}){
+function MultivaluedAttribute({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     const xCenterPosition = 122;         const yCenterPosition = 37;
 
@@ -13,6 +13,9 @@ function MultivaluedAttribute({id, displayText, color, fontFamily, fontSize}){
     xRadiusInner = resolveRequiredWidth(xRadiusInner * 2, displayText, fontSize, fontFamily) / 2
     xRadiusOuter = xRadiusInner + 5;
 
+    useLayoutEffect(() => {
+        updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
+    },[xRadiusOuter, yRadiusOuter]);
 
     return (
         <React.Fragment>
