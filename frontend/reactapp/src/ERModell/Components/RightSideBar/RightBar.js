@@ -4,7 +4,7 @@ import {ConnectionCardinality, OBJECTTYPE} from "../../Model/ActionState";
 import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../Util/ObjectUtil";
-import {ConnectionType} from "../../Model/Diagram";
+import {AssociationTypeDetails, ConnectionType} from "../../Model/Diagram";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState}) => {
 
@@ -38,8 +38,8 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     function filterAndSortConnections(){
         return connections.filter(connection =>
             connection.end === selectedObject.id ||
-            connection.start === selectedObject.id).
-            sort((a,b) => {
+            connection.start === selectedObject.id)
+            .sort((a,b) => {
                 return a.id<b.id?-1:1
             });
 
@@ -87,15 +87,24 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
   const AssociationMenu = () => {
         let start = resolveObjectById(selectedObject.start, drawBoardElements)
         let end = resolveObjectById(selectedObject.end, drawBoardElements)
+
+        let cardinality =
+            <React.Fragment>
+                <div>Cardinality</div>
+                <div className={"spacerSmall"}/>
+                <div>Min: {selectedObject.min} Max: {selectedObject.max} </div>
+            </React.Fragment>
+
+      if(selectedObject.associationTypeDetails === AssociationTypeDetails.attributeConnector)
+          cardinality = null;
+
     return (
 
       <React.Fragment>
 
           <div className={"spacerBig"}/>
 
-          <div>Cardinality</div>
-          <div className={"spacerSmall"}/>
-          <div>Min: {selectedObject.min} Max: {selectedObject.max} </div>
+          {cardinality}
 
           <div className={"spacerBig"}/>
 
