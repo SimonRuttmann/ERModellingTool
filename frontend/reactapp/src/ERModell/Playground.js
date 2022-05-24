@@ -88,7 +88,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   const [invalidMessages, setInvalidMessages] = useState([])
 
-  console.log(invalidMessages);
   useEffect( () => {
 
     const errorMessages = validateErDiagram(connections, drawBoardElements)

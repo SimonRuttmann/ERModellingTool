@@ -1,14 +1,21 @@
-import React from "react";
+import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../../Util/SvgUtils"
 
 
-function StrongEntity({id, displayText, color, fontFamily, fontSize}){
+function StrongEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     const x = 0;       const y = 0;
     let width = 137;   const height= 67;
 
     //If necessary, increase width to fit text
     width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
+
+    useLayoutEffect( () => {
+
+        console.log("update size")
+        updateDrawBoardElementSize(id, width, height)
+
+    },[width, height])
 
 
     return (

@@ -112,27 +112,21 @@ const BackgroundPaging = React.forwardRef ((
         let maxY = 0;
 
         elements.forEach( element => {
-            if(element.x>maxX) maxX = element.x
-            if(element.y>maxY) maxY = element.y
+            if(element.x + element.width  > maxX) maxX = element.x + element.width
+            if(element.y + element.height > maxY) maxY = element.y + element.height
         })
 
-        return {x: maxX, y: maxY}
+        return {x: maxX + drawBoardBorderOffset, y: maxY + drawBoardBorderOffset}
     }
 
     function decreasePageIfNecessary(elements, pagesHorizontal, pagesVertical){
 
         //Get highest x and highest y, which are required to fit within the pages
 
-        let maxX = 0;
-        let maxY = 0;
+        const maxXY = getMaxXAndYOfElements(elements);
 
-        elements.forEach( element => {
-            if(element.x>maxX) maxX = element.x
-            if(element.y>maxY) maxY = element.y
-        })
-
-        maxX = maxX + elementWidthOffset;
-        maxY = maxY + elementHeightOffset;
+        const maxX = maxXY.x;
+        const maxY = maxXY.y;
 
         return getPageReductionForPosition(maxX, maxY, pagesHorizontal, pagesVertical)
     }
