@@ -374,10 +374,11 @@ input[type="file"] {
 
 .TransformButtonEnabled:hover{
   background-color: #3c3f41;
+  cursor: pointer;
 }
 
 .TransformButtonDisabled{
-
+ display: none;
 }
 
 .invalidMessage{

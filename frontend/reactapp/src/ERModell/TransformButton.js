@@ -1,4 +1,5 @@
 import transformIcon from "../Resources/server.svg";
+import relationalIcon from "../Resources/table.svg";
 import React from "react";
 import validIcon from "../Resources/check-circle-fill.svg";
 import invalidIcon from "../Resources/exclamation-circle-fill.svg"
@@ -45,7 +46,7 @@ const TransformButton = ({transformToRel, invalidMessages}) => {
             <React.Fragment>
 
                 {displayedIcon}
-                <img src={transformIcon} className={transformButtonStyle} onClick={handleClick} alt={"To relational diagram"}/>
+                <img src={relationalIcon} className={transformButtonStyle} onClick={handleClick} alt={"To relational diagram"}/>
             </React.Fragment>
         </React.Fragment>
     )
