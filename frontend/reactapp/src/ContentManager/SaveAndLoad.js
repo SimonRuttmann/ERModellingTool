@@ -3,6 +3,9 @@ import Download from "./Download";
 import Upload from "./Upload";
 import {diagramTypes} from "../ERModell/Model/Diagram";
 import axios from "axios";
+import privacyPolicyIcon from "../Resources/Datenschutzerklärung/shield-exclamation.svg";
+import downloadIcon from "../Resources/cloud-download.svg";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
@@ -105,7 +108,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
             <div className="Head">
                 <button className={erTabStyle} onClick={changeToErDiagram}>Er Diagram</button>
                 <button className={relationalTabStyle} onClick={changeToRelationalDiagram}>Relational Diagram</button>
-
+                <PrivacyPolicy/>
                 <Download erContent={erContent}/>
                 <Upload importDrawBoardData={importDrawBoardData}/>
             </div>

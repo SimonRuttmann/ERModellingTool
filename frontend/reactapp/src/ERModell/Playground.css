@@ -282,11 +282,25 @@ input[type="file"] {
   width: 40px;
   height: 40px;
   cursor: pointer;
-  margin: 0 40px 0 0;
   padding: 10px 10px 5px 10px;
   border-radius: 10px;
 }
 .downloadButton:hover{
+  background-color: #222222;
+}
+
+.privacyPolicy{
+  float:right;
+  text-align: unset;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin: 0 40px 0 0;
+  padding: 10px 10px 5px 10px;
+  border-radius: 10px;
+}
+
+.privacyPolicy:hover{
   background-color: #222222;
 }
 
