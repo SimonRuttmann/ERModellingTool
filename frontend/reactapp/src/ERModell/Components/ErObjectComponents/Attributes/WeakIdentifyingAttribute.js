@@ -16,7 +16,11 @@ function WeakIdentifyingAttribute({id, displayText, color, fontFamily, fontSize,
     let xLinePositionEnd = xCenterPosition + xRadiusOuter * 0.85;
 
     useLayoutEffect(() => {
-        updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
+
+        let maxX =  (xRadiusOuter + xCenterPosition);
+        let maxY =  (yRadiusOuter + yCenterPosition);
+
+        updateDrawBoardElementSize(id, maxX, maxY);
     },[xRadiusOuter, yRadiusOuter]);
 
     return (

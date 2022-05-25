@@ -7,8 +7,7 @@ const BackgroundPaging = React.forwardRef ((
 
     useEffect( () => {
 
-        let pos = getMaxXAndYOfElements(elements);
-        adjustBounds(pos.x, pos.y, elements)
+        adjustBounds(elements)
 
     },
     //Justification: Performance increase, methods should not be used as callback,
@@ -19,13 +18,6 @@ const BackgroundPaging = React.forwardRef ((
 
     // *****************************  Handle page increment/decrement  *****************************
 
-    //TODO replace with correct values of er elements
-    //Work:
-    // 1. Add with and height properties to "drawBoardElement" (depending on text, width is dynamic),
-    // 2. resolve elements instead of positions,
-    // 3. apply offsets
-    const elementWidthOffset = 150;
-    const elementHeightOffset = 75;
 
     const oneBackgroundPageVertical = backgroundPageSize.vertical;
     const oneBackgroundPageHorizontal = backgroundPageSize.horizontal;
@@ -42,26 +34,24 @@ const BackgroundPaging = React.forwardRef ((
     /**
      * Function to increase or decrease the amount of pages
      * displayed depending on the elements within the draw board
-     * @param elementX The x-Coordinate of the element
-     * @param elementY The y-Coordinate of the element
-     * @param elements Optional element object, if set, the current state will not be used (as it could be already updated)
-     * @required drawBoardElements elements inside the draw board need to be added to the state
+     * @param elements drawBoardElements on the draw board
      * @see drawBoardElements
-     * @see setDrawBoardElements
+     * @see setAmountBackgroundPages
      */
-    function adjustBounds(elementX, elementY, elements){ //elements ist optional!
+    function adjustBounds(elements){
 
-        if(elements == null) return;
+        let pos = getMaxXAndYOfElements(elements);
+
+        const maxX = pos.x;
+        const maxY = pos.y;
 
         let currentPagesHorizontal = amountBackgroundPages.horizontal;
         let currentPagesVertical = amountBackgroundPages.vertical;
 
-        //TODO multiple set states
-        let updatedIncreasedPages = increasePageIfNecessary(elementX, elementY, currentPagesHorizontal, currentPagesVertical)
 
+        let updatedIncreasedPages = increasePageIfNecessary(maxX, maxY, currentPagesHorizontal, currentPagesVertical)
 
-        let updatedPages = decreasePageIfNecessary(elements, updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
-
+        let updatedPages = decreasePageIfNecessary(maxX, maxY, updatedIncreasedPages.horizontal, updatedIncreasedPages.vertical)
 
 
         setAmountBackgroundPages(() => ({
@@ -75,10 +65,8 @@ const BackgroundPaging = React.forwardRef ((
     function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical) {
         let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
 
-
-        x = x + elementWidthOffset;
-        y = y + elementHeightOffset;
-
+        console.log("max x " + x)
+        console.log("max y " + y)
         let horizontal = pagesHorizontal;
         let vertical = pagesVertical;
 
@@ -119,16 +107,10 @@ const BackgroundPaging = React.forwardRef ((
         return {x: maxX + drawBoardBorderOffset, y: maxY + drawBoardBorderOffset}
     }
 
-    function decreasePageIfNecessary(elements, pagesHorizontal, pagesVertical){
+    function decreasePageIfNecessary(x, y, pagesHorizontal, pagesVertical){
 
         //Get highest x and highest y, which are required to fit within the pages
-
-        const maxXY = getMaxXAndYOfElements(elements);
-
-        const maxX = maxXY.x;
-        const maxY = maxXY.y;
-
-        return getPageReductionForPosition(maxX, maxY, pagesHorizontal, pagesVertical)
+        return getPageReductionForPosition(x, y, pagesHorizontal, pagesVertical)
     }
 
 

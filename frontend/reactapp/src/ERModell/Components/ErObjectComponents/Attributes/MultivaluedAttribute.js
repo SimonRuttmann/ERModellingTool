@@ -14,7 +14,11 @@ function MultivaluedAttribute({id, displayText, color, fontFamily, fontSize, upd
     xRadiusOuter = xRadiusInner + 5;
 
     useLayoutEffect(() => {
-        updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
+
+        let maxX =  (xRadiusOuter + xCenterPosition);
+        let maxY =  (yRadiusOuter + yCenterPosition);
+
+        updateDrawBoardElementSize(id, maxX, maxY);
     },[xRadiusOuter, yRadiusOuter]);
 
     return (

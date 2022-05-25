@@ -12,7 +12,11 @@ function NormalAttribute({id, displayText, color, fontFamily, fontSize, updateDr
     xRadiusOuter = resolveRequiredWidth(xRadiusOuter * 2, displayText, fontSize, fontFamily) / 2
 
     useLayoutEffect(() => {
-        updateDrawBoardElementSize(id, xRadiusOuter*2, yRadiusOuter*2)
+
+        let maxX =  (xRadiusOuter + xCenterPosition);
+        let maxY =  (yRadiusOuter + yCenterPosition);
+
+        updateDrawBoardElementSize(id, maxX, maxY)
     },[xRadiusOuter, yRadiusOuter]);
 
     return (
