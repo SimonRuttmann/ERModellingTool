@@ -24,7 +24,7 @@ export function PrivacyPolicy({erContent}){
                     ariaHideApp={false}
                 >
                     <h1>Datenschutzerklärung</h1>
-                    <h2 id="m14">Einleitung</h2>
+                    <h2>Einleitung</h2>
                     <p>Mit der folgenden Datenschutzerklärung möchten wir Sie darüber aufklären, welche Arten Ihrer
                         personenbezogenen Daten (nachfolgend auch kurz als "Daten“ bezeichnet) wir zu welchen Zwecken
                         und in welchem Umfang verarbeiten. Die Datenschutzerklärung gilt für alle von uns durchgeführten
@@ -34,9 +34,9 @@ export function PrivacyPolicy({erContent}){
                         als "Onlineangebot“).</p>
                     <p>Die verwendeten Begriffe sind nicht geschlechtsspezifisch.</p>
                     <p>Stand: 25. Mai 2022</p><h2>Inhaltsübersicht</h2>
-                    <h2 id="m3">Verantwortlicher</h2><p>Simon Ruttmann</p>
-                    E-Mail-Adresse: <p><a href="mailto:simon.ruttmann@freenet.de">simon.ruttmann@freenet.de</a></p>
-                    <h2 id="mOverview">Übersicht der Verarbeitungen</h2><p>Die nachfolgende Übersicht fasst die Arten
+                    <h2>Verantwortlicher</h2><p>Simon Ruttmann</p>
+                    E-Mail-Adresse: <p>simon.ruttmann@freenet.de</p>
+                    <h2>Übersicht der Verarbeitungen</h2><p>Die nachfolgende Übersicht fasst die Arten
                     der verarbeiteten Daten und die Zwecke ihrer Verarbeitung zusammen und verweist auf die betroffenen
                     Personen.</p><h3>Arten der verarbeiteten Daten</h3>
                     <ul>
@@ -58,7 +58,7 @@ export function PrivacyPolicy({erContent}){
                         <li>Bereitstellung unseres Onlineangebotes und Nutzerfreundlichkeit.</li>
                         <li>Informationstechnische Infrastruktur.</li>
                     </ul>
-                    <h3 id="m13">Maßgebliche Rechtsgrundlagen</h3><p>Im Folgenden erhalten Sie eine Übersicht der
+                    <h3>Maßgebliche Rechtsgrundlagen</h3><p>Im Folgenden erhalten Sie eine Übersicht der
                     Rechtsgrundlagen der DSGVO, auf deren Basis wir personenbezogene Daten verarbeiten. Bitte nehmen Sie
                     zur Kenntnis, dass neben den Regelungen der DSGVO nationale Datenschutzvorgaben in Ihrem bzw.
                     unserem Wohn- oder Sitzland gelten können. Sollten ferner im Einzelfall speziellere Rechtsgrundlagen
@@ -90,7 +90,7 @@ export function PrivacyPolicy({erContent}){
                         Durchführung oder Beendigung von Beschäftigungsverhältnissen sowie die Einwilligung von
                         Beschäftigten. Ferner können Landesdatenschutzgesetze der einzelnen Bundesländer zur Anwendung
                         gelangen.</p>
-                    <h2 id="m27">Sicherheitsmaßnahmen</h2><p>Wir treffen nach Maßgabe der gesetzlichen Vorgaben unter
+                    <h2>Sicherheitsmaßnahmen</h2><p>Wir treffen nach Maßgabe der gesetzlichen Vorgaben unter
                     Berücksichtigung des Stands der Technik, der Implementierungskosten und der Art, des Umfangs, der
                     Umstände und der Zwecke der Verarbeitung sowie der unterschiedlichen Eintrittswahrscheinlichkeiten
                     und des Ausmaßes der Bedrohung der Rechte und Freiheiten natürlicher Personen geeignete technische
@@ -106,14 +106,14 @@ export function PrivacyPolicy({erContent}){
                     <p>SSL-Verschlüsselung (https): Um Ihre via unserem Online-Angebot übermittelten Daten zu schützen,
                         nutzen wir eine SSL-Verschlüsselung. Sie erkennen derart verschlüsselte Verbindungen an dem
                         Präfix https:// in der Adresszeile Ihres Browsers.</p>
-                    <h2 id="m25">Übermittlung von personenbezogenen Daten</h2><p>Im Rahmen unserer Verarbeitung von
+                    <h2>Übermittlung von personenbezogenen Daten</h2><p>Im Rahmen unserer Verarbeitung von
                     personenbezogenen Daten kommt es vor, dass die Daten an andere Stellen, Unternehmen, rechtlich
                     selbstständige Organisationseinheiten oder Personen übermittelt oder sie ihnen gegenüber offengelegt
                     werden. Zu den Empfängern dieser Daten können z.B. mit IT-Aufgaben beauftragte Dienstleister oder
                     Anbieter von Diensten und Inhalten, die in eine Webseite eingebunden werden, gehören. In solchen
                     Fall beachten wir die gesetzlichen Vorgaben und schließen insbesondere entsprechende Verträge bzw.
                     Vereinbarungen, die dem Schutz Ihrer Daten dienen, mit den Empfängern Ihrer Daten ab.</p>
-                    <h2 id="m24">Datenverarbeitung in Drittländern</h2><p>Sofern wir Daten in einem Drittland (d.h.,
+                    <h2>Datenverarbeitung in Drittländern</h2><p>Sofern wir Daten in einem Drittland (d.h.,
                     außerhalb der Europäischen Union (EU), des Europäischen Wirtschaftsraums (EWR)) verarbeiten oder die
                     Verarbeitung im Rahmen der Inanspruchnahme von Diensten Dritter oder der Offenlegung bzw.
                     Übermittlung von Daten an andere Personen, Stellen oder Unternehmen stattfindet, erfolgt dies nur im
@@ -123,11 +123,9 @@ export function PrivacyPolicy({erContent}){
                         Datenschutzniveau, vertraglichen Verpflichtung durch sogenannte Standardschutzklauseln der
                         EU-Kommission, beim Vorliegen von Zertifizierungen oder verbindlicher internen
                         Datenschutzvorschriften verarbeiten (Art. 44 bis 49 DSGVO, Informationsseite der
-                        EU-Kommission: <a
-                            href="https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection_de"
-                            target="_blank">https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection_de</a>).
+                        EU-Kommission: https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection_de".
                     </p>
-                    <h2 id="m12">Löschung von Daten</h2><p>Die von uns verarbeiteten Daten werden nach Maßgabe der
+                    <h2>Löschung von Daten</h2><p>Die von uns verarbeiteten Daten werden nach Maßgabe der
                     gesetzlichen Vorgaben gelöscht, sobald deren zur Verarbeitung erlaubten Einwilligungen widerrufen
                     werden oder sonstige Erlaubnisse entfallen (z.B. wenn der Zweck der Verarbeitung dieser Daten
                     entfallen ist oder sie für den Zweck nicht erforderlich sind).</p>
@@ -139,7 +137,7 @@ export function PrivacyPolicy({erContent}){
                         natürlichen oder juristischen Person erforderlich ist.</p>
                     <p>Unsere Datenschutzhinweise können ferner weitere Angaben zu der Aufbewahrung und Löschung von
                         Daten beinhalten, die für die jeweiligen Verarbeitungen vorrangig gelten.</p>
-                    <h2 id="m134">Einsatz von Cookies</h2><p>Cookies sind kleine Textdateien, bzw. sonstige
+                    <h2>Einsatz von Cookies</h2><p>Cookies sind kleine Textdateien, bzw. sonstige
                     Speichervermerke, die Informationen auf Endgeräten speichern und Informationen aus den Endgeräten
                     auslesen. Z.B. um den Login-Status in einem Nutzerkonto, einen Warenkorbinhalt in einem E-Shop, die
                     aufgerufenen Inhalte oder verwendete Funktionen eines Onlineangebotes speichern. Cookies können
@@ -205,7 +203,7 @@ export function PrivacyPolicy({erContent}){
                             Browser, System und verwendeten Endgerät gespeichert.
                         </li>
                     </ul>
-                    <h2 id="m225">Bereitstellung des Onlineangebotes und Webhosting</h2><p>Um unser Onlineangebot sicher
+                    <h2>Bereitstellung des Onlineangebotes und Webhosting</h2><p>Um unser Onlineangebot sicher
                     und effizient bereitstellen zu können, nehmen wir die Leistungen von einem oder mehreren
                     Webhosting-Anbietern in Anspruch, von deren Servern (bzw. von ihnen verwalteten Servern) das
                     Onlineangebot abgerufen werden kann. Zu diesen Zwecken können wir Infrastruktur- und
@@ -250,7 +248,7 @@ export function PrivacyPolicy({erContent}){
                             endgültigen Klärung des jeweiligen Vorfalls von der Löschung ausgenommen.
                         </li>
                     </ul>
-                    <h2 id="m182">Kontakt- und Anfragenverwaltung</h2><p>Bei der Kontaktaufnahme mit uns (z.B. per
+                    <h2>Kontakt- und Anfragenverwaltung</h2><p>Bei der Kontaktaufnahme mit uns (z.B. per
                     Kontaktformular, E-Mail, Telefon oder via soziale Medien) sowie im Rahmen bestehender Nutzer- und
                     Geschäftsbeziehungen werden die Angaben der anfragenden Personen verarbeitet soweit dies zur
                     Beantwortung der Kontaktanfragen und etwaiger angefragter Maßnahmen erforderlich ist.</p>
@@ -283,7 +281,7 @@ export function PrivacyPolicy({erContent}){
                             der Beantwortung der Anliegen und unserer gesetzlichen Aufbewahrungspflichten.
                         </li>
                     </ul>
-                    <h2 id="m15">Änderung und Aktualisierung der Datenschutzerklärung</h2><p>Wir bitten Sie, sich
+                    <h2>Änderung und Aktualisierung der Datenschutzerklärung</h2><p>Wir bitten Sie, sich
                     regelmäßig über den Inhalt unserer Datenschutzerklärung zu informieren. Wir passen die
                     Datenschutzerklärung an, sobald die Änderungen der von uns durchgeführten Datenverarbeitungen dies
                     erforderlich machen. Wir informieren Sie, sobald durch die Änderungen eine Mitwirkungshandlung
@@ -292,7 +290,7 @@ export function PrivacyPolicy({erContent}){
                     <p>Sofern wir in dieser Datenschutzerklärung Adressen und Kontaktinformationen von Unternehmen und
                         Organisationen angeben, bitten wir zu beachten, dass die Adressen sich über die Zeit ändern
                         können und bitten die Angaben vor Kontaktaufnahme zu prüfen.</p>
-                    <h2 id="m10">Rechte der betroffenen Personen</h2><p>Ihnen stehen als Betroffene nach der DSGVO
+                    <h2>Rechte der betroffenen Personen</h2><p>Ihnen stehen als Betroffene nach der DSGVO
                     verschiedene Rechte zu, die sich insbesondere aus Art. 15 bis 21 DSGVO ergeben:</p>
                     <ul>
                         <li><strong>Widerspruchsrecht: Sie haben das Recht, aus Gründen, die sich aus Ihrer besonderen
@@ -332,7 +330,7 @@ export function PrivacyPolicy({erContent}){
                             DSGVO verstößt.
                         </li>
                     </ul>
-                    <h2 id="m42">Begriffsdefinitionen</h2><p>In diesem Abschnitt erhalten Sie eine Übersicht über die in
+                    <h2>Begriffsdefinitionen</h2><p>In diesem Abschnitt erhalten Sie eine Übersicht über die in
                     dieser Datenschutzerklärung verwendeten Begrifflichkeiten. Viele der Begriffe sind dem Gesetz
                     entnommen und vor allem im Art. 4 DSGVO definiert. Die gesetzlichen Definitionen sind verbindlich.
                     Die nachfolgenden Erläuterungen sollen dagegen vor allem dem Verständnis dienen. Die Begriffe sind
