@@ -29,6 +29,7 @@ function ContentManager() {
     }
 
     return (
+        <React.StrictMode>
         <div className="App">
             <SaveAndLoad metaInforamtion={metaInformation}
                          diagramType={diagramType}
@@ -39,6 +40,7 @@ function ContentManager() {
 
             </SaveAndLoad>
         </div>
+        </React.StrictMode>
     )
 }
 

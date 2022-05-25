@@ -84,11 +84,11 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
     setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
   }
-
+  const nodeRef = React.useRef(null);
   return (
     <React.Fragment>
 
-      <Draggable
+      <Draggable nodeRef={nodeRef}
           onMouseDown={(e => e.stopPropagation())}
 
          bounds={
@@ -108,7 +108,7 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
          position={{x: thisObject.x, y: thisObject.y}}
          defaultPosition={{x: thisObject.x, y: thisObject.y}}>
 
-        <g
+        <g ref={nodeRef}
            id={thisObject.id}
            cursor="pointer"
            fill="#61DAFB"
