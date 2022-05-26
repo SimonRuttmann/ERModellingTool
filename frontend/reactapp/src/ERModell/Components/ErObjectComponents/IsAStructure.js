@@ -26,7 +26,6 @@ function IsAStructure({id, displayText, color, fontFamily, fontSize, updateDrawB
 
     useLayoutEffect( () => {
 
-        console.log("update size")
         updateDrawBoardElementSize(id, width, height)
 
     },[width, height])

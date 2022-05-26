@@ -26,7 +26,6 @@ function StrongRelation({id, displayText, color, fontFamily, fontSize, updateDra
 
     useLayoutEffect( () => {
 
-        console.log("update size")
         updateDrawBoardElementSize(id, width, height)
 
     },[width, height])

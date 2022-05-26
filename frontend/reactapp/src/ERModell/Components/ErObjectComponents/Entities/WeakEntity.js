@@ -16,7 +16,6 @@ function WeakEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoa
 
     useLayoutEffect( () => {
 
-        console.log("update size")
         updateDrawBoardElementSize(id, widthOuter, heightOuter)
 
     },[widthOuter, heightOuter])

@@ -65,8 +65,6 @@ const BackgroundPaging = React.forwardRef ((
     function increasePageIfNecessary(x, y, pagesHorizontal, pagesVertical) {
         let page = getBackgroundPageBounds(pagesHorizontal, pagesVertical);
 
-        console.log("max x " + x)
-        console.log("max y " + y)
         let horizontal = pagesHorizontal;
         let vertical = pagesVertical;
 
