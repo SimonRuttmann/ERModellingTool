@@ -16,6 +16,12 @@ import {validateErDiagram} from "./ErRules/ErValidator";
 
 const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
+  //TODO This class should be converted to a pure interaction class
+  //Separate following logic
+  //1. Invalid messages --> Validator
+  //2. Update position and update size --> DrawBoard util // Element render util
+  //This component then holds only interaction specific logic
+  // Maybe create a interaction state machine, for state management
 
   /**
    * Schema for drawBoardElements
@@ -200,6 +206,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     if( actionState === ACTIONSTATE.AddConnection) {
 
+      //Only allow new connections on highlighted elements
+      if(selectedObject.isHighlighted === false) return;
+
       changeActionState(ACTIONSTATE.Default)
 
       let previousSelectedObject = selectedObjectId;
@@ -292,7 +301,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
         width: 150,
         height: 100,
         objectType: OBJECTTYPE.DrawBoardElement,
-        erType: erType
+        erType: erType,
+        isMerging: true,
+        owningSide: null
       };
 
       setDrawBoardElements([
@@ -429,6 +440,41 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
 
+  const setElementMergeProperty = (id, elements, shouldMerge) => {
+
+    return elements.map(element => {
+      if (element.id === id) return {...element, isMerging: shouldMerge}
+      return {...element}
+    });
+  }
+
+  const setElementOwningSideProperty = (id, elements, owningSideId) => {
+
+    return elements.map(element => {
+      if (element.id === id) return {...element, owningSide: owningSideId}
+      return {...element}
+    });
+  }
+
+  const setMergeProperty = (selectedRelationId, shouldMerge) => {
+
+    let elements = setElementMergeProperty(selectedRelationId, drawBoardElements, shouldMerge);
+
+    setDrawBoardElements(prevState => [
+        ...elements
+    ])
+
+  }
+
+  const setOwningSideProperty = (selectedRelationId, owningElementId) => {
+
+    let elements = setElementOwningSideProperty(selectedRelationId, drawBoardElements, owningElementId)
+
+    setDrawBoardElements(prevState => [
+        ...elements
+    ])
+  }
+
   const selectElement = (elements, id) => {
 
     let shallowCopy = [...elements];
@@ -494,7 +540,9 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     removeElement: removeElement,
     setDisplayName: setDisplayName,
     editConnectionNotation: editConnectionNotation,
-    toAddConnectionState: toAddConnectionState
+    toAddConnectionState: toAddConnectionState,
+    setMergeProperty: setMergeProperty,
+    setOwningSideProperty: setOwningSideProperty
   }
 
 
