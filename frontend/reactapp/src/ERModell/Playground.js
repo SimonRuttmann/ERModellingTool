@@ -289,7 +289,12 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     if (Object.keys(ERTYPE).includes(erType)){
 
       let newId = erType + "--" + Date.now();
-      let { x, y } = e.target.getBoundingClientRect();
+
+      //The currentTarget needs to be used instead of the e.target, to always receive the
+      //element which has the handler on the event installed
+      //With e.target the target can be set to a sub element of the svg, when dropping over it
+      //therefore the x and y coordinates would be relative to the sub element instead of the svg
+      let { x, y } = e.currentTarget.getBoundingClientRect();
 
       let newDrawBoardElement = {
         id: newId,
@@ -312,7 +317,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
       setCounter(counter+1);
 
-
+      e.stopPropagation();
     }
 
 
