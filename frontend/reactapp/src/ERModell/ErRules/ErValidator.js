@@ -54,10 +54,10 @@ export const validateErDiagram = (connections, drawBoardElements) => {
 
         else{
 
-            let identifier = connectedElements.filter(element => element.erType === ERTYPE.IdentifyingAttribute.name);
+            let identifier = connectedElements.filter(element => element.erType === ERTYPE.WeakIdentifyingAttribute.name);
 
             if(identifier.length === 0)
-                invalidMessages.push(`The weak entity "${entity.displayName}" does not have an identifier!`);
+                invalidMessages.push(`The weak entity "${entity.displayName}" does not have an partial identifier!`);
         }
 
     }
