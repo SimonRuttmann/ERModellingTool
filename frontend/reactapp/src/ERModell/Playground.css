@@ -5,6 +5,11 @@ body {
   height: 100%;
 }
 
+/* TODO ADJUST ZOOM LEVEL, could lead to bugs, --> komische dragging mit zoom
+html {
+  zoom: 0.8;
+}
+*/
 
 /* Root element of the website*/
 .canvasStyle {
@@ -362,7 +367,7 @@ input[type="file"] {
   position: fixed;
   width: 50px;
   height: 50px;
-  right: 100px;
+  right: 50%;
   bottom: 20px;
   padding: 10px 10px 10px 10px;
   border-radius: 10px;
@@ -375,7 +380,7 @@ input[type="file"] {
   position: fixed;
   width: 50px;
   height: 50px;
-  right: 30px;
+  right: calc(50% - 100px);
   bottom: 20px;
   padding: 10px 10px 10px 10px;
   border-radius: 10px;
@@ -398,3 +403,94 @@ input[type="file"] {
 .invalidMessage{
   text-align: left;
 }
+
+
+
+.mergeCheckBoxSwitch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.mergeCheckBoxSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mergeCheckBoxSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #9a9a9a;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.mergeCheckBoxSlider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #383838;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .mergeCheckBoxSlider {
+  background-color: #222222;
+}
+
+input:focus + .mergeCheckBoxSlider {
+  box-shadow: 0 0 1px #222222;
+}
+
+input:checked + .mergeCheckBoxSlider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.mergeCheckBoxSlider.mergeCheckBoxSliderContent {
+  border-radius: 34px;
+}
+
+.mergeCheckBoxSlider.mergeCheckBoxSliderContent:before {
+  border-radius: 50%;
+}
+
+
+
+.select {
+  appearance: none;
+
+  background-color: transparent;
+
+  border: 1px solid white;
+  border-radius: 20px;
+
+  width: 80%;
+  padding: 10px;
+  line-height: 1.1;
+
+  color: white;
+  font-family: inherit;
+  font-size: inherit;
+
+  cursor: pointer;
+}
+
+
+.select-items {
+  background-color: #383838;
+  color: white;
+}
+
+
