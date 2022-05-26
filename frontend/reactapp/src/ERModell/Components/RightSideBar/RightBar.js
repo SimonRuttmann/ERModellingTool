@@ -5,9 +5,9 @@ import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../Util/ObjectUtil";
 import {AssociationTypeDetails, ConnectionType} from "../../Model/Diagram";
-import {getConnectorsOfObject, getOtherElementsOfConnectors} from "../../ErRules/ErRulesUtil";
+import EnhancedSettings from "./EnhancedSettings";
 
-const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState}) => {
+const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setMergeProperty, setOwningSideProperty}) => {
 
     if(selectedObjectId == null) return null;
 
@@ -55,40 +55,6 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     }
 
 
-//TODO Include logic for merge and owning side
-    //wenn relation deg == 2 zu entities und min = 1 und max = 1 auf beiden seiten
-    //                                          01 und 01
-    //
-    const cons = filterAndSortConnections();
-    if( cons.length === 2 &&
-        cons.every(connection => isOneToOne(connection)) &&
-        cons.every(connection => isConnectedToStrongEntity(connection))){
-        //TODO DISPLAY OWNING SIDE MERGE
-    }
-
-    if( cons.length === 2 &&
-        cons.every(connection => isZeroOneToZeroOne(connection)) &&
-        cons.every(connection => isConnectedToStrongEntity(connection))){
-        //TODO DISPLAY OWNING SIDE
-    }
-
-    const isOneToOne = (connection) => {
-        return connection.min === "1" && connection.max === "1"
-    }
-
-    const isZeroOneToZeroOne = (connection) => {
-        return connection.min === "0" && connection.max === "1"
-    }
-
-    const isConnectedToStrongEntity = (connection) => {
-        let otherElement;
-
-        if(connection.start === selectedObject.id) otherElement = resolveObjectById(connection.end, drawBoardElements)
-        else otherElement = resolveObjectById(connection.start, drawBoardElements)
-
-        return otherElement.erType === ERTYPE.StrongEntity.name;
-    }
-
     const RelationMenu = () => {
         return (
 
@@ -111,7 +77,12 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
                                 onChange={e => editConnectionNotation(connection.id, ConnectionCardinality.Max, e.target.value)}/>
                     </div>
                 ))}
-
+                <EnhancedSettings selectedObject={selectedObject}
+                                  drawBoardElements={drawBoardElements}
+                                  connections={connections}
+                                  setMergeProperty={setMergeProperty}
+                                  setOwningSideProperty={setOwningSideProperty}
+                />
             </React.Fragment>
 
         )
