@@ -83,8 +83,6 @@ export const onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnec
     //Rule only applies, when the other element is of type entity or relation
     if(! isElementOfCategoryEntityOrRelation(element)) return true;
 
-    console.log("element is fo type entity or relation")
-    console.log(element)
     const possibleRoot = resolveRootElementOfAttribute(selectedObject, connections, drawBoardElements)
 
     if(possibleRoot == null) return true;
@@ -198,7 +196,7 @@ export const getOtherElementsOfConnectors = (element, connections, drawBoardElem
  * @returns {*}
  */
 export const resolveRootElementOfAttribute = (element, connections, drawBoardElements) => {
-    console.log("resolve root element of attribute")
+
     let checkedElements = []
     return resolveRootElementOfAttributeRecursive(element, connections, drawBoardElements, checkedElements)
 }
@@ -480,8 +478,8 @@ const isATypesSubgraphBounds = (element) => {
 export const ensureIsACircleFree = (element, connections, selectedObject, drawBoardElements) => {
 
     //Rule only applies if selected object and element of type StrongEntity and IsA
-    if( selectedObject.erType === ERTYPE.IsAStructure.name && element.erType === ERTYPE.StrongEntity.name ||
-        selectedObject.erType === ERTYPE.StrongEntity.name && element.erType === ERTYPE.IsAStructure.name)      {
+    if( (selectedObject.erType === ERTYPE.IsAStructure.name && element.erType === ERTYPE.StrongEntity.name) ||
+        (selectedObject.erType === ERTYPE.StrongEntity.name && element.erType === ERTYPE.IsAStructure.name))      {
 
         const typesIsAGraph = collectIsATypesSubgraph(selectedObject, connections, drawBoardElements);
         const elementPartOfIsaGraph = collectionContains(typesIsAGraph, element)
