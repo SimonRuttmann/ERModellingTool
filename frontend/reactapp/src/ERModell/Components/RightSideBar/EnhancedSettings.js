@@ -1,38 +1,9 @@
 import {resolveObjectById} from "../Util/ObjectUtil";
 import {ERTYPE} from "../../Model/ErType";
 import {getOtherElementsOfConnectors} from "../../ErRules/ErRulesUtil";
-import React, {useEffect, useRef} from "react";
+import React, {useRef} from "react";
 
 const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setMergeProperty, setOwningSideProperty}) => {
-
-    /**
-     * Warning: Cannot update a component (`PlayGround`) while rendering a different component (`EnhancedSettings`). To locate the bad setState() call inside `EnhancedSettings`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render
-     *     at EnhancedSettings (http://localhost:3000/main.44775bf3e35a23b96498.hot-update.js:35:5)
-     *     at div
-     *     at RightBar (http://localhost:3000/static/js/bundle.js:6417:5)
-     *     at div
-     *     at div
-     *     at PlayGround (http://localhost:3000/static/js/bundle.js:9105:5)
-     *     at SaveAndLoad (http://localhost:3000/static/js/bundle.js:2754:5)
-     *     at div
-     *     at ContentManager (http://localhost:3000/static/js/bundle.js:1560:88)
-     *     at div
-     *     at App
-     *
-     *
-     *
-     * overrideMethod    @    react_devtools_backend.js:4026
-     * printWarning    @    react-dom.development.js:67
-     * error    @    react-dom.development.js:43
-     * warnAboutRenderPhaseUpdatesInDEV    @    react-dom.development.js:24002
-     * scheduleUpdateOnFiber    @    react-dom.development.js:21836
-     * dispatchAction    @    react-dom.development.js:16139
-     * setOwningSideProperty    @    Playground.js:477
-     * setDefaultOwningSide    @    EnhancedSettings.js:19
-     * EnhancedSettings    @    EnhancedSettings.js:120
-     * renderWithHooks    @    react-dom.development.js:14985
-     * mountIndeterminateComponent    @    react-dom.development.js:17811
-     */
 
     const mergeBoxRef = useRef(null);
 
@@ -41,12 +12,6 @@ const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setMe
         setMergeProperty(selectedObject.id, mergeBoxRef.current.checked)
     }
 
-    const setDefaultOwningSide = (defaultOwningSideId) => {
-
-        if(selectedObject.owningSide === defaultOwningSideId) return;
-
-        setOwningSideProperty(selectedObject.id, defaultOwningSideId)
-    }
 
     const setOwningSide = (e) => {
         setOwningSideProperty(selectedObject.id, e.target.value)
