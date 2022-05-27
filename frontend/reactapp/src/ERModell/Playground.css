@@ -493,4 +493,7 @@ input:checked + .mergeCheckBoxSlider:before {
   color: white;
 }
 
+.erDescriptions {
+  text-align: left;
+}
 
