@@ -20,6 +20,16 @@ export const validateErDiagram = (connections, drawBoardElements) => {
             invalidMessages.push(`The element of type "${namedElement.erType}" has no name!`)
     }
 
+    //TODO THIS IS OPTIONAL!
+   // let alreadyUsedNames = [];
+
+  //  drawBoardElements.forEach(element => {
+  //      if (alreadyUsedNames[element.displayName.trim()])
+  //          invalidMessages.push(`The name "${element.displayName}" is used multiple times!`)
+  //      else
+  //          alreadyUsedNames[element.displayName.trim()] = true;
+  //  });
+
     if(connections.length === 0 && drawBoardElements.length === 0)
         invalidMessages.push("Diagram is empty!")
 
@@ -34,7 +44,7 @@ export const validateErDiagram = (connections, drawBoardElements) => {
             invalidMessages.push(`The attribute "${attribute.displayName}" is not connected to a entity or relation!`)
     }
 
-    //For every Entity a key is present (top level key)
+    //For every Entity a key is present (top level key), or it is an inheritor of an isa structure
 
     let entities = drawBoardElements.filter(element => element.erType === ERTYPE.StrongEntity.name ||
                                                        element.erType === ERTYPE.WeakEntity.name);
@@ -47,8 +57,9 @@ export const validateErDiagram = (connections, drawBoardElements) => {
         if(entity.erType === ERTYPE.StrongEntity.name){
 
             let identifier = connectedElements.filter(element => element.erType === ERTYPE.IdentifyingAttribute.name);
+            let inheritorConnections = connectors.filter(connection => connection.connectionType === ConnectionType.inheritor)
 
-            if(identifier.length === 0)
+            if(identifier.length === 0 && inheritorConnections.length === 0)
                 invalidMessages.push(`The strong entity "${entity.displayName}" does not have an identifier!`) ;
         }
 

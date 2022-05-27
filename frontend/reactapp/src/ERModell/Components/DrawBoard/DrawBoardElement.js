@@ -43,7 +43,7 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
 
   let background = "#fff";
   if(thisObject.isSelected) background = "#e1b43c"
-  else if(thisObject.isHighlighted) background = "#fffacd"
+  else if(thisObject.isHighlighted) background = "#f8ec9a"
 
   const propsForErComponent = {
     id: thisObject.id,

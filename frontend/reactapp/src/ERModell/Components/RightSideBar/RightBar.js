@@ -54,15 +54,22 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
         return filterAndSortConnections().filter(connection => connection.connectionType === ConnectionType.inheritor);
     }
 
+    function filterAndSortNonAttributeConnections(){
+        return filterAndSortConnections().filter(connection =>
+            ! ( connection.connectionType === ConnectionType.association &&
+                connection.associationTypeDetails === AssociationTypeDetails.attributeConnector));
+    }
+
+
 
     const RelationMenu = () => {
         return (
 
             <React.Fragment>
 
-                {filterAndSortConnections().length > 0 ? <div>Associated to:</div> : <div>No associations</div> }
+                {filterAndSortNonAttributeConnections().length > 0 ? <div>Associated to:</div> : <div>No associations</div> }
 
-                {filterAndSortConnections().map((connection,i) => (
+                {filterAndSortNonAttributeConnections().map((connection,i) => (
                     <div key={connection.id + " -- " + i}>
                         {getDisplayNameAndType(connection)} <br/>
                         Min: <input
