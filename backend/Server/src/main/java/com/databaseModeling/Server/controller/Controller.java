@@ -8,10 +8,7 @@ import com.databaseModeling.Server.services.transformation.interfaces.ICardinali
 import com.databaseModeling.Server.model.ValidationResult;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformAttributesService;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformWeakTypesService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -19,8 +16,10 @@ import java.util.ArrayList;
 @RestController
 public class Controller {
 
-    @GetMapping("/*")
+    @GetMapping("/test")
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     public String doSthm() {
+        System.out.println("received");
         return "hallo";
     }
 
@@ -31,20 +30,22 @@ public class Controller {
         return m;
     }
 
+
     @PostMapping("/convert/relational")
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     public ConceptionalModelDto convertToRelational(
             @RequestBody ConceptionalModelDto type)
     {
         //Idee für später Node Abstrakte klasse implementiert INode, Edge Abstrakte klasse implementiert IEdge
         //Graph <N,E> mit extends Inode extends IEdge
         //Graph <Element, Association>
-        System.out.println(type.getType());
+        System.out.println(type.getProjectType());
         System.out.println(type.getProjectName());
         System.out.println(type.getProjectVersion());
 
         ConceptionalModelDto conceptionalModelDto = new ConceptionalModelDto();
         conceptionalModelDto.setProjectName("projectNameValue");
-        conceptionalModelDto.setType("typeValue");
+        conceptionalModelDto.setProjectType("typeValue");
         conceptionalModelDto.setProjectVersion("1.1.1.1");
 
         ConceptionalModelDto.DrawBoardContent drawBoardContent = new ConceptionalModelDto.DrawBoardContent();

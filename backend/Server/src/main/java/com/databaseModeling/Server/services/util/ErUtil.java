@@ -139,7 +139,7 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
     ResolveBaseOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
-        return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Base).stream().findFirst().orElseThrow();
+        return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Parent).stream().findFirst().orElseThrow();
     }
 
 

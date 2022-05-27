@@ -5,7 +5,7 @@ import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssocia
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
-import com.mongodb.assertions.Assertions;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,8 @@ public class ErTreeGraphFactory {
         }
 
         //TODO remove this
-        Assertions.assertTrue(attributeConnectors.isEmpty());
+        System.out.println("attribute connectors should be empty");
+        System.out.println(attributeConnectors.isEmpty());
 
     }
 

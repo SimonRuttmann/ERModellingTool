@@ -5,5 +5,11 @@ public enum AssociationType {
     Association,
     AttributeConnector,
     Inheritor,
-    Base
+    Parent
 }
+
+
+/*
+export const ConnectionType = {association: "association", inheritor: "inheritor", parent:"parent"}
+export const AssociationTypeDetails = {association: "association", attributeConnector: "attributeConnector"}
+ */
