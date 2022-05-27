@@ -385,8 +385,11 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     if(selectedObject.objectType === OBJECTTYPE.Connection) {
 
-      connectionsToUpdate = removeConnectionDirect(elementsToUpdate, connectionsToUpdate)
-
+      console.log("Remove connection")
+      console.log(connectionsToUpdate)
+      connectionsToUpdate = removeConnectionDirect(selectedObject, connectionsToUpdate)
+      console.log("after remove connection")
+      console.log(connectionsToUpdate)
     }
     if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement){
 

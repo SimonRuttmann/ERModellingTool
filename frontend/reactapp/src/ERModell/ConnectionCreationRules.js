@@ -14,7 +14,7 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
     let endElement = resolveObjectById(idEnd, drawBoardElements);
 
     let withLabel = true;
-    let connectionType;
+    let connectionType = ConnectionType.association;
     let withArrow = false;
     let associationTypeDetails = AssociationTypeDetails.association;
 
