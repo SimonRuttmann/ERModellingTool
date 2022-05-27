@@ -115,6 +115,9 @@ public class ConceptionalModelDto {
             private String associationTypeDetails;  // AssociationTypeDetails = {association: "association", attributeConnector: "attributeConnector"}
             public AssociationType getAssociationType(){
 
+                if(connectionType == null)
+                    return AssociationType.Association;
+
                 if(connectionType.equals("association") &&
                    associationTypeDetails.equals("attributeConnector"))
                     return AssociationType.AttributeConnector;

@@ -42,9 +42,12 @@ public class ErTreeGraphFactory {
                 getElements().
                 stream().
                 filter(element -> element.getErType().isNode).
-                forEach(node ->  erGraph.addNode(node.getId(),
-                        new TreeNode<>(node.getId(), new EntityRelationElement(node.getErType(), new ElementMetaInformation()))));
-
+                forEach(node ->
+                        erGraph.addNode(node.getId(),
+                            new TreeNode<>(node.getId(),
+                            new EntityRelationElement(
+                                    node.getErType(),
+                                    ElementMetaInformationFactory.createElementMetaInformation(node)))));
     }
 
     private static void addEdges(
@@ -60,7 +63,7 @@ public class ErTreeGraphFactory {
                         erGraph.graphNodes.stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getStart())) &&
                         erGraph.graphNodes.stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getEnd()))).
                 forEach(edge -> erGraph.addEdge(edge.getId(), edge.getStart(), edge.getEnd(),
-                                new EntityRelationAssociation(edge.getMin(), edge.getMax(), new ElementMetaInformation())));
+                                new EntityRelationAssociation(edge.getMin(), edge.getMax())));
 
     }
 
@@ -74,7 +77,12 @@ public class ErTreeGraphFactory {
                 getElements().
                 stream().
                 filter(element -> ! element.getErType().isNode).
-                map(attribute -> new TreeNode<>(attribute.getId(), new EntityRelationElement(attribute.getErType(), new ElementMetaInformation()))).
+                map(attribute ->
+                        new TreeNode<>(
+                                attribute.getId(),
+                                new EntityRelationElement(
+                                        attribute.getErType(),
+                                        ElementMetaInformationFactory.createElementMetaInformation(attribute)))).
                 collect(Collectors.toList());
 
 
@@ -103,7 +111,7 @@ public class ErTreeGraphFactory {
      * and starts recursion step with children
      * @param parent The current root element of the tree
      * @param connectors The remaining connections
-     * @param treeNodes All tree nodes TODO optimization possible!
+     * @param treeNodes All tree nodes TODO optimization possible! Use a hash set, also AttributeConnector is given!
      */
     private static void orderTreeRecursive(
             TreeNode<EntityRelationElement> parent,

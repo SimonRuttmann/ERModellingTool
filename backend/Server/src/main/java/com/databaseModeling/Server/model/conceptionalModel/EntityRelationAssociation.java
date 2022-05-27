@@ -33,12 +33,9 @@ public class EntityRelationAssociation {
         this.associationType = associationType;
     }
 
-    public ElementMetaInformation elementMetaInformation;
-
-    public EntityRelationAssociation(String min, String max, ElementMetaInformation elementMetaInformation) {
+    public EntityRelationAssociation(String min, String max) {
         this.min = min;
         this.max = max;
-        this.elementMetaInformation = elementMetaInformation;
     }
 
     private Table table;
