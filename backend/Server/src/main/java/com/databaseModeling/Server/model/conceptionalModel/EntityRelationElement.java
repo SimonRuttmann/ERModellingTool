@@ -57,6 +57,7 @@ public class EntityRelationElement {
     }
 
     public void removeTable(){
+        TableManager.unregisterTable(this.table);
         this.table = null;
     }
     public EntityRelationElement(ErType erType, ElementMetaInformation elementMetaInformation) {

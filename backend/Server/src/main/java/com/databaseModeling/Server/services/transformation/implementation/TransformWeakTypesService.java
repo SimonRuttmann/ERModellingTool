@@ -133,7 +133,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
 
         return  relations.
                 stream().
-                filter(connectedNode -> resolveErType(connectedNode) == ErType.IdentifyingRelation).
+                filter(connectedNode -> resolveErType(connectedNode) == ErType.WeakRelation).
                 collect(Collectors.toList());
     }
 

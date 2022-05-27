@@ -33,9 +33,10 @@ public class EntityRelationAssociation {
         this.associationType = associationType;
     }
 
-    public EntityRelationAssociation(String min, String max) {
+    public EntityRelationAssociation(String min, String max, AssociationType associationType) {
         this.min = min;
         this.max = max;
+        this.associationType = associationType;
     }
 
     private Table table;

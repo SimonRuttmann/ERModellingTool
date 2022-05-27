@@ -1,6 +1,5 @@
 package com.databaseModeling.Server.model;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +55,7 @@ public class ValidationResult {
     }
 
     private String withPrefix(String prefix, String message){
-        return MessageFormat.format("{0} : {1}", prefix, message);
+        return prefix + " : " + message;
     }
 
 }
