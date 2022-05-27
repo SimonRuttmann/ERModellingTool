@@ -486,7 +486,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     let elements = setElementMergeProperty(selectedRelationId, drawBoardElements, shouldMerge);
 
-    setDrawBoardElements(prevState => [
+    setDrawBoardElements(() => [
         ...elements
     ])
 
@@ -496,7 +496,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
     let elements = setElementOwningSideProperty(selectedRelationId, drawBoardElements, owningElementId)
 
-    setDrawBoardElements(prevState => [
+    setDrawBoardElements(() => [
         ...elements
     ])
   }
