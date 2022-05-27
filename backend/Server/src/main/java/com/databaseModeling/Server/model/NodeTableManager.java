@@ -40,7 +40,12 @@ public class NodeTableManager {
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> nodeToMerge){
 
         var tableToMerge = resolveErData(nodeToMerge).getTable();
-        var referencingTables = nodeToMerge.
+        //new
+        var referencingTables = tableToMerge.getReferencesToChildAttributeTables();
+
+        var owningTable = resolveErData(owningNode).getTable();
+        owningTable.addAllReferencesToChildAttributeTable(referencingTables);
+    /*    var referencingTables = nodeToMerge.
                 getNodeData().
                 getChildren().
                 stream().
@@ -60,8 +65,8 @@ public class NodeTableManager {
                 table.referencedIdentifyingTable = owningTable;
             }
         });
-
+*/
         TableManager.AddColumns(owningTable, tableToMerge.getColumns());
-
+        resolveErData(nodeToMerge).removeTable();
     }
 }

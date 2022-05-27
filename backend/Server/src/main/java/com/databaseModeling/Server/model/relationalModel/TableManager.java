@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -13,24 +14,35 @@ public class TableManager {
 
     private static final AtomicLong tableIdCounter = new AtomicLong();
 
+    private static final List<Table> tableRegister = new ArrayList<>();
     public static Table createTable(ErType erType, ElementMetaInformation elementMetaInformation){
 
         var tableId = generateTableId();
         Table table = new Table(tableId);
+        table.setOriginDisplayName(elementMetaInformation.getDisplayName());
+        tableRegister.add(table);
 
         var columnId = generateColumnId(table);
         Column column = new Column();
         column.setId(columnId);
+        column.setOriginDisplayName(elementMetaInformation.getDisplayName());
 
+        //If it is no attribute, we return the table without columns
+        switch (erType){
+            case StrongEntity:
+            case WeakEntity:
+            case StrongRelation:
+            case WeakRelation:
+                return table;
+        }
+
+        //Mark column as primary key
         switch (erType){
             case IdentifyingAttribute:
             case WeakIdentifyingAttribute:  column.getKey().setIsPrimaryKey(true);
-                                            break;
-            case NormalAttribute:
-            case MultivaluedAttribute:
         }
 
-        column.setOriginDisplayName(elementMetaInformation.getDisplayName());
+        table.addColumn(column);
 
         return table;
     }
@@ -93,6 +105,13 @@ public class TableManager {
     }
 
 
+    public static void unregisterTable(Table table){
+        tableRegister.remove(table);
+    }
+
+    public static List<Table> getTableRegister(){
+        return tableRegister;
+    }
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

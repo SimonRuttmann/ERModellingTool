@@ -10,15 +10,42 @@ public final class Table {
 
     public String getId() {return id;}
 
+    public String originDisplayName;
+    public void setOriginDisplayName(String originDisplayName){
+        this.originDisplayName = originDisplayName;
+    }
+
+
     //used for attribute tables
-    public Table referencedAttributeTable;
-    public Boolean isFixedAttributeTable;
+    private final List<Table> referencedAttributeTables = new ArrayList<Table>();
+
+    public List<Table> getReferencesToChildAttributeTables(){
+        return referencedAttributeTables;
+    }
+
+    public void addReferenceToChildAttributeTable(Table childAttributeTable){
+        referencedAttributeTables.add(childAttributeTable);
+    }
+
+    public void addAllReferencesToChildAttributeTable(List<Table> childAttributeTables){
+        referencedAttributeTables.addAll(childAttributeTables);
+    }
+
+    public void removeReferenceToChildAttributeTable(Table childAttributeTable){
+        referencedAttributeTables.remove(childAttributeTable);
+    }
+
+    public void clearReferencedAttributeTable(){
+        referencedAttributeTables.clear();
+    }
+
+    public Boolean isFixedAttributeTable = false;
 
 
     //used for weak entity tables
-    public Table referencedIdentifyingTable;
-    public Boolean isWeakEntityTable;
-    public Boolean isTransformed;
+    public Table referencedIdentifyingTable = null;
+    public Boolean isWeakEntityTable = false;
+    public Boolean isTransformed = false;
     public boolean isStrongWithReferences(){
         if (isWeakEntityTable) return referencedIdentifyingTable != null;
         return true;
@@ -49,5 +76,9 @@ public final class Table {
         return columns;
     }
 
+
+    public void clearColumns() {
+        columns.clear();
+    }
 
 }

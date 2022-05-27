@@ -62,8 +62,14 @@ public class ErTreeGraphFactory {
                 filter(connection ->
                         erGraph.graphNodes.stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getStart())) &&
                         erGraph.graphNodes.stream().anyMatch(graphNode -> graphNode.getId().equals(connection.getEnd()))).
-                forEach(edge -> erGraph.addEdge(edge.getId(), edge.getStart(), edge.getEnd(),
-                                new EntityRelationAssociation(edge.getMin(), edge.getMax())));
+                forEach(edge -> erGraph.addEdge(
+                                    edge.getId(),
+                                    edge.getStart(),
+                                    edge.getEnd(),
+                                    new EntityRelationAssociation(
+                                            edge.getMin(),
+                                            edge.getMax(),
+                                            edge.getAssociationType())));
 
     }
 
