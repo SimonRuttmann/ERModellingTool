@@ -5,6 +5,7 @@ import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.relationalModel.Table;
 import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformAttributesService;
 
@@ -28,7 +29,7 @@ public class TransformAttributesService implements ITransformAttributesService {
         for (var root : erGraph.graphNodes){
 
             if(resolveErType(root).isNode)
-                updateReferences(root.getNodeData());
+                updateReferences(root.getNodeData().getTreeData().getTable());
 
         }
     }
@@ -47,7 +48,7 @@ public class TransformAttributesService implements ITransformAttributesService {
      *      4.1 If the table of the child is marked as fixed
      *           4.1.1 If the table has at least one more children
      *                    Create a reference from the child to the parent
-     *           4.1.2 Else
+     *           4.1.2 Else (In this case it is a "pipe-attribute" and must be forwarded)
      *                     Merge the child table with the parent table
      *                     and update the sub children reference
      *           4.1.3 Mark the table, to be persisted
@@ -71,32 +72,48 @@ public class TransformAttributesService implements ITransformAttributesService {
 
         if(parent.isLeaf()) return;
 
+        var parentTable = parent.getTreeData().getTable();
+
+        // If we reach this point, the element is no leaf
+        // therefore it is a composite attribute, so the column needs to be
+        // cleared and filled with the child table columns
+        parentTable.clearColumns();
 
         for (var child : parent.getChildren()) {
             var childTable = child.getTreeData().getTable();
-            var parentTable = parent.getTreeData().getTable();
 
 
             if(childTable.isFixedAttributeTable){
 
                 //Attribute is used as a "pipe", therefore we can merge the table
-                if(parent.getChildren().size() == 1) removePipelineAttribute(parent, child);
+                if(parent.getChildren().size() == 1) {
+                    forwardAttributeTable(parent, child);
+                    parentTable.isFixedAttributeTable = true;
+                }
 
-                else childTable.referencedAttributeTable = parentTable;
+                else {
+                    parentTable.addReferenceToChildAttributeTable(childTable);
+                    //childTable.referencedAttributeTable = parentTable;
+                }
 
-                parentTable.isFixedAttributeTable = true;
+                //If it is a multivalued attribute it is marked above as isFixedAttributeTable
+                //parentTable.isFixedAttributeTable = true;
             }
 
             else{
-                TableManager.AddColumns(parentTable, childTable.getColumns());
-                child.getTreeData().removeTable();
+                //TableManager.AddColumns(parentTable, childTable.getColumns());
+                //child.getTreeData().removeTable();
+
+                //We always forward the attribute table, because the child table
+                //Could have references which would get lost by deleting the table
+                forwardAttributeTable(parent, child);
             }
 
         }
 
     }
 
-    private void removePipelineAttribute(
+    private void forwardAttributeTable(
             TreeNode<EntityRelationElement> parent,
             TreeNode<EntityRelationElement> child){
 
@@ -106,14 +123,8 @@ public class TransformAttributesService implements ITransformAttributesService {
         TableManager.AddColumns(parentTable, childTable.getColumns());
 
         //Get all references to the child table and update them to the parent table
-        for(var subChild : child.getChildren()){
-
-            //Check for reference!
-            if(subChild.getTreeData().getTable().referencedAttributeTable == child.getTreeData().getTable()){
-                subChild.getTreeData().getTable().referencedAttributeTable = parentTable;
-            }
-
-        }
+        var referencedByChild = childTable.getReferencesToChildAttributeTables();
+        parentTable.addAllReferencesToChildAttributeTable(referencedByChild);
 
         child.getTreeData().removeTable();
     }
@@ -129,12 +140,23 @@ public class TransformAttributesService implements ITransformAttributesService {
      * 3. Start preorder traversal
      *</pre>
      *
-     * @param parent The parent element of the tree
      */
-    private void updateReferences(TreeNode<EntityRelationElement> parent){
+    private void updateReferences(Table parentTable){
 
+        var referencedTables = parentTable.getReferencesToChildAttributeTables();
+
+        if(referencedTables.size() == 0 ) return;
+
+        for(var childTable : referencedTables){
+
+            TableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
+
+            updateReferences(childTable);
+        }
+        /*
         //Added for more readability
         if(parent.isLeaf()) return;
+
 
         for(var child : parent.getChildren()){
             var childData = child.getTreeData();
@@ -151,6 +173,8 @@ public class TransformAttributesService implements ITransformAttributesService {
 
             updateReferences(child);
         }
+        */
+
 
     }
 
