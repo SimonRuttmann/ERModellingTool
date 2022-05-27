@@ -9,7 +9,6 @@ import com.databaseModeling.Server.model.conceptionalModel.Cardinality;
 import com.databaseModeling.Server.model.ValidationResult;
 import com.databaseModeling.Server.services.transformation.interfaces.ICardinalityResolverService;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,11 +18,6 @@ import static com.databaseModeling.Server.services.util.ErUtil.resolveAssociatio
 
 
 public class CardinalityResolverService implements ICardinalityResolverService {
-
-    private final String alphabeticValue = "AlphabeticValue";
-    private final String numericValue = "NumericValue";
-    private final String regex = MessageFormat.
-            format("^\\s*((?<{1}>[A-Za-z]+)|(?<{2}>\\d+))\\s*$", alphabeticValue, numericValue);
 
     @Override
     public void ResolveCardinalities(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph, ValidationResult validationResult){
@@ -42,14 +36,6 @@ public class CardinalityResolverService implements ICardinalityResolverService {
         }
 
     }
-
-    //Information provided by association type
-//    private boolean isPartOfIsa(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> edge){
-//
-//
-//        return resolveErType(edge.getSource())      == ErType.IsAStructure ||
-//               resolveErType(edge.getDestination()) == ErType.IsAStructure;
-//    }
 
     private Cardinality resolveCardinality(String min, String max, List<String> errorMessages){
 
@@ -75,6 +61,11 @@ public class CardinalityResolverService implements ICardinalityResolverService {
 
     private int parseAssociationValue(String value, List<String> errorMessages){
 
+        String alphabeticValue = "AlphabeticValue";
+        String numericValue = "NumericValue";
+
+        String regex = "^\\s*((?<" + alphabeticValue + ">[A-Za-z]+)|(?<" + numericValue + ">\\d+))\\s*$";
+
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(value);
 
@@ -82,13 +73,19 @@ public class CardinalityResolverService implements ICardinalityResolverService {
 
         int number = 0;
 
-        if(! matcher.group(alphabeticValue).isEmpty()) number = Integer.MAX_VALUE;
+        //Annahme alphabetic value = 1 --> matcher.group.isEmpty == Fals -> Negation = true -> maxValue ? ohoh
+        var numVal  = matcher.group(numericValue);
+        var alphVal = matcher.group(alphabeticValue);
+        //Wenn numeric value gesetzt ist
+        if(matcher.group(numericValue) != null && !matcher.group(numericValue).isEmpty())
+            return getNumberOfValue(matcher.group(numericValue));
 
-        else if(! matcher.group(numericValue).isEmpty())
-            number = getNumberOfValue(matcher.group(numericValue));
 
-        else errorMessages.add("The cardinality " + value + " could not be parsed");
+        if(matcher.group(alphabeticValue) != null && !matcher.group(alphabeticValue).isEmpty())
+            return Integer.MAX_VALUE;
 
+
+        errorMessages.add("The cardinality " + value + " could not be parsed");
         return number;
     }
 
