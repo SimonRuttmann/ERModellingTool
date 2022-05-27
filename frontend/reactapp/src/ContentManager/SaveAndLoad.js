@@ -66,13 +66,19 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         setLoadProcessStatus(false)
     }
 
-    const url = "localhost:8080/transform"
+    const url = "http://localhost:8080/convert/relational"
     const [serverResult, setServerResult] = useState({})
     const [error, setError] = useState(false)
+
     function transformToRel(){
         let content = JSON.stringify(erContent.current);
         console.log("Call to backend")
-        axios.post(url, {...content}).
+        console.log(url)
+        console.log(content)
+      //  axios.get("http://localhost:8080/test").then((response) => console.log(response));
+       // axios.get("https://jsonplaceholder.typicode.com/users").then((response) => console.log(response));
+
+        axios.post(url, erContent.current).
         then((response) => {setServerResult(response.data);}).
         catch(error => setError(true));
     }
