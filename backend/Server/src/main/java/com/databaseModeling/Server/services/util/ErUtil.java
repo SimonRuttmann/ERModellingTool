@@ -9,7 +9,6 @@ import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +19,14 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
         var sourceDesc = resolveErTypeQualifiedName(edge.getSource());
         var destDesc = resolveErTypeQualifiedName(edge.getDestination());
 
-        return MessageFormat.format("Association from {1} to {2}", sourceDesc, destDesc );
-
+        return "Association from " + sourceDesc + " to " + destDesc;
     }
 
     public static String resolveErTypeQualifiedName(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
 
         var erData = resolveErData(erElement);
-        return MessageFormat.format("{1} with name {2}", erData.getErType().displayName, erData.getElementMetaInformation().getDisplayName() );
+
+        return erData.getErType().displayName + " with name " +erData.getElementMetaInformation().getDisplayName();
     }
     public static ErType resolveErType(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
 
@@ -151,7 +150,7 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
         return erGraph.graphNodes.
                 stream().
                 filter(node -> resolveErType(node) == ErType.StrongRelation ||
-                        resolveErType(node) == ErType.IdentifyingRelation).
+                        resolveErType(node) == ErType.WeakRelation).
                 filter(node -> node.getDegree() == 2).
                 collect(Collectors.toList());
 
