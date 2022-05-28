@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static com.databaseModeling.Server.services.util.ErUtil.*;
 
-public class TransformIsAStructureServiceService implements ITransformIsAStructureService {
+public class TransformIsAStructureService implements ITransformIsAStructureService {
 
     @Override
     public void transformIsAStructures(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {

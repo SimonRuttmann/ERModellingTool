@@ -3,13 +3,10 @@ package com.databaseModeling.Server.services.transformation.implementation;
 import com.databaseModeling.Server.model.NodeTableManager;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
-import com.databaseModeling.Server.model.conceptionalModel.ErType;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformManyToManyService;
-
-import java.util.stream.Collectors;
 
 import static com.databaseModeling.Server.services.util.ErUtil.*;
 
@@ -26,7 +23,7 @@ public class TransformManyToManyService implements ITransformManyToManyService {
     private void transformManyToManyRelation(
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation) {
 
-        if(! isManyToOne(relation)) return;
+        if(! isManyToMany(relation)) return;
 
         var entities = ResolveEntitiesConnectedToRelation(relation);
 
@@ -36,7 +33,7 @@ public class TransformManyToManyService implements ITransformManyToManyService {
         relation.getNodeData().getTreeData().setTransformed(true);
     }
 
-    private boolean isManyToOne(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
+    private boolean isManyToMany(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
 
         if(relation.getDegree() > 2 ) return true;
 

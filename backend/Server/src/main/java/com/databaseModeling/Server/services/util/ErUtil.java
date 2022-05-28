@@ -165,4 +165,12 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
                 collect(Collectors.toList());
 
     }
+
+    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    resolveStrongRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
+
+        return resolveRelationsOfDeg2(erGraph).stream().
+                filter(node -> resolveErType(node) == ErType.StrongRelation).
+                collect(Collectors.toList());
+    }
 }
