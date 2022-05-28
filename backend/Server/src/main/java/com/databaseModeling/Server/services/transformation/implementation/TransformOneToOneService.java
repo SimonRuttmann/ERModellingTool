@@ -66,7 +66,9 @@ public class TransformOneToOneService implements ITransformOneToOneService {
         //Add foreign keys to the owning node
         AddForeignKeysAsNormalColumn(nodeToReference, owningNode);
 
-        resolveErData(relation).setTransformed(true);
+        var relationData = resolveErData(relation);
+        relationData.setTransformed(true);
+        relationData.removeTable();
     }
 
     private boolean isOptionalToOptional(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> firstEdge,

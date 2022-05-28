@@ -67,7 +67,7 @@ public class TransformAttributesService implements ITransformAttributesService {
         }
 
         if(parent.getTreeData().getErType() == ErType.MultivaluedAttribute){
-            parent.getTreeData().getTable().isFixedAttributeTable = true;
+            parent.getTreeData().getTable().setFixedAttributeTable(true);
         }
 
         if(parent.isLeaf()) return;
@@ -83,12 +83,12 @@ public class TransformAttributesService implements ITransformAttributesService {
             var childTable = child.getTreeData().getTable();
 
 
-            if(childTable.isFixedAttributeTable){
+            if(childTable.isFixedAttributeTable()){
 
                 //Attribute is used as a "pipe", therefore we can merge the table
                 if(parent.getChildren().size() == 1) {
                     forwardAttributeTable(parent, child);
-                    parentTable.isFixedAttributeTable = true;
+                    parentTable.setFixedAttributeTable(true);
                 }
 
                 else {
@@ -142,6 +142,8 @@ public class TransformAttributesService implements ITransformAttributesService {
      *
      */
     private void updateReferences(Table parentTable){
+
+        if(parentTable == null) return;
 
         var referencedTables = parentTable.getReferencesToChildAttributeTables();
 

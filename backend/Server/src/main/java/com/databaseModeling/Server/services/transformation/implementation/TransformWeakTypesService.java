@@ -54,16 +54,16 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
      */
     private void addForeignAsPrimaryKeysRecursive(Table table){
         
-        if(!table.isWeakEntityTable || table.isTransformed) return;
+        if(!table.isWeakEntityTable() || table.isTransformed()) return;
 
-        addForeignAsPrimaryKeysRecursive(table.referencedIdentifyingTable);
+        addForeignAsPrimaryKeysRecursive(table.getReferencedIdentifyingTable());
 
-        var isReferenceStrongEntityTable = !table.referencedIdentifyingTable.isWeakEntityTable;
-        var isReferenceTransformedWeakEntityTable = table.referencedIdentifyingTable.isTransformed;
+        var isReferenceStrongEntityTable = !table.getReferencedIdentifyingTable().isWeakEntityTable();
+        var isReferenceTransformedWeakEntityTable = table.getReferencedIdentifyingTable().isTransformed();
         
         if(isReferenceStrongEntityTable || isReferenceTransformedWeakEntityTable){
-            TableManager.AddForeignKeysToTableAsPrimaryKeys(table.referencedIdentifyingTable, table);
-            table.isTransformed = true;
+            TableManager.AddForeignKeysToTableAsPrimaryKeys(table.getReferencedIdentifyingTable(), table);
+            table.setTransformed(true);
         }
 
     }
@@ -137,8 +137,8 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
 
             if(!isIdentifying) continue;
 
-            weakEntityData.getTable().isWeakEntityTable = true;
-            weakEntityData.getTable().referencedIdentifyingTable = identifyingEntityData.getTable();
+            weakEntityData.getTable().setWeakEntityTable(true);
+            weakEntityData.getTable().setReferencedIdentifyingTable(identifyingEntityData.getTable());
 
             //Merge relation into weak entity
             MergeTables(weakEntity, identifyingRelation);

@@ -10,6 +10,7 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 
 import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
 import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
 import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRelationsOfDeg2;
 
 public class TransformManyToOneService implements ITransformManyToOneService {
@@ -44,7 +45,7 @@ public class TransformManyToOneService implements ITransformManyToOneService {
             singleNode = nodeOfSecondEdge;
             manyNode = nodeOfFirstEge;
         }
-        else if(isManyToOne(firstEdge, secondEdge)){
+        else if(isManyToOne(secondEdge, firstEdge)){
             singleNode = nodeOfFirstEge;
             manyNode = nodeOfSecondEdge;
         }
@@ -54,7 +55,9 @@ public class TransformManyToOneService implements ITransformManyToOneService {
         MergeTables(manyNode, relation);
         AddForeignKeysAsNormalColumn(singleNode, manyNode);
 
-        relation.getNodeData().getTreeData().setTransformed(true);
+        var relationData = resolveErData(relation);
+        relationData.setTransformed(true);
+        relationData.removeTable();
     }
 
 

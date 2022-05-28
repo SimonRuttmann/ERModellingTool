@@ -54,8 +54,6 @@ public class ConceptionalModelDto {
         public static class Element{
             private String id;
             private String displayName;
-            //private Boolean isHighlighted;
-            //private Boolean isSelected;
             private String x;
             private String y;
             private String width;
@@ -102,16 +100,11 @@ public class ConceptionalModelDto {
             private String min;
             private String max;
             private String objectType;  //TODO NOT NEEDED
-
             private Boolean isSelected; //TODO NOT NEEDED
             private Boolean withArrow;  //TODO NOT NEEDED
-
             private Boolean withLabel;  //TODO NOT NEEDED
-
             private Boolean isHighlighted; //TODO NOT NEEDED
-
             private String connectionType;  //ConnectionType = {association: "association", inheritor: "inheritor", parent:"parent"}
-
             private String associationTypeDetails;  // AssociationTypeDetails = {association: "association", attributeConnector: "attributeConnector"}
             public AssociationType getAssociationType(){
 
