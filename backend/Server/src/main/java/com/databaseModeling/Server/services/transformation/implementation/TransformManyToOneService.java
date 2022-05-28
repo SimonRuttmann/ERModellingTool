@@ -10,7 +10,7 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 
 import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
 import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
-import static com.databaseModeling.Server.services.util.ErUtil.resolveRelationsOfDeg2;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRelationsOfDeg2;
 
 public class TransformManyToOneService implements ITransformManyToOneService {
 
@@ -22,7 +22,7 @@ public class TransformManyToOneService implements ITransformManyToOneService {
     @Override
     public void transformManyToOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        var relations = resolveRelationsOfDeg2(erGraph);
+        var relations = resolveStrongRelationsOfDeg2(erGraph);
         relations.forEach(this::transformOneToManyRelation);
     }
 

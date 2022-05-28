@@ -11,15 +11,14 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 
 import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
 import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
-import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
-import static com.databaseModeling.Server.services.util.ErUtil.resolveRelationsOfDeg2;
+import static com.databaseModeling.Server.services.util.ErUtil.*;
 
 public class TransformOneToOneService implements ITransformOneToOneService {
 
     @Override
     public void transformOneToOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        var relations = resolveRelationsOfDeg2(erGraph);
+        var relations = resolveStrongRelationsOfDeg2(erGraph);
         relations.forEach(this::transformOptionalOneToOptionalOneRelation);
 
     }

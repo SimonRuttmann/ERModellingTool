@@ -50,7 +50,7 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     /**
      * Returns all relations the given entity is connected to
      * @param entity The entity to query for
-     * @return A list of graph edges, representing the relations
+     * @return A list of graph nodes, representing the relations
      */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     ResolveRelationsOfEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
@@ -106,6 +106,20 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     }
 
     //ISA UTIL
+    /**
+     * Returns all elements the given entity is connected to
+     * @param entity The entity to query for
+     * @return A list of graph nodes, representing the other elements
+     */
+    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    ResolveElementsConnectionToEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
+
+        return  entity.
+                getEdges().
+                stream().
+                map(edge -> edge.getOtherSide(entity)).
+                collect(Collectors.toList());
+    }
     private static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     ResolveTypesConnectedToIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure, AssociationType type){
 
@@ -133,10 +147,10 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     /**
      * Resolves the base entity of the given IsA Structure
      * @param isAStructure The IsA Structure to query for
-     * @return The base of the isA Structure
+     * @return The parent of the isA Structure
      */
     public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
-    ResolveBaseOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
+    ResolveParentOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
         return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Parent).stream().findFirst().orElseThrow();
     }
