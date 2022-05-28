@@ -2,9 +2,7 @@ package com.databaseModeling.Server.controller;
 
 import com.databaseModeling.Server.model.ErTreeGraphFactory;
 import com.databaseModeling.Server.model.relationalModel.TableManager;
-import com.databaseModeling.Server.services.transformation.implementation.CardinalityResolverService;
-import com.databaseModeling.Server.services.transformation.implementation.TransformAttributesService;
-import com.databaseModeling.Server.services.transformation.implementation.TransformWeakTypesService;
+import com.databaseModeling.Server.services.transformation.implementation.*;
 import com.databaseModeling.Server.services.transformation.interfaces.ICardinalityResolverService;
 import com.databaseModeling.Server.model.ValidationResult;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformAttributesService;
@@ -58,25 +56,28 @@ public class Controller {
         transformAttributesService.transformAttributes(graph);
 
         var tables = TableManager.getTableRegister();
-       // transformAttributesService.generateAttributeTableKeys(graph);
-        var tablesNew = TableManager.getTableRegister();
+
             //Transform weak entities by object reference
             ITransformWeakTypesService weakTypesService = new TransformWeakTypesService();
             weakTypesService.transformWeakTypes(graph);
 
-                //Transform one to one
-
-                //Transform one to 0,one
-
-                //Transform 0,one to 0,one
-
-                //Transform many to one
-
-                //Transform many to many
-
-
             //Create and cascade primary keys of weak entities
             weakTypesService.generateIdentifyingPrimaryKeys(graph);
+
+            var isaStructureService = new TransformIsAStructureService();
+            isaStructureService.transformIsAStructures(graph);
+
+            //Transform one to one
+            var oneToOneService = new TransformOneToOneService();
+            oneToOneService.transformOneToOneRelations(graph);
+
+            //Transform many to one
+            var manyToOneService = new TransformManyToOneService();
+            manyToOneService.transformManyToOneRelations(graph);
+
+            //Transform many to many
+            var manyToManyService = new TransformManyToManyService();
+            manyToManyService.transformManyToManyRelations(graph);
 
         //Create and cascade primary keys of attributes
         transformAttributesService.generateAttributeTableKeys(graph);

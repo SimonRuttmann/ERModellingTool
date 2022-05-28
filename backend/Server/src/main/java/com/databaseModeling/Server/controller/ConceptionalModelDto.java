@@ -64,7 +64,7 @@ public class ConceptionalModelDto {
             private String erType;      //Enum IdentifyingAttribute ... //TODO
 
             //Optional! TODO
-            private boolean isMerging;
+            private Boolean isMerging;
 
             //Optional! TODO
             private String owningSide;

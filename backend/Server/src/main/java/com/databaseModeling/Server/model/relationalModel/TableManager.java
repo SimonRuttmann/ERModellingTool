@@ -17,6 +17,8 @@ public class TableManager {
     private static final List<Table> tableRegister = new ArrayList<>();
     public static Table createTable(ErType erType, ElementMetaInformation elementMetaInformation){
 
+        if(erType == ErType.IsAStructure) return null;
+
         var tableId = generateTableId();
         Table table = new Table(tableId);
         table.setOriginDisplayName(elementMetaInformation.getDisplayName());
