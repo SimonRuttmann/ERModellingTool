@@ -6,8 +6,6 @@ import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 import com.databaseModeling.Server.model.relationalModel.TableManager;
 
-import java.util.stream.Collectors;
-
 import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
 
 /**
@@ -16,7 +14,7 @@ import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
 public class NodeTableManager {
 
     public static void AddForeignKeysAsNormalColumn( GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
-                                              GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
+                                                     GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
 
         var referencedTable = resolveErData(referencedNode).getTable();
         var referencingTable = resolveErData(referencingNode).getTable();
@@ -45,27 +43,7 @@ public class NodeTableManager {
 
         var owningTable = resolveErData(owningNode).getTable();
         owningTable.addAllReferencesToChildAttributeTable(referencingTables);
-    /*    var referencingTables = nodeToMerge.
-                getNodeData().
-                getChildren().
-                stream().
-                map(child -> child.getTreeData().getTable()).
-                collect(Collectors.toList());
 
-
-        var owningTable = resolveErData(owningNode).getTable();
-
-        referencingTables.forEach(table -> {
-            if(table.referencedAttributeTable == tableToMerge){
-                table.referencedAttributeTable = owningTable;
-            }
-
-            //TODO needed?
-            if(table.referencedIdentifyingTable == tableToMerge){
-                table.referencedIdentifyingTable = owningTable;
-            }
-        });
-*/
         TableManager.AddColumns(owningTable, tableToMerge.getColumns());
         resolveErData(nodeToMerge).removeTable();
     }

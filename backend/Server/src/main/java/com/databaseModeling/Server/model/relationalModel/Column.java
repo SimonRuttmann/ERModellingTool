@@ -14,8 +14,6 @@ public final class Column {
     private String originDisplayName;
     private String newDisplayName;
 
-    private boolean isPrimaryKey;
-
     private Key key = new Key(false, false, null);
 
     public boolean isForeignKey(){
