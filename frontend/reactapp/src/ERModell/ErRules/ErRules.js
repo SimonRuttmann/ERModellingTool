@@ -43,7 +43,7 @@ const identifyingAttributeRule = (element) => {
         case ERTYPE.StrongEntity.name:               return true;
         case ERTYPE.WeakEntity.name:                 return false;
 
-        case ERTYPE.StrongRelation.name:             return true;
+        case ERTYPE.StrongRelation.name:             return false;
         case ERTYPE.WeakRelation.name:               return false;
 
         case ERTYPE.IsAStructure.name:               return false;
@@ -237,7 +237,7 @@ const strongRelationRule = (element) => {
 
     switch (element.erType) {
 
-        case ERTYPE.IdentifyingAttribute.name:       return true;
+        case ERTYPE.IdentifyingAttribute.name:       return false;
         case ERTYPE.NormalAttribute.name:            return true;
         case ERTYPE.MultivaluedAttribute.name:       return true;
         case ERTYPE.WeakIdentifyingAttribute.name:   return false;
@@ -274,6 +274,7 @@ const checkWeakRelationHasOnly2Entities = (element, connections, selectedObject,
     const connectionsToElement = getConnectorsOfObject(selectedObject, connections);
     const connectedElements = getOtherElementsOfConnectors(selectedObject, connectionsToElement, drawBoardElements)
     const entities = connectedElements.filter(connectedElement => connectedElement.erType === ERTYPE.StrongEntity.name || connectedElement.erType === ERTYPE.WeakEntity.name)
+
     return entities.length < 2;
 
 }
@@ -285,7 +286,7 @@ const checkIfToWeakRelationItOnlyHasDeg2 = (element, connections, selectedObject
     //Rule applies only if element to connect is of type Weak relation and
     // the selected Objects is of type StrongEntity or WeakEntity
     if( selectedObject.erType !== ERTYPE.StrongEntity.name && selectedObject.erType !== ERTYPE.WeakEntity.name) return true;
-    if(element.erType !== ERTYPE.WeakRelation) return true;
+    if( element.erType !== ERTYPE.WeakRelation.name) return true;
 
     const connectionsToElement = getConnectorsOfObject(element, connections);
     const connectedElements = getOtherElementsOfConnectors(element, connectionsToElement, drawBoardElements)
