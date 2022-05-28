@@ -8,6 +8,14 @@ public class EntityRelationElement {
 
     private boolean isTransformed = false;
 
+    public EntityRelationElement(ErType erType, boolean merging, String owningSide, ElementMetaInformation elementMetaInformation) {
+        this.erType = erType;
+        this.shouldBeMerged = merging;
+        this.owningSide = owningSide;
+        this.elementMetaInformation = elementMetaInformation;
+        this.table = TableManager.createTable(erType, elementMetaInformation);
+    }
+
     public boolean isTransformed() {
         return isTransformed;
     }
@@ -34,6 +42,9 @@ public class EntityRelationElement {
         return owningSide;
     }
 
+    public boolean hasOwningSide(){
+        return owningSide != null && !owningSide.isEmpty() && !owningSide.isBlank();
+    }
     public void setOwningSide(String owningSide) {
         this.owningSide = owningSide;
     }

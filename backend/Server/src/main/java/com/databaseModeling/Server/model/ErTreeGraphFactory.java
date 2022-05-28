@@ -42,14 +42,25 @@ public class ErTreeGraphFactory {
                 getElements().
                 stream().
                 filter(element -> element.getErType().isNode).
-                forEach(node ->
-                        erGraph.addNode(node.getId(),
-                            new TreeNode<>(node.getId(),
-                            new EntityRelationElement(
-                                    node.getErType(),
-                                    ElementMetaInformationFactory.createElementMetaInformation(node)))));
+                forEach(node -> erGraph.addNode(
+                                    node.getId(),
+                                    new TreeNode<>(node.getId(), createNodeData(node))));
     }
 
+    private static EntityRelationElement createNodeData(ConceptionalModelDto.DrawBoardContent.Element element){
+        return new EntityRelationElement(
+                element.getErType(),
+                element.getIsMerging(),
+                element.getOwningSide(),
+                ElementMetaInformationFactory.createElementMetaInformation(element));
+    }
+
+    private static EntityRelationAssociation createEdgeData(ConceptionalModelDto.DrawBoardContent.Connection connection){
+        return new EntityRelationAssociation(
+                connection.getMin(),
+                connection.getMax(),
+                connection.getAssociationType());
+    }
     private static void addEdges(
             Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph,
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
@@ -66,10 +77,7 @@ public class ErTreeGraphFactory {
                                     edge.getId(),
                                     edge.getStart(),
                                     edge.getEnd(),
-                                    new EntityRelationAssociation(
-                                            edge.getMin(),
-                                            edge.getMax(),
-                                            edge.getAssociationType())));
+                                    createEdgeData(edge)));
 
     }
 
