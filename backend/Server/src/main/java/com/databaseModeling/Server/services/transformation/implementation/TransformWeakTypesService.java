@@ -13,6 +13,8 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
+import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
 import static com.databaseModeling.Server.services.util.ErUtil.*;
 
 public class TransformWeakTypesService implements ITransformWeakTypesService {
@@ -29,8 +31,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
             var typesToIdentify = resolveTypesToIdentify(erGraph);
             if(typesToIdentify.size() == 0) break;
 
-            int round = i;
-            typesToIdentify.forEach(type -> resolveIdentifyingType(type, round));
+            typesToIdentify.forEach(this::resolveIdentifyingType);
 
         }
 
@@ -88,11 +89,16 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
                 collect(Collectors.toList());
     }
 
+    private Map< GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>,
+                 GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> >
+            createNodeMap(){
+        return new HashMap<>();
+    }
     //Round is required for
     // A --> B --> D (strong)
     // C --> B                    To Prevent:  A --> C --> B --> D
     private void resolveIdentifyingType(
-            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity, int round){
+            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
 
         //If the weak entity is already resolved, we can skip processing
         if(resolveErData(weakEntity).getTable().isStrongWithReferences()) return;
@@ -101,14 +107,23 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
         var identifyingRelations = ResolveIdentifyingRelations(weakEntity);
 
         //Collect all entities of the other sides of the identifyingRelations
-        Set<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>> identifyingEntities = new HashSet<>();
+
+        //andere datenstruktur Relation <-> Weak Entity
+        var identifyingEntitiesRelations = createNodeMap();
 
         for (var identifyingRelation : identifyingRelations) {
-            identifyingEntities.addAll(ResolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation));
+            var connectedOtherEntity = ResolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation).get(0);
+            identifyingEntitiesRelations.put(connectedOtherEntity, identifyingRelation);
         }
 
 
-        for (var identifyingEntity : identifyingEntities) {
+        for (var entry : identifyingEntitiesRelations.entrySet()) {
+
+            // weakEntity               Identifying Relation         IdentifyingEntity
+            // Weak Entity A    -->     Weak Relation B     -->      Strong Entity C
+
+            var identifyingEntity = entry.getKey();
+            var identifyingRelation = entry.getValue();
 
             var identifyingEntityData = resolveErData(identifyingEntity);
             var weakEntityData = resolveErData(weakEntity);
@@ -122,18 +137,13 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
 
             if(!isIdentifying) continue;
 
-            //Round is required for
-            // A --> B --> D (strong)
-            // C --> B                    To Prevent:  A --> C --> B --> D
-
-            //Round is required for
-            // A(1) --> B(0) --> D(-1) (strong)
-            // C(1) --> B(0)                    To Prevent:  A(1) -|FORBIDDEN THROUGH ROUND|-> C(1) --> B(0) --> D(-1)
-            if(round == identifyingEntityData.getTable().round) continue;
-
-            weakEntityData.getTable().round = round;
             weakEntityData.getTable().isWeakEntityTable = true;
             weakEntityData.getTable().referencedIdentifyingTable = identifyingEntityData.getTable();
+
+            //Merge relation into weak entity
+            MergeTables(weakEntity, identifyingRelation);
+
+            resolveErData(identifyingRelation).setTransformed(true);
             break;
         }
     }

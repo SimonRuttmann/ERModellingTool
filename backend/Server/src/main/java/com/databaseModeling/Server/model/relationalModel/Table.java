@@ -15,7 +15,6 @@ public final class Table {
         this.originDisplayName = originDisplayName;
     }
 
-
     //used for attribute tables
     private final List<Table> referencedAttributeTables = new ArrayList<Table>();
 
@@ -47,7 +46,6 @@ public final class Table {
     public Boolean isWeakEntityTable = false;
     public Boolean isTransformed = false;
 
-    public int round = -1;
     public boolean isStrongWithReferences(){
         if (isWeakEntityTable) return referencedIdentifyingTable != null;
         return true;
