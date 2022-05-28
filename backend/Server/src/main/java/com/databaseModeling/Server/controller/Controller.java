@@ -1,6 +1,7 @@
 package com.databaseModeling.Server.controller;
 
 import com.databaseModeling.Server.model.ErTreeGraphFactory;
+import com.databaseModeling.Server.model.TableDtoFactory;
 import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.implementation.*;
 import com.databaseModeling.Server.services.transformation.interfaces.ICardinalityResolverService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class Controller {
@@ -32,7 +34,7 @@ public class Controller {
 
     @PostMapping("/convert/relational")
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
-    public ConceptionalModelDto convertToRelational(
+    public List<TableDTO> convertToRelational(
             @RequestBody ConceptionalModelDto type)
     {
         //Idee für später Node Abstrakte klasse implementiert INode, Edge Abstrakte klasse implementiert IEdge
@@ -82,10 +84,10 @@ public class Controller {
         //Create and cascade primary keys of attributes
         transformAttributesService.generateAttributeTableKeys(graph);
 
+        List<TableDTO> dtoTables = TableDtoFactory.createTableDto(TableManager.getTableRegister());
 
-
-
-        return null;
+        System.out.println(dtoTables);
+        return dtoTables;
     }
 
 }

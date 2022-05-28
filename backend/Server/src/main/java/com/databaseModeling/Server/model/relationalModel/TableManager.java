@@ -20,7 +20,7 @@ public class TableManager {
         if(erType == ErType.IsAStructure) return null;
 
         var tableId = generateTableId();
-        Table table = new Table(tableId);
+        Table table = new Table(tableId, elementMetaInformation);
         table.setOriginDisplayName(elementMetaInformation.getDisplayName());
         tableRegister.add(table);
 
@@ -29,7 +29,7 @@ public class TableManager {
         column.setId(columnId);
         column.setOriginDisplayName(elementMetaInformation.getDisplayName());
 
-        if(erType == ErType.WeakEntity) table.isWeakEntityTable = true;
+        if(erType == ErType.WeakEntity) table.setWeakEntityTable(true);
 
         //If it is no attribute, we return the table without columns
         switch (erType){
