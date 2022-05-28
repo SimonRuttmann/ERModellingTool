@@ -10,8 +10,7 @@ import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformWeakTypesService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.databaseModeling.Server.services.util.ErUtil.*;
@@ -30,7 +29,8 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
             var typesToIdentify = resolveTypesToIdentify(erGraph);
             if(typesToIdentify.size() == 0) break;
 
-            typesToIdentify.forEach(this::resolveIdentifyingType);
+            int round = i;
+            typesToIdentify.forEach(type -> resolveIdentifyingType(type, round));
 
         }
 
@@ -54,17 +54,17 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
     private void addForeignAsPrimaryKeysRecursive(Table table){
         
         if(!table.isWeakEntityTable || table.isTransformed) return;
-        
+
+        addForeignAsPrimaryKeysRecursive(table.referencedIdentifyingTable);
+
         var isReferenceStrongEntityTable = !table.referencedIdentifyingTable.isWeakEntityTable;
         var isReferenceTransformedWeakEntityTable = table.referencedIdentifyingTable.isTransformed;
         
         if(isReferenceStrongEntityTable || isReferenceTransformedWeakEntityTable){
             TableManager.AddForeignKeysToTableAsPrimaryKeys(table.referencedIdentifyingTable, table);
             table.isTransformed = true;
-            return;
         }
-        
-        addForeignAsPrimaryKeysRecursive(table.referencedIdentifyingTable);
+
     }
 
     private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
@@ -88,8 +88,11 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
                 collect(Collectors.toList());
     }
 
+    //Round is required for
+    // A --> B --> D (strong)
+    // C --> B                    To Prevent:  A --> C --> B --> D
     private void resolveIdentifyingType(
-            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
+            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity, int round){
 
         //If the weak entity is already resolved, we can skip processing
         if(resolveErData(weakEntity).getTable().isStrongWithReferences()) return;
@@ -97,10 +100,15 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
         //Returns all identifying relations connected to the weak entity
         var identifyingRelations = ResolveIdentifyingRelations(weakEntity);
 
-        for (var identifyingRelation : identifyingRelations) {
+        //Collect all entities of the other sides of the identifyingRelations
+        Set<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>> identifyingEntities = new HashSet<>();
 
-            //Returns all entities of the other side of the identifyingRelation
-            var identifyingEntity = ResolveOtherEntityConnectedToRelation(weakEntity, identifyingRelation);
+        for (var identifyingRelation : identifyingRelations) {
+            identifyingEntities.addAll(ResolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation));
+        }
+
+
+        for (var identifyingEntity : identifyingEntities) {
 
             var identifyingEntityData = resolveErData(identifyingEntity);
             var weakEntityData = resolveErData(weakEntity);
@@ -114,6 +122,16 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
 
             if(!isIdentifying) continue;
 
+            //Round is required for
+            // A --> B --> D (strong)
+            // C --> B                    To Prevent:  A --> C --> B --> D
+
+            //Round is required for
+            // A(1) --> B(0) --> D(-1) (strong)
+            // C(1) --> B(0)                    To Prevent:  A(1) -|FORBIDDEN THROUGH ROUND|-> C(1) --> B(0) --> D(-1)
+            if(round == identifyingEntityData.getTable().round) continue;
+
+            weakEntityData.getTable().round = round;
             weakEntityData.getTable().isWeakEntityTable = true;
             weakEntityData.getTable().referencedIdentifyingTable = identifyingEntityData.getTable();
             break;

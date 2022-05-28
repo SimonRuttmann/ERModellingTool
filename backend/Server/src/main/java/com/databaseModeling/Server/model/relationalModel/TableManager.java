@@ -27,6 +27,8 @@ public class TableManager {
         column.setId(columnId);
         column.setOriginDisplayName(elementMetaInformation.getDisplayName());
 
+        if(erType == ErType.WeakEntity) table.isWeakEntityTable = true;
+
         //If it is no attribute, we return the table without columns
         switch (erType){
             case StrongEntity:

@@ -46,6 +46,8 @@ public final class Table {
     public Table referencedIdentifyingTable = null;
     public Boolean isWeakEntityTable = false;
     public Boolean isTransformed = false;
+
+    public int round = -1;
     public boolean isStrongWithReferences(){
         if (isWeakEntityTable) return referencedIdentifyingTable != null;
         return true;
