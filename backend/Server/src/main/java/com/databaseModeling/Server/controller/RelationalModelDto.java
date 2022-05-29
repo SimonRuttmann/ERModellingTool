@@ -34,6 +34,8 @@ public class RelationalModelDto{
             private String displayName;
             private double x;
             private double y;
+            private double width = 0.0;
+            private double height = 0.0;
             private List<ColumnDTO> columns = new ArrayList<>();
 
             @Data
