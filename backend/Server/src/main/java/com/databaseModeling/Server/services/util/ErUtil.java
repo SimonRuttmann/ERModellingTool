@@ -165,9 +165,16 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
                 stream().
                 filter(node -> resolveErType(node) == ErType.StrongRelation ||
                         resolveErType(node) == ErType.WeakRelation).
-                filter(node -> node.getDegree() == 2).
                 collect(Collectors.toList());
 
+    }
+
+    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    resolveStrongRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
+
+        return resolveRelations(erGraph).stream().
+                filter(node -> resolveErType(node) == ErType.StrongRelation).
+                collect(Collectors.toList());
 
     }
 

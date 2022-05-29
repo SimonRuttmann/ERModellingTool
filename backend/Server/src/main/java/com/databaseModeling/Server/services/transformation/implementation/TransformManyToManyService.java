@@ -16,7 +16,7 @@ public class TransformManyToManyService implements ITransformManyToManyService {
     @Override
     public void transformManyToManyRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        var relations = resolveRelations(erGraph);
+        var relations = resolveStrongRelations(erGraph); //TODO was resolveRelations
         relations.forEach(this::transformManyToManyRelation);
     }
 
