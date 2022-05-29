@@ -9,7 +9,7 @@ import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import TransformButton from "./TransformButton";
-import {ConnectionType} from "./Model/Diagram";
+import {ConnectionType, DiagramTypes} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
 import {createSelection} from "./ErRules/ErDrawingRuleEnforcer";
 import {validateErDiagram} from "./ErRules/ErValidator";
@@ -589,7 +589,10 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
           <LeftSideBar/>
 
           {/* The draw board   */}
-          <DrawBoard onDropHandler={addDrawBoardElement} drawBoardElements={drawBoardElements} drawBoardBorderOffset={drawBoardBorderOffset}>
+          <DrawBoard onDropHandler={addDrawBoardElement}
+                     drawBoardElements={drawBoardElements}
+                     drawBoardBorderOffset={drawBoardBorderOffset}
+                     diagramType={DiagramTypes.erDiagram}>
 
             {/* The elements inside the draw board */}
             {drawBoardElements.map((drawBoardElement) => (
