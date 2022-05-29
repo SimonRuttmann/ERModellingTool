@@ -24,6 +24,16 @@ public class RelationalModelDto{
     public static class DrawBoardContent {
 
         private List<TableDTO> tables = new ArrayList<>();
+        private List<ConnectionDTO> connections = new ArrayList<>();
+
+        @Data
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class ConnectionDTO {
+            private String id;
+            private String start;
+            private String end;
+        }
 
         @Data
         @AllArgsConstructor

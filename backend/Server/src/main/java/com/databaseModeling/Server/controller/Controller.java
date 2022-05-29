@@ -11,6 +11,10 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
 @RestController
 public class Controller {
 
@@ -92,7 +96,30 @@ public class Controller {
         System.out.println(response);
         System.out.println(response.getDrawBoardContent().getTables().size());
         System.out.println(TableManager.getTableRegister().size());
+
+
+        AtomicLong connectionIdCounter = new AtomicLong();
+        var tableDto = content.getTables();
+        List<RelationalModelDto.DrawBoardContent.ConnectionDTO> connectionDTOList = new ArrayList<>();
+
+        for (var table : tableDto){
+            for (var column : table.getColumns()){
+                if(column.isForeignKey() && column.getForeignKeyReferencedId() != null){
+                    var connection = new RelationalModelDto.DrawBoardContent.ConnectionDTO();
+                    var key = column.getId() + " --> " + column.getForeignKeyReferencedId() + connectionIdCounter.getAndIncrement();
+                    connection.setId(key);
+                    connection.setStart(column.getId());
+                    connection.setEnd(column.getForeignKeyReferencedId());
+                    connectionDTOList.add(connection);
+                }
+            }
+        }
+
+        content.setConnections(connectionDTOList);
         TableManager.getTableRegister().clear();
+
+
+
 
         return response;
     }
