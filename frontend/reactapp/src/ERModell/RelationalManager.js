@@ -124,6 +124,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
     const onCanvasSelected = () => {
 
+        return;
         if(selectedObjectId == null) return;
 
         const newElementState = unselectPreviousElement(connections, drawBoardElements);
@@ -151,6 +152,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
     const onDrawBoardElementSelected = (drawBoardElementId) => {
 
+        return;
         //click on draw board element
         let selectedObject = drawBoardElements.find(element => element.id === drawBoardElementId);
 
