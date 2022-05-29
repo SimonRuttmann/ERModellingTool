@@ -1,5 +1,6 @@
 package com.databaseModeling.Server.services.transformation.implementation;
 
+import com.databaseModeling.Server.model.NodeTableManager;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
@@ -7,6 +8,8 @@ import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformManyToOneService;
+
+import java.util.Objects;
 
 import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
 import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
@@ -50,6 +53,18 @@ public class TransformManyToOneService implements ITransformManyToOneService {
             manyNode = nodeOfSecondEdge;
         }
         else return;
+
+        var isReflexive = Objects.equals(nodeOfFirstEge.getId(), nodeOfSecondEdge.getId());
+        if(isReflexive){
+
+            var relationData = resolveErData(relation);
+
+            NodeTableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+            NodeTableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+
+            relationData.setTransformed(true);
+            return;
+        }
 
 
         MergeTables(manyNode, relation);
