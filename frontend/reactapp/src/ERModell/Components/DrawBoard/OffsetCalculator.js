@@ -8,6 +8,8 @@ import {ConnectionType} from "../../Model/Diagram";
  */
 export const calculateOffsets = (connections, thisConnection, offsetFactor) => {
 
+    if(thisConnection.horizontalAlignment === true ) return calculateForeignKeyOffset(thisConnection);
+
     const offset = calculateDefaultOffsets(connections, thisConnection, offsetFactor)
 
     const specificOffsets = calculateOffsetsIsA(offset, connections, thisConnection, offsetFactor)
@@ -65,6 +67,14 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
     return {endOffset: endOffset, startOffset: startOffset};
 }
 
+const calculateForeignKeyOffset  = (thisConnection) => {
+    const offsetValue = 0;
+
+    const newOffset =  [
+        {position: "left", offset: {y: offsetValue}},
+        {position: "right", offset: {y: offsetValue}} ];
+    return {startOffset: newOffset, endOffset: newOffset}
+}
 
 const calculateOffsetValue = (sortedCollection, thisConnection, offsetFactor) => {
 

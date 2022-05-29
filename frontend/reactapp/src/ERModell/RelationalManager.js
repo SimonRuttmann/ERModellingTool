@@ -110,10 +110,24 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
         if(importedContent == null) return;
 
         if(importedContent.drawBoardContent != null){
+
             console.log(importedContent.drawBoardContent.tables)
+
             if(Array.isArray(importedContent.drawBoardContent.tables)) {
                 setDrawBoardElements(() => [
                     ...importedContent.drawBoardContent.tables
+                ])
+            }
+
+            console.log(importedContent.drawBoardContent.connections)
+            if(Array.isArray(importedContent.drawBoardContent.connections)) {
+
+                const updatedConnections = importedContent.drawBoardContent.connections.map(connection => {
+                    return {...connection, withLabel: false, horizontalAlignment: true, withArrow: true, isSelected: false}
+                });
+
+                setConnections(() => [
+                    ...updatedConnections
                 ])
             }
 
