@@ -1,15 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
 import Download from "./Download";
 import Upload from "./Upload";
-import {diagramTypes} from "../ERModell/Model/Diagram";
+import {DiagramTypes} from "../ERModell/Model/Diagram";
 import axios from "axios";
-import privacyPolicyIcon from "../Resources/Datenschutzerklärung/shield-exclamation.svg";
-import downloadIcon from "../Resources/cloud-download.svg";
 import PrivacyPolicy from "./PrivacyPolicy";
 
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
-    const [currentDiagram, updateDiagram] = useState(diagramTypes.erDiagram)
+    const [currentDiagram, updateDiagram] = useState(DiagramTypes.erDiagram)
     const [loadProcessIsActive, setLoadProcessStatus] = useState(false)
 
     if(currentDiagram !== diagramType) {
@@ -19,8 +17,8 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
     //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     // avoid setting refs during rendering
-    const erContent = useRef({...metaInformation, projectType: diagramTypes.erDiagram, elements: [], connections: []})
-    const relationalContent = useRef({...metaInformation, projectType: diagramTypes.relationalDiagram, elements: [], connections: []})
+    const erContent = useRef({...metaInformation, projectType: DiagramTypes.erDiagram, elements: [], connections: []})
+    const relationalContent = useRef({...metaInformation, projectType: DiagramTypes.relationalDiagram, tables: []})
 
 
     function syncErContent(drawBoardElements, connections){
@@ -29,21 +27,21 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
         erContent.current = {
             ...metaInformation,
-            projectType: diagramTypes.erDiagram,
+            projectType: DiagramTypes.erDiagram,
             drawBoardContent: {elements: drawBoardElements, connections: connections}
         }
     }
 
 
-    function syncRelContent(drawBoardElements, connections){
+    function syncRelContent(tables){
 
-        if(loadProcessIsActive) return;
+      //  if(loadProcessIsActive) return;
 
-        relationalContent.current = {
-            ...metaInformation,
-            projectType: diagramTypes.relationalDiagram,
-            drawBoardContent: {elements: drawBoardElements, connections: connections}
-        }
+      //  relationalContent.current = {
+      //      ...metaInformation,
+      //      projectType: DiagramTypes.relationalDiagram,
+      //      drawBoardContent: {tables: tables}
+      //  }
     }
 
     /**
@@ -66,22 +64,41 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         setLoadProcessStatus(false)
     }
 
+
     const url = "http://localhost:8080/convert/relational"
-    const [serverResult, setServerResult] = useState({})
+    const [serverResult, setServerResult] = useState(null)
     const [error, setError] = useState(false)
+
 
     function transformToRel(){
         let content = JSON.stringify(erContent.current);
-        console.log("Call to backend")
-        console.log(url)
-        console.log(content)
-      //  axios.get("http://localhost:8080/test").then((response) => console.log(response));
-       // axios.get("https://jsonplaceholder.typicode.com/users").then((response) => console.log(response));
+
 
         axios.post(url, erContent.current).
-        then((response) => {setServerResult(response.data);}).
+        then((response) => {
+
+            setServerResult(response.data);
+            console.log("Received")
+
+        }).
         catch(error => setError(true));
     }
+
+    useEffect( () => {
+
+        console.log("Use effect of server result")
+        console.log(serverResult)
+        if(serverResult == null) return;
+
+        changeToRelationalDiagram();
+
+        setImportedContent(serverResult);
+        relationalContent.current = serverResult;
+
+        setServerResult(null);
+
+    },[serverResult])
+
 
     const SaveAndLoadProps = {
         syncErContent: syncErContent,
@@ -94,16 +111,16 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
     useEffect( () => {
 
-        if(diagramType === diagramTypes.erDiagram)  setImportedContent(erContent.current)
-        if(diagramType === diagramTypes.relationalDiagram) setImportedContent(relationalContent.current)
+        if(diagramType === DiagramTypes.erDiagram)  setImportedContent(erContent.current)
+        if(diagramType === DiagramTypes.relationalDiagram) setImportedContent(relationalContent.current)
 
         setLoadProcessStatus(false)
 
     },[diagramType])
 
 
-    const erTabActive = diagramType === diagramTypes.erDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
-    const relationalTabActive = diagramType === diagramTypes.relationalDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
+    const erTabActive = diagramType === DiagramTypes.erDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
+    const relationalTabActive = diagramType === DiagramTypes.relationalDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
 
     let erTabStyle = `TabsButton ${erTabActive}`;
     let relationalTabStyle = `TabsButton ${relationalTabActive}`;
