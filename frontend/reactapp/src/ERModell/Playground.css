@@ -124,7 +124,7 @@ html {
 }
 
 /* The main outer drawboard container */
-.outerDrawBoardContainer {
+.outerDrawBoardContainerEr {
   position: absolute !important;
   display: block;
   left: 300px;
@@ -497,3 +497,11 @@ input:checked + .mergeCheckBoxSlider:before {
   text-align: left;
 }
 
+.outerDrawBoardContainerRelational {
+  position: absolute !important;
+  display: block;
+  height: 100%;
+  width: 100%;
+  text-align: left;
+  background-color: #222222;
+}

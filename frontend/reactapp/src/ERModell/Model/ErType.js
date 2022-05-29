@@ -30,6 +30,7 @@ import WeakEntity from "../Components/ErObjectComponents/Entities/WeakEntity";
 import StrongRelation from "../Components/ErObjectComponents/Relations/StrongRelation";
 import WeakRelation from "../Components/ErObjectComponents/Relations/WeakRelation";
 import IsAStructure from "../Components/ErObjectComponents/IsAStructure";
+import Table from "../Components/ErObjectComponents/Table";
 
 
 /**
@@ -220,6 +221,10 @@ const erType_TooltipTitle = {
     IsAStructure:               <h1>Is A Structure</h1>
 }
 
+export const RELATIONALTYPENAME = {
+    Table: "Table"
+}
+
 /**
  * @summary Use this method to receive the component for a corresponding erType
  * @see ERTYPENAME
@@ -239,7 +244,8 @@ export const resolveErComponent = (type, props) => {
         case ERTYPENAME.StrongRelation: return <StrongRelation {...props}/>
         case ERTYPENAME.WeakRelation: return <WeakRelation {...props}/>
         case ERTYPENAME.IsAStructure: return <IsAStructure {...props}/>
-        default: return <div/>
+        case RELATIONALTYPENAME.Table: return <Table {...props}/> //TODO
+        default: return <Table {...props}/>
     }
 }
 
