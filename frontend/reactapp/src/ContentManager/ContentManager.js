@@ -3,21 +3,21 @@ import '../App.css';
 import PlayGround from '../ERModell/Playground';
 import React, {useState} from "react";
 import SaveAndLoad from "./SaveAndLoad";
-import {diagramTypes} from "../ERModell/Model/Diagram";
+import {DiagramTypes} from "../ERModell/Model/Diagram";
 import RelationalManager from "../ERModell/RelationalManager";
 
 function ContentManager() {
 
-    const [diagramType, setDiagramType] = useState(diagramTypes.erDiagram)
+    const [diagramType, setDiagramType] = useState(DiagramTypes.erDiagram)
 
     function changeToErDiagram(){
-        if(diagramType === diagramTypes.erDiagram) return;
-        setDiagramType(diagramTypes.erDiagram);
+        if(diagramType === DiagramTypes.erDiagram) return;
+        setDiagramType(DiagramTypes.erDiagram);
     }
 
     function changeToRelationalDiagram(){
-        if(diagramType === diagramTypes.relationalDiagram) return;
-        setDiagramType(diagramTypes.relationalDiagram);
+        if(diagramType === DiagramTypes.relationalDiagram) return;
+        setDiagramType(DiagramTypes.relationalDiagram);
     }
 
     const projectVersion = 1.0;
@@ -36,7 +36,7 @@ function ContentManager() {
                          changeToErDiagram={changeToErDiagram}
                          changeToRelationalDiagram={changeToRelationalDiagram}>
 
-                {diagramType === diagramTypes.erDiagram ? <PlayGround/> : <RelationalManager/>}
+                {diagramType === DiagramTypes.erDiagram ? <PlayGround/> : <RelationalManager/>}
 
             </SaveAndLoad>
         </div>
