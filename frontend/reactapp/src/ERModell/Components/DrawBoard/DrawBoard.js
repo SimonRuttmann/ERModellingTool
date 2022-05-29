@@ -4,8 +4,9 @@ import {useXarrow, Xwrapper} from "react-xarrows";
 import SvgResizer from "./SvgResizer";
 import DrawBoardElement from "./DrawBoardElement";
 import ConnectionElement from "./ConnectionElement";
+import {DiagramTypes} from "../../Model/Diagram";
 
-const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderOffset}) => {
+const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderOffset, diagramType}) => {
 
     const updateConnections = useXarrow();
 
@@ -28,12 +29,20 @@ const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderO
      */
     const mostOuterDiagramDivRef = useRef(null)
 
+    let outerStyle;
+    
+    switch (diagramType) {
+        case DiagramTypes.erDiagram: outerStyle = "outerDrawBoardContainerEr"; break;
+        case DiagramTypes.relationalDiagram: outerStyle = "outerDrawBoardContainerRelational"; break;
+    }
+
+    outerStyle += " scrollAble";
 
     return (
         <React.Fragment>
 
             <div id="mostOuter"
-                 className="outerDrawBoardContainer scrollAble"
+                 className={outerStyle}
                  ref={mostOuterDiagramDivRef}
                  onScroll={updateConnections}>
 
