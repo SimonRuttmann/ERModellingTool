@@ -54,10 +54,10 @@ public class ConceptionalModelDto {
         public static class Element{
             private String id;
             private String displayName;
-            private String x;
-            private String y;
-            private String width;
-            private String height;
+            private double x;
+            private double y;
+            private double width;
+            private double height;
             private String objectType;  //Enum DrawBoardElement ...
             private String erType;      //Enum IdentifyingAttribute ... //TODO
 

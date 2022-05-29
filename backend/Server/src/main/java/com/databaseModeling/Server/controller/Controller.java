@@ -38,7 +38,7 @@ public class Controller {
         //Graph <N,E> mit extends Inode extends IEdge
         //Graph <Element, Association>
 
-
+        System.out.println(type.getDrawBoardContent().getElements().size());
         var validationResult = new ValidationResult();
 
         //Create graph
@@ -82,9 +82,18 @@ public class Controller {
         transformAttributesService.generateAttributeTableKeys(graph);
 
         var response = new RelationalModelDto();
-        response.setTables(TableDtoFactory.createTableDto(TableManager.getTableRegister()));
+        var content = new RelationalModelDto.DrawBoardContent();
+        content.setTables(TableDtoFactory.createTableDto(TableManager.getTableRegister()));
+        response.setDrawBoardContent(content);
+        response.setProjectName(type.getProjectName());
+        response.setProjectVersion(type.getProjectVersion());
+        response.setProjectType("relationalDiagram");
 
         System.out.println(response);
+        System.out.println(response.getDrawBoardContent().getTables().size());
+        System.out.println(TableManager.getTableRegister().size());
+        TableManager.getTableRegister().clear();
+
         return response;
     }
 

@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class TableDtoFactory {
 
-    public static RelationalModelDto.TableDTO createTableDto(Table table){
-        var dto = new RelationalModelDto.TableDTO();
+    public static RelationalModelDto.DrawBoardContent.TableDTO createTableDto(Table table){
+        var dto = new RelationalModelDto.DrawBoardContent.TableDTO();
         dto.setId(table.getId());
         dto.setDisplayName(table.getOriginDisplayName());
         dto.setX(table.getMetaInformation().getXPos());
@@ -20,12 +20,12 @@ public class TableDtoFactory {
         return dto;
     }
 
-    public static List<RelationalModelDto.TableDTO> createTableDto(List<Table> tables){
+    public static List<RelationalModelDto.DrawBoardContent.TableDTO> createTableDto(List<Table> tables){
         return tables.stream().map(TableDtoFactory::createTableDto).collect(Collectors.toList());
     }
 
-    private static RelationalModelDto.TableDTO.ColumnDTO createColumnDto(Column column){
-        var dto = new RelationalModelDto.TableDTO.ColumnDTO();
+    private static RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO createColumnDto(Column column){
+        var dto = new RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO();
         dto.setId(column.getId());
         dto.setDisplayName(column.getOriginDisplayName());
         dto.setPrimaryKey(column.isPrimaryKey());
@@ -34,7 +34,7 @@ public class TableDtoFactory {
         return dto;
     }
 
-    private static List<RelationalModelDto.TableDTO.ColumnDTO> createColumnDto(List<Column> columns){
+    private static List<RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO> createColumnDto(List<Column> columns){
         return columns.stream().map(TableDtoFactory::createColumnDto).collect(Collectors.toList());
     }
 }

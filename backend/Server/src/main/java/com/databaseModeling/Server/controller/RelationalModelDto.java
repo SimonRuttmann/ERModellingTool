@@ -13,29 +13,39 @@ import java.util.List;
 @NoArgsConstructor
 public class RelationalModelDto{
 
-    private List<TableDTO> tables = new ArrayList<>();
+    private String projectVersion;
+    private String projectName;
+    private String projectType;
+    private RelationalModelDto.DrawBoardContent drawBoardContent;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class TableDTO {
+    public static class DrawBoardContent {
 
-        private String id;
-        private String displayName;
-        private String x;
-        private String y;
-        private List<ColumnDTO> columns = new ArrayList<>();
+        private List<TableDTO> tables = new ArrayList<>();
 
         @Data
         @AllArgsConstructor
         @NoArgsConstructor
-        public static class ColumnDTO {
+        public static class TableDTO {
+
             private String id;
             private String displayName;
-            private boolean isPrimaryKey;
-            private boolean isForeignKey;
-            private String foreignKeyReferencedId;
+            private double x;
+            private double y;
+            private List<ColumnDTO> columns = new ArrayList<>();
+
+            @Data
+            @AllArgsConstructor
+            @NoArgsConstructor
+            public static class ColumnDTO {
+                private String id;
+                private String displayName;
+                private boolean isPrimaryKey;
+                private boolean isForeignKey;
+                private String foreignKeyReferencedId;
+            }
         }
     }
-
 }

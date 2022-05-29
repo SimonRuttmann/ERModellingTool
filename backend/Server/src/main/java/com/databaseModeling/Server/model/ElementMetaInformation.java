@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ElementMetaInformation {
 
-    private String xPos;
-    private String yPos;
-    private String height;
-    private String width;
+    private double xPos;
+    private double yPos;
+    private double height;
+    private double width;
     private String displayName;
 
     public String getDisplayName(){
