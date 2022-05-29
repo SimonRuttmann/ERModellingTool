@@ -44,6 +44,32 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
 
     },[width, tableHeight])
 
+    const sortedColumns = object.columns.sort( (a,b) => {
+       if( a.primaryKey &&  b.primaryKey) {
+
+           if( a.foreignKey &&  b.foreignKey) return  0;
+           if( a.foreignKey && !b.foreignKey) return +1;
+           if(!a.foreignKey &&  b.foreignKey) return -1;
+           if(!a.foreignKey && !b.foreignKey) return  0;
+
+       }
+       if( a.primaryKey && !b.primaryKey) return -1;
+       if(!a.primaryKey &&  b.primaryKey) return +1;
+       if(!a.primaryKey && !b.primaryKey){
+
+           if( a.foreignKey &&  b.foreignKey) return  0;
+           if( a.foreignKey && !b.foreignKey) return -1;
+           if(!a.foreignKey &&  b.foreignKey) return +1;
+           if(!a.foreignKey && !b.foreignKey) return  0;
+
+       }
+       return 0;
+    });
+
+    // A primary
+    // A primary foreign
+    // A foreign
+    // A --
 
     return (
         <React.Fragment>
@@ -86,7 +112,7 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
 
             >{displayText}</text>
 
-            {object.columns.map( (column, i) => (
+            {sortedColumns.map( (column, i) => (
                 <Column key={column.id}
                         x={0}
                         y={ i * columnHeight + headerHeight}
