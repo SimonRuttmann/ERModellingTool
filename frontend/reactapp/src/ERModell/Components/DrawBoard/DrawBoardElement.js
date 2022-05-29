@@ -51,7 +51,8 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     color: background,
     fontSize: fontSize,
     fontFamily: fontFamily,
-    updateDrawBoardElementSize: updateDrawBoardElementSize
+    updateDrawBoardElementSize: updateDrawBoardElementSize,
+    object: thisObject
   }
 
   //Handles the selection of this component and subcomponents
