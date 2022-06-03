@@ -79,14 +79,14 @@ const ConnectionElement = ({connections, thisConnection, onConnectionSelected}) 
         cursor: 'pointer'
 
     }
-
+// attribtue etc kleiner machen von der textlänge pg admin 3 -- Query builder visuell
   return <Xarrow
                 start={thisConnection.start}
                 end={thisConnection.end}
                 path={paths.smooth}
                 labels={thisConnection.withLabel ? minMaxLabels : null}
                 dashness={false}
-                strokeWidth={6}
+                strokeWidth={3}
                 headSize={5}
                 tailSize={5}
                 showHead={thisConnection.withArrow}

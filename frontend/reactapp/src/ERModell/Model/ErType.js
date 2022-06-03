@@ -109,43 +109,40 @@ const erType_TooltipDescription = {
             <p>
                 A identifying attribute or a group of identifying           <br/>
                 attributes are used as a key for a entity.                  <br/>
-                An important constraint on an entity is the key.            <br/>
-                The key is an attribute or a group of attributes whose      <br/>
-                values can be used to uniquely identify an                  <br/>
-                individual entity in an entity set.</p>
+            </p>
             <p>Examples are:</p>
             <ul>
-                <li>An id used as a unique number of a person</li>
-                <li>A unique identifier for something else</li>
+                <li>The matriculation  number of a student</li>
+                <li>The license plate of a car</li>
             </ul>
         </div>,
 
     NormalAttribute:
         <div className="erDescriptions">
-            <p>Identifying attributes are used to uniquely identify entities</p>
+            <p>A normal attribute is used to hold data of an entity</p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>The size of an object</li>
+                <li>The forename of a person</li>
             </ul>
         </div>,
 
     MultivaluedAttribute:
         <div className="erDescriptions">
-            <p>Identifying attributes are used to uniquely identify entities</p>
+            <p>A multivalued attribute can hold multiple values for an entity</p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>The address`s of a person</li>
+                <li>Event dates for an recurring event</li>
             </ul>
         </div>,
     WeakIdentifyingAttribute:
         <div className="erDescriptions">
-            <p>Identifying attributes are used to uniquely identify entities</p>
+            <p>Weak identifying attributes are used to partially identify weak entities</p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>The page number of a book</li>
+                <li>An item number of a order</li>
             </ul>
         </div>,
     StrongEntity:
@@ -153,57 +150,58 @@ const erType_TooltipDescription = {
             <p> A strong entity is used to represent individually           <br/>
                 identifiable objects of the real world,                     <br/>
                 which can hold a set of attributes to store data            <br/>
-                of the object.                                              <br/>
-                An entity is considered strong if it can exist              <br/>
-                apart from all of its related entities.                     <br/>
+                of the object.
             </p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>A Person</li>
+                <li>A Car</li>
             </ul>
         </div>,
     WeakEntity:
         <div className="erDescriptions">
-            <p> A strong entity is used to represent         <br/>
-                identifiable objects of the real world,      <br/>
-                which can hold a set of attributes           <br/>
-                of the object.                               <br/>
+            <p> A weak entity is used to represent           <br/>
+                partially unique objects of the real world,  <br/>
+                It is unique to a corresponding              <br/>
+                strong entity entry.
             </p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>A page of a book </li>
+                <li>A item of a order</li>
             </ul>
         </div>,
     StrongRelation:
         <div className="erDescriptions">
-            <p> A
+            <p> A strong relations expresses how multiple     <br/>
+                entities correspond to each other.            <br/>
             </p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>A person OWNS multiple cars</li>
+                <li>A car is DRIVEN BY multiple persons</li>
             </ul>
         </div>,
     WeakRelation:
         <div className="erDescriptions">
-            <p> A s
+            <p> A weak relations expresses how a strong         <br/>
+                entity entry correspond to a weak entity.
             </p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>A folder HAS multiple pages</li>
+                <li>A order CONTAINS order items</li>
             </ul>
         </div>,
     IsAStructure:
         <div className="erDescriptions">
-            <p>123456789012345
+            <p> A isa expresses, that a strong entity           <br/>
+                type is also part of another strong entity.
             </p>
             <p>Examples are:</p>
             <ul>
-                <li>The name</li>
-                <li>The number</li>
+                <li>An external professor is a professor</li>
+                <li>A internal professor is a professor</li>
             </ul>
         </div>,
 }
