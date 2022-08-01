@@ -86,7 +86,8 @@ public class TransformAttributesService implements ITransformAttributesService {
             if(childTable.isFixedAttributeTable()){
 
                 //Attribute is used as a "pipe", therefore we can merge the table
-                if(parent.getChildren().size() == 1) {
+                //The node itself can't be a pipeline attribute
+                if(parent.getChildren().size() == 1 && !parent.getTreeData().getErType().isNode) {
                     forwardAttributeTable(parent, child);
                     parentTable.setFixedAttributeTable(true);
                 }
