@@ -45,13 +45,14 @@ public class TransformIsAStructureService implements ITransformIsAStructureServi
         //Get connected isA`s
         var connectedElements = ResolveElementsConnectionToEntity(parent);
         var connectedIsA = connectedElements.stream().
-                           filter(elements -> resolveErType(elements) == ErType.IsAStructure);
+                            filter(elements -> resolveErType(elements) == ErType.IsAStructure).
+                            filter(isAs -> ResolveParentOfIsAStructure(isAs) != parent);
 
         var unhandledIsAs = connectedIsA.filter(this::isIsANotHandled).count();
 
-        //As there can only be one parent to the current isA,
-        //all other isAs (on the higher stages) require to be resolved
-        if(unhandledIsAs > 1) return;
+
+        //All other isAs (on the higher stages) require to be resolved
+        if(unhandledIsAs > 0) return;
 
         //All isAs in the higher stages are resolved, therefore we can resolve this isa
         var inheritors = ResolveInheritorsOfIsAStructure(isAStructure);
