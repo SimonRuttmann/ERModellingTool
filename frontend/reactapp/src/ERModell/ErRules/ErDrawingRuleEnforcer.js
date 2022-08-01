@@ -54,7 +54,8 @@ export const createSelection = (id, connectionType, drawBoardElements, connectio
 }
 
 
-
+//TODO die validierung muss auch die kardinalitäten überprüfen
+//Bei mehr als 2 ent auf bez mit 1:1 oder 1:N -> error message
 
 
 

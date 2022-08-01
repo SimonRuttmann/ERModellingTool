@@ -416,10 +416,20 @@ const collectElementsOfSubgraphRecursive = (element, connections, collectedEleme
 
 }
 
-const addIfNotExists = (element, collection) => {
+export const addIfNotExists = (element, collection) => {
     if(collection.indexOf(element) !== -1) return false;
     collection.push(element)
     return true;
+}
+
+//TODO instead use array.method = addAllIfNotExists
+//TODO mit function createCollection
+
+export const addAllIfNotExists = (elements, collection) => {
+    for (let element of elements){
+        if(collection.indexOf(element) === -1)
+        collection.push(element)
+    }
 }
 
 const weakTypesSubgraphBounds = (element) => {
