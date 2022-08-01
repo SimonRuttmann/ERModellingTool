@@ -405,13 +405,8 @@ Menge 2
 export const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
     const {isa, entity} = resolveEntityIsA(element, selectedObject)
 
-    console.log("ensureEntityAsSubTypeToIsANoMultipleInheritance")
-    console.log(isa)
-    console.log(entity)
     const superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
 
-    console.log("Supertype")
-    console.log(superType)
     //if(superType == null) return true; //Falsch! hier check, ob ein untertyp die isa erreicht...
 
     //ensure circle free //E1 -> A1       A1->  E3   E3 -> A3
@@ -419,8 +414,7 @@ export const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connect
     if(superType == null){
 
         const impactedEntities = collectImpactedEntitySet(entity, connections, drawBoardElements);
-   //     console.log("impacted Entites")
-   //     console.log(impactedEntities)
+
         for(let entity of impactedEntities){
             if(isa === getIsAsWhichInheritorIsTheEntity(entity, connections, drawBoardElements)) return false;
         }
@@ -429,13 +423,9 @@ export const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connect
     }
 
     const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
-    console.log("Impacted Set of ENTITY")
-    console.log(impactedSet)
-    console.log(entity)
+
     const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
-    console.log("SUPERTYPESET")
-    console.log(superTypeSet)
-    console.log(superType)
+
     return areCollectionsDisjoint(superTypeSet, impactedSet)
 }
 
