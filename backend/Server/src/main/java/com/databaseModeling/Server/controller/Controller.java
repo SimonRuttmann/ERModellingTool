@@ -60,15 +60,15 @@ public class Controller {
 
         var tables = TableManager.getTableRegister();
 
+            var isaStructureService = new TransformIsAStructureService();
+            isaStructureService.transformIsAStructures(graph);
+
             //Transform weak entities by object reference
             ITransformWeakTypesService weakTypesService = new TransformWeakTypesService();
             weakTypesService.transformWeakTypes(graph);
 
             //Create and cascade primary keys of weak entities
             weakTypesService.generateIdentifyingPrimaryKeys(graph);
-
-            var isaStructureService = new TransformIsAStructureService();
-            isaStructureService.transformIsAStructures(graph);
 
             //Transform one to one
             var oneToOneService = new TransformOneToOneService();
