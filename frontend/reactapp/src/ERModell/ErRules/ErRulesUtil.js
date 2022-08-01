@@ -41,6 +41,19 @@ export const pathDoesMax2TimesExist = (element, connections, selectedObject) => 
 
     return samePathConnections.length < 2;
 }
+//TODO neu dazugekommen, testen!
+export const pathWeakRelToWeakEntityDoesMax1TimesExist = (element, connections, selectedObject) => {
+
+    //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
+
+    const samePathConnections  =
+        connections.filter(connection => connectionSamePath(connection, element, selectedObject));
+
+    if(element.erType === ERTYPE.WeakEntity.name)
+        return samePathConnections.length < 1;
+
+    return samePathConnections.length < 2;
+}
 
 const connectionSamePath = (connection, elementOne, elementTwo) => {
 

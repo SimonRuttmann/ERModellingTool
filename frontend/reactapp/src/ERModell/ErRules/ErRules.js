@@ -14,7 +14,7 @@ import {
     getConnectorsOfObject,
     getOtherElementsOfConnectors,
     ensureIsACircleFree,
-    pathDoesMax2TimesExist
+    pathDoesMax2TimesExist, pathWeakRelToWeakEntityDoesMax1TimesExist
 } from "./ErRulesUtil";
 import {ConnectionType} from "../Model/Diagram";
 
@@ -157,13 +157,13 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
 
     return applyRules(drawBoardElements, connections, selectedObject,
                         strongEntityRule,
-                        ifDestinationAttributePathDoesNotExist,
+                        ifDestinationAttributePathDoesNotExist, //TODO Redundant mit relationOrEntityToAttributeIfAttributeHasNoRoot
                         ifDestinationIsaPathDoesNotExist,
                         relationOrEntityToAttributeIfAttributeHasNoRoot,
                         checkWeakTypesConsistency,
                         checkIfToWeakRelationItOnlyHasDeg2,
                         ensureIsACircleFree,
-                        pathDoesMax2TimesExist)
+                        pathDoesMax2TimesExist) //TODO pathDoesMax2TimesExist, checkt ob ein pfad bereits existiert ?
 }
 
 
@@ -230,7 +230,8 @@ export const handleSelectStrongRelation = (selectedObject, connectionType, drawB
                         strongRelationRule,
                         ifDestinationAttributePathDoesNotExist,
                         relationOrEntityToAttributeIfAttributeHasNoRoot,
-                        pathDoesMax2TimesExist)
+                        pathDoesMax2TimesExist,
+                        pathWeakRelToWeakEntityDoesMax1TimesExist)
 }
 
 const strongRelationRule = (element) => {
@@ -314,6 +315,84 @@ const weakRelationRule = (element) => {
     }
 
 }
+/*TODO
+
+Funktionen:
+GetSuperTypes
+
+GetSubTypes
+
+
+GetCompleteSuperTypes
+    var a = new List
+    var subTypes = getSubTypes(entity)
+    for each subType of subTypes
+        a.Add(subType)
+        a.AddAll(subtype.getSuperTypes)
+
+
+GetCompleteSuperTypesOfIsA
+    var a = new list.
+    Foreach subtype of isa
+        a.AddAll(GetReferencedSuperTypes(subtype))
+
+Algo as Child / Subtype
+    var a = GetCompleteSuperTypes(Entity)
+    var b = isa.getParent.getSupertypes()
+
+    return a disjunkt b
+
+Alsog as parent / supertype
+    var a = GetCompleteSuperTypesOfIsA(isa)
+    var b = entity.getSupertypes()
+
+
+var untertypen = funct1(me)
+foreach untertypen : funct2(untertyp)
+
+Für eine Entität alle obertypen heraufinden
+
+
+
+   Algo:
+   1. Als Untertyp
+      var vererbt = Funct1(Me)
+
+
+
+   2. Obertypen
+   var meineTypen = funct1(Me)
+
+   var untertypenIsa = isa.getUntertypen
+   var UntertypenMengeIsa = forEach(UntertypenIsa) funct1(untertyp)
+
+   var Untertypen = funct2(ME)
+   var UntertypenMenge = forEach(Untertypen + ME) funct1(untertyp)
+
+
+
+1. Untertypen
+
+Erst schauen, von was erbt mein Typ akutell
+
+Dann schauen, von was erben meine Untertypen akutell
+Diese mengen vereineigen
+
+
+Dann schauen, von was erbt der Obertyp der ISa
+
+diese menge muss disjunkt sein.
+
+
+2. Obertyp
+Erst schauen, von was erbt mein Typ aktuell
+Menge 1
+
+Dann schauen, von was erben die Untertypen der isa
+Menge 2
+
+1 und 2 muss disjunkt sien
+*/
 
 export const handleSelectIsAStructure = (selectedObject, connectionType, drawBoardElements, connections) => {
 
