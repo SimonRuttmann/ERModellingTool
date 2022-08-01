@@ -178,6 +178,10 @@ export const applyRules = (elements, connections, selectedObject, ...rules) => {
 
 //Tested
 export const getConnectorsOfObject = (element, connections) => {
+    if(connections == null) {
+        console.log("CONNECTIONS ARE UNDEFINED")
+        console.log(element)
+    }
     return connections.filter(connection => connection.end === element.id || connection.start === element.id)
 }
 

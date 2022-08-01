@@ -162,7 +162,7 @@ export const handleSelectStrongEntity = (selectedObject, connectionType, drawBoa
         relationOrEntityToAttributeIfAttributeHasNoRoot,
         checkWeakTypesConsistency,
         checkIfToWeakRelationItOnlyHasDeg2,
-        ensureIsACircleFree,
+        ensureEntityAsSubTypeToIsANoMultipleInheritance,
         pathDoesMax2TimesExist) //TODO pathDoesMax2TimesExist, checkt ob ein pfad bereits existiert ?
 }
 
@@ -405,11 +405,37 @@ Menge 2
 export const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
     const {isa, entity} = resolveEntityIsA(element, selectedObject)
 
+    console.log("ensureEntityAsSubTypeToIsANoMultipleInheritance")
+    console.log(isa)
+    console.log(entity)
     const superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
 
-    const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
-    const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
+    console.log("Supertype")
+    console.log(superType)
+    //if(superType == null) return true; //Falsch! hier check, ob ein untertyp die isa erreicht...
 
+    //ensure circle free //E1 -> A1       A1->  E3   E3 -> A3
+                         //E1 -> A2       A2 -> E4   E4 -> A3   //collision!
+    if(superType == null){
+
+        const impactedEntities = collectImpactedEntitySet(entity, connections, drawBoardElements);
+   //     console.log("impacted Entites")
+   //     console.log(impactedEntities)
+        for(let entity of impactedEntities){
+            if(isa === getIsAsWhichInheritorIsTheEntity(entity, connections, drawBoardElements)) return false;
+        }
+        return true;
+
+    }
+
+    const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
+    console.log("Impacted Set of ENTITY")
+    console.log(impactedSet)
+    console.log(entity)
+    const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
+    console.log("SUPERTYPESET")
+    console.log(superTypeSet)
+    console.log(superType)
     return areCollectionsDisjoint(superTypeSet, impactedSet)
 }
 
@@ -486,7 +512,8 @@ const collectSubTypeSetOfEntityRecursive = (element, connections, drawBoardEleme
 
     for (let isA of isAs){
         let subTypes = getSubTypesOfIsA(isA, connections, drawBoardElements)
-        addAllIfNotExists(subTypes, allSubTypesOneLayerBelow)                               // Entity 2, 3, 4, 5
+        addAllIfNotExists(subTypes, allSubTypesOneLayerBelow)
+        addAllIfNotExists(subTypes, collectedElements)                               // Entity 2, 3, 4, 5
     }
 
     for (let subType of allSubTypesOneLayerBelow){                                          // Execute recursion
@@ -539,6 +566,8 @@ const collectSuperTypeSetOfEntityRecursive = (element, connections, drawBoardEle
 
     for (let isA of isAs){
         let superType = getSuperTypeOfIsA(isA, connections, drawBoardElements)
+        if(superType == null) continue;
+        addIfNotExists(superType, collectedElements)
         addIfNotExists(superType, superTypesOneLayerAbove)                                      // Entity 2, 3
     }
 
@@ -605,9 +634,9 @@ const isAStructureRule = (element) => {
  * Returns Entity 2, Entity 3
  */
 export const getSubTypesOfIsA = (element, connections, drawBoardElements) => {
-    const inheritorConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.type === ConnectionType.inheritor);
-    const subTypes = getOtherElementsOfConnectors(element, inheritorConnections, drawBoardElements)[0];
-    console.log(subTypes)
+    const inheritorConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.connectionType === ConnectionType.inheritor);
+    const subTypes = getOtherElementsOfConnectors(element, inheritorConnections, drawBoardElements);
+
     return subTypes;
 }
 
@@ -628,9 +657,9 @@ export const getSubTypesOfIsA = (element, connections, drawBoardElements) => {
  * Returns Entity 1
  */
 export const getSuperTypeOfIsA = (element, connections, drawBoardElements) => {
-    const parentConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.type === ConnectionType.parent);
+    const parentConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.connectionType === ConnectionType.parent);
     const superType = getOtherElementsOfConnectors(element, parentConnections, drawBoardElements)[0];
-    console.log(superType)
+
     return superType;
 }
 
@@ -652,9 +681,9 @@ export const getSuperTypeOfIsA = (element, connections, drawBoardElements) => {
  * Returns IsA 3, IsA 4
  */
 export const getIsAsWhichParentIsTheEntity = (element, connections, drawBoardElements) => {
-    const inheritorConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.type === ConnectionType.parent);
+    const inheritorConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.connectionType === ConnectionType.parent);
     const subTypes = getOtherElementsOfConnectors(element, inheritorConnections, drawBoardElements);
-    console.log(subTypes)
+
     return subTypes;
 }
 
@@ -674,9 +703,9 @@ export const getIsAsWhichParentIsTheEntity = (element, connections, drawBoardEle
  * Returns IsA 1, IsA 2
  */
 export const getIsAsWhichInheritorIsTheEntity = (element, connections, drawBoardElements) => {
-    const parentConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.type === ConnectionType.inheritor);
+    const parentConnections =  getConnectorsOfObject(element, connections).filter(connection => connection.connectionType === ConnectionType.inheritor);
     const superType = getOtherElementsOfConnectors(element, parentConnections, drawBoardElements);
-    console.log(superType)
+
     return superType;
 }
 
