@@ -684,7 +684,7 @@ const collectImpactedEntitySet = (element, connections, drawBoardElements) => {
  *           Entity 1                     <- Given entity
  */
 const collectSuperTypeSetOfEntityRecursive = (element, connections, drawBoardElements, collectedElements) => {
-    if(element == null) return;
+
     let superTypesOneLayerAbove = []
     const isAs = getIsAsWhichInheritorIsTheEntity(element, connections, drawBoardElements);    // IsA 1, IsA 2
 
@@ -693,7 +693,7 @@ const collectSuperTypeSetOfEntityRecursive = (element, connections, drawBoardEle
         if(superType == null && isA.fakeSuperType != null){
             addIfNotExists(isA.fakeSuperType, collectedElements)
         }
-        else {
+        else if(superType != null) {
             addIfNotExists(superType, collectedElements)
             addIfNotExists(superType, superTypesOneLayerAbove)
         }// Entity 2, 3
