@@ -405,28 +405,136 @@ Menge 2
 export const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
     const {isa, entity} = resolveEntityIsA(element, selectedObject)
 
-    const superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
+    let superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
 
-    //if(superType == null) return true; //Falsch! hier check, ob ein untertyp die isa erreicht...
-
+    addFakeMissingSuperTypes(drawBoardElements, connections);
     //ensure circle free //E1 -> A1       A1->  E3   E3 -> A3
                          //E1 -> A2       A2 -> E4   E4 -> A3   //collision!
-    if(superType == null){
+    //if(superType == null){
+        //return ensureEntityAsSubTypeToIsANoMultipleInheritance_handleNoSupertype(element, connections, selectedObject, drawBoardElements)
+   // }
 
-        const impactedEntities = collectImpactedEntitySet(entity, connections, drawBoardElements);
-
-        for(let entity of impactedEntities){
-            if(isa === getIsAsWhichInheritorIsTheEntity(entity, connections, drawBoardElements)) return false;
-        }
-        return true;
-
-    }
+    if(superType == null) superType = isa.fakeSuperType;
 
     const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
 
     const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
 
-    return areCollectionsDisjoint(superTypeSet, impactedSet)
+    removeFakeMissingSuperTypes(drawBoardElements, connections);
+
+
+    return areCollectionsDisjoint(superTypeSet, impactedSet);
+    //if( ! areCollectionsDisjoint(superTypeSet, impactedSet) ) return false;
+
+    //return ensureEntityAsSubTypeToIsANoMultipleInheritance_handleNoSupertype(element, connections, selectedObject, drawBoardElements)
+}
+
+const removeFakeMissingSuperTypes = (drawBoardElements, connections) => {
+    let isAStructures = drawBoardElements.filter(element => element.erType === ERTYPE.IsAStructure.name);
+
+    for (let isA of isAStructures){
+        isA.fakeSuperType = undefined;
+    }
+}
+
+const addFakeMissingSuperTypes = (drawBoardElements, connections) => {
+    let isAStructures = drawBoardElements.filter(element => element.erType === ERTYPE.IsAStructure.name);
+
+    for (let isA of isAStructures){
+        let superType = getSuperTypeOfIsA(isA, drawBoardElements, connections)
+        if(superType == null) isA.fakeSuperType = {id: Date.now() + " -- fake"}
+    }
+}
+/*
+//normal mache ich folgendes. ich nehm mir die obertypenmenge der isa und vergleich sie mit der gesammtmege der 7ner entitty. Jetzt hab ich die 0 ner nicht.
+// Deswegen muss schauen, dass ich die  "quasi" nachbau
+export const ensureEntityAsSubTypeToIsANoMultipleInheritance_handleNoSupertype = (element, connections, selectedObject, drawBoardElements) => {
+    const {isa, entity} = resolveEntityIsA(element, selectedObject)
+
+    console.log("CONNECTIONS IN ENSURE HANDLE SPECIAL CASE")
+    console.log(connections)
+    const inheritedIsAsOfEntity = [];
+    getAllInheritedIsAs(entity, connections, drawBoardElements, inheritedIsAsOfEntity)
+
+    //If the currently selected isa has no supertype but is in the list of the already inherited isAs then there is no connection allowed
+    if(collectionContains(isa, inheritedIsAsOfEntity)) return false;
+
+    const inheritedIsAsOfIsA = [];
+    const superType = getSuperTypeOfIsA(isa, connections, drawBoardElements);
+    if(superType == null) return true;
+    //Why? This is because the isa is not connected to any of the inherited isAs
+
+
+    getAllInheritedIsAs(superType, connections, drawBoardElements, inheritedIsAsOfIsA)
+
+    return areCollectionsDisjoint(inheritedIsAsOfEntity, inheritedIsAsOfIsA);
+
+    //nein sie sind nicht disjunkt -> false
+    //ja sie sind disjunkt -> true
+
+
+    //getAllInheritedIsAs
+    //1. getAllInheritedIsAsOfStrongEntity7
+    //2. isCurrentIsAConnectedToInheritedIsAs
+    //    When true return false
+
+    //const subTypes = getSubTypesOfIsA(isa, connections, drawBoardElements)
+    //const isAs = [];
+
+    //for(let subType of subTypes) {
+    //    let upperLayerIsAsOfEntity = getAllInheritedIsAs(subType, connections, drawBoardElements);
+    //    addAllIfNotExists(upperLayerIsAsOfEntity, isAs)
+    //}
+    //if(collectionContains(entity, isAs) ) return false;
+    //return true;
+}
+
+const getAllInheritedIsAs = (subType, connections, drawBoardElements, inheritedIsAs) => {
+    if(subType == null) return; //no need to check more, all above isa s for this isa are already resolved (must be as there is no supertype of the previous isa
+
+    const parentIsAs = getIsAsWhichInheritorIsTheEntity(subType, connections, drawBoardElements)
+    addAllIfNotExists(parentIsAs, inheritedIsAs)
+    for(let isA of parentIsAs){
+        const superType = getSuperTypeOfIsA(isA, connections, drawBoardElements);
+        getAllInheritedIsAs(superType, connections, drawBoardElements, inheritedIsAs)
+    }
+}
+*/
+/*
+export const ensureEntityAsSubTypeToIsANoMultipleInheritance_handleSpecialCase = (element, connections, selectedObject, drawBoardElements) => {
+    const {isa, entity} = resolveEntityIsA(element, selectedObject)
+
+    const superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
+
+    const impactedEntities = collectImpactedEntitySet(entity, connections, drawBoardElements);
+
+    const upperLayerIsAsOfImpactedEntities = [];
+    for(let entity of impactedEntities) {
+        let upperLayerIsAsOfEntity = getIsAsWhichInheritorIsTheEntity(entity, connections, drawBoardElements);
+        addAllIfNotExists(upperLayerIsAsOfEntity, upperLayerIsAsOfImpactedEntities)
+    }
+    //TODO das reicht nicht...
+    //ERste idee.. hole von den den subtypen der isa die impacted entity set, prüfe sodann ob das element darin vorkommt
+    //ich brauh auf jeden fall erstmal alle elemente die von der isa erben
+
+    const impactedSet2 = []
+    const subTypesOfIsA = getSubTypesOfIsA(isa, connections, drawBoardElements)
+    for (let subType of subTypesOfIsA){
+        let impactedEntities = collectImpactedEntitySet(subType, connections, drawBoardElements)
+        addAllIfNotExists(impactedEntities, impactedSet2)
+    }
+
+    //Bei all den elementen, darf ich mich nicht zu einer verbinden, welche
+
+
+    if(collectionContains(isa, upperLayerIsAsOfImpactedEntities) ) return false;
+    return true;
+
+}
+ */
+
+const collectionContains = (element, collection) => {
+    return collection.indexOf(element) !== -1;
 }
 
 export const ensureEntityAsSuperTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
@@ -471,7 +579,14 @@ export const resolveEntityIsA = (firstElement, secondElement) => {
 
 
 
-//eingabe entität
+/**
+ * Collects the subtype set for a given entity
+ * @param element The entity to collect the subtype set from
+ * @param connections The connections in the Er diagram
+ * @param drawBoardElements The elements in the Er diagram
+ * @returns {*[]} A collection of entities.
+ * Those entities inherit directly or indirectly the given entity through isA structures
+ */
 const collectSubTypeSetOfEntity = (element, connections, drawBoardElements) => {
     let collectedElements = [];
 
@@ -480,13 +595,14 @@ const collectSubTypeSetOfEntity = (element, connections, drawBoardElements) => {
     return collectedElements;
 }
 
-//eingabe entität
+
 /**
- *
- * @param element
- * @param connections
- * @param drawBoardElements
- * @param collectedElements
+ * Populates a given collection with entities, which inherit from the given entity
+ * @param element The entity to collect the subtype set recursively
+ * @param connections The connections in the Er diagram
+ * @param drawBoardElements The elements in the Er diagram
+ * @param collectedElements The collection to populate
+ * @example
  *
  *                  Entity 1                     <- Given entity
  *          |                  |                   (parent connection)
@@ -511,6 +627,14 @@ const collectSubTypeSetOfEntityRecursive = (element, connections, drawBoardEleme
     }
 }
 
+/**
+ * Collects the super type set for a given entity
+ * @param element The entity to collect the super type set from
+ * @param connections The connections in the Er diagram
+ * @param drawBoardElements The elements in the Er diagram
+ * @returns {*[]} A collection of entities.
+ * Those entities are inherited directly or indirectly through isA structures
+ */
 const collectSuperTypeSetOfEntity = (element, connections, drawBoardElements) => {
     let collectedElements = [];
 
@@ -519,7 +643,16 @@ const collectSuperTypeSetOfEntity = (element, connections, drawBoardElements) =>
     return collectedElements;
 }
 
-//eingabe entität
+/**
+ * Collects the impacted entity set for a given entity
+ * @param element The entity to collect the impacted entity set from
+ * @param connections The connections in the Er diagram
+ * @param drawBoardElements The elements in the Er diagram
+ * @returns {*[]} A collection of entities.
+ * Defined as the supertype set for each entity in the subtype set for a given entity
+ * All those entities are influenced at allowing
+ * a connection of an entity to an isa as inheritor or parent
+ */
 const collectImpactedEntitySet = (element, connections, drawBoardElements) => {
     const impactedEntitySet = [];
 
@@ -527,20 +660,20 @@ const collectImpactedEntitySet = (element, connections, drawBoardElements) => {
     addAllIfNotExists(subTypeSet, impactedEntitySet)
 
     for (let subType of subTypeSet){
-        const superTypesOfSubType = collectSuperTypeSetOfEntity(element, connections, drawBoardElements)
+        const superTypesOfSubType = collectSuperTypeSetOfEntity(subType, connections, drawBoardElements)
         addAllIfNotExists(superTypesOfSubType, impactedEntitySet)
     }
     return impactedEntitySet;
 }
 
 
-//eingabe entität
 /**
- *
- * @param element
- * @param connections
- * @param drawBoardElements
- * @param collectedElements
+ * Populates a given collection with entities, which are inherited by the given entity
+ * @param element The entity to collect the super set recursively
+ * @param connections The connections in the Er diagram
+ * @param drawBoardElements The elements in the Er diagram
+ * @param collectedElements The collection to populate
+ * @example
  *
  *  ------------------------------
  *  |Entity 2            Entity 3|        <- add and execute recursion on these elements
@@ -551,14 +684,19 @@ const collectImpactedEntitySet = (element, connections, drawBoardElements) => {
  *           Entity 1                     <- Given entity
  */
 const collectSuperTypeSetOfEntityRecursive = (element, connections, drawBoardElements, collectedElements) => {
+    if(element == null) return;
     let superTypesOneLayerAbove = []
     const isAs = getIsAsWhichInheritorIsTheEntity(element, connections, drawBoardElements);    // IsA 1, IsA 2
 
     for (let isA of isAs){
         let superType = getSuperTypeOfIsA(isA, connections, drawBoardElements)
-        if(superType == null) continue;
-        addIfNotExists(superType, collectedElements)
-        addIfNotExists(superType, superTypesOneLayerAbove)                                      // Entity 2, 3
+        if(superType == null && isA.fakeSuperType != null){
+            addIfNotExists(isA.fakeSuperType, collectedElements)
+        }
+        else {
+            addIfNotExists(superType, collectedElements)
+            addIfNotExists(superType, superTypesOneLayerAbove)
+        }// Entity 2, 3
     }
 
     for (let superType of superTypesOneLayerAbove){                                             // Execute recursion
