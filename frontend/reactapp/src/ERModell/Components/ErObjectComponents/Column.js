@@ -1,4 +1,5 @@
 import React from "react";
+import {SqlDataTypes} from "./SqlDataTypes";
 function Column({ width, height, x, y, fontFamily, fontSize, column}){
 
 
@@ -17,6 +18,10 @@ function Column({ width, height, x, y, fontFamily, fontSize, column}){
 
      */
 
+    const getDataType = (column) => {
+        if(column.dataType == null) return SqlDataTypes.INT;
+        return column.dataType;
+    }
 
     let primaryKey =
         <svg x={x + 5} y={y + 5} width={30} height={30} viewBox="0 0 16 16">
@@ -77,11 +82,34 @@ function Column({ width, height, x, y, fontFamily, fontSize, column}){
 
             >{column.displayName}</text>
 
+            {column.primaryKey || column.foreignKey ? null :
+            <text
+                //id
+                id={column.id}
+
+                //position
+                x={x + 200}
+                y={y + height / 2}
+
+                //alignment
+                dominantBaseline="middle"
+                textAnchor="left"
+
+                //display text style
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+
+                //display style
+                stroke="#000"
+                strokeWidth="0"
+                fill="#000000"
+
+            >{getDataType(column)}</text>
+            }
+
                 { column.primaryKey ? primaryKey : null}
 
                 { column.foreignKey ? foreignKey : null}
-
-
 
             </g>
 

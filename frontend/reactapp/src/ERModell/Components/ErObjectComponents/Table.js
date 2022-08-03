@@ -3,6 +3,7 @@ import {resolveRequiredWidth} from "../Util/SvgUtils"
 import Column from "./Column";
 
 
+
 function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize, object}){
 
 
@@ -33,8 +34,7 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
 
     //If necessary, increase width to fit text
     let minCalcWidth = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
-    console.log("MIN")
-    console.log(minCalcWidth)
+
     if(minCalcWidth > width) width = minCalcWidth;
 
 
@@ -120,10 +120,14 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
                         height={columnHeight}
                         column={column}
                         fontFamily={fontFamily}
-                        fontSize={fontSize}/>
+                        fontSize={fontSize}
+                        />
             ))}
         </React.Fragment>
     )
+
+
 }
 
 export default Table
+
