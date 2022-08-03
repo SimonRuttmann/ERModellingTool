@@ -8,6 +8,8 @@ import com.databaseModeling.Server.services.transformation.implementation.*;
 import com.databaseModeling.Server.services.transformation.interfaces.ICardinalityResolverService;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformAttributesService;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformWeakTypesService;
+import com.databaseModeling.Server.sqlGeneration.SqlGenerator;
+import com.databaseModeling.Server.sqlGeneration.TopologicalSort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class Controller {
+
 
     @GetMapping("/test")
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
@@ -122,6 +125,56 @@ public class Controller {
 
 
         return response;
+    }
+
+    @PostMapping("/convert/sql")
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
+    public String convertToSql(
+            @RequestBody RelationalModelDto type)
+    {
+
+        System.out.println(type);
+
+        var topologicalSort = new TopologicalSort<RelationalModelDto.DrawBoardContent.TableDTO>();
+        var tables = type.getDrawBoardContent().getTables();
+
+        for (var table : type.getDrawBoardContent().getTables()) {
+            topologicalSort.addNode(table);
+        }
+
+        for (var connection : type.getDrawBoardContent().getConnections()){
+            topologicalSort.addEdge(GetTableForId(tables, connection.getStart()), GetTableForId(tables, connection.getEnd()));
+        }
+        var success = topologicalSort.topologicalSort();
+
+        var resultSet = topologicalSort.resolveResultSet();
+
+        StringBuilder sql = new StringBuilder();
+
+        for(var table : resultSet){
+            sql.append(SqlGenerator.generateSqlForTable(table, resultSet));
+            sql.append("\n\n");
+        }
+
+        if(!success){
+            sql.append("Circular dependencies between the sql tables through foreign key constraints detected!");
+        }
+
+        return sql.toString();
+    }
+
+    //Todo in util packen
+    public static RelationalModelDto.DrawBoardContent.TableDTO
+        GetTableForId(List<RelationalModelDto.DrawBoardContent.TableDTO> tables, String id){
+
+        return tables.stream().filter(table -> table.getColumns().stream().anyMatch(column -> column.getId().equals(id))).findFirst().orElseThrow();
+    }
+
+
+    public static RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO
+        GetColumnForId(RelationalModelDto.DrawBoardContent.TableDTO referencedTable, String id) {
+
+        return referencedTable.getColumns().stream().filter(column -> column.getId().equals(id)).findFirst().orElseThrow();
     }
 
 }
