@@ -4,8 +4,12 @@ import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import {DiagramTypes} from "./Model/Diagram";
+import SqlPopUp from "./SqlPopUp";
+import RelationalRightBar from "./RelationalRightBar";
+import {ACTIONSTATE, OBJECTTYPE} from "./Model/ActionState";
+import {resolveObjectById} from "./Components/Util/ObjectUtil";
 
-const RelationalManager = ({syncRelContent, importedContent, triggerImportComplete}) => {
+const RelationalManager = ({syncRelContent, importedContent, triggerImportComplete, generateSql, sqlServerResult}) => {
 
     const table = {
         id: "",
@@ -50,6 +54,8 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
      */
     const [connections, setConnections] = useState([]);
 
+    //The currently selected object id, or null
+    const [selectedObjectId, setSelectedObjectId] = useState(null);
 
     /**
      * Synchronize data with parent for download and transformation
@@ -149,18 +155,45 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
     const onDropOnDrawBoard = (e) => {e.stopPropagation()};
     const onConnectionSelected = (connectionId) => {};
-    const onDrawBoardElementSelected = (drawBoardElementId) => {};
 
+    const onDrawBoardElementSelected = (drawBoardElementId) => {
+        setSelectedObjectId(drawBoardElementId)
+    };
+
+    const onCanvasSelected = () => {
+        if(selectedObjectId == null) return;
+        setSelectedObjectId(null);
+    }
+
+    console.log("SQL SERVER RESULT")
+    console.log(sqlServerResult)
     /**
      * The offset between the canvas and the inner drawBoard
      * The "border" of the background page is set to 30 px offset to the mostOuter and therefore canvas
      */
     const drawBoardBorderOffset = 30;
 
+
+    const changeDataType = (tableId, columnId, dataType) => {
+        let table = resolveObjectById(tableId, drawBoardElements)
+        let column = resolveObjectById(columnId, table.columns)
+
+        column.dataType = dataType;
+
+        //Deep clone required, as column is a nested object inside table
+        let clone = JSON.parse(JSON.stringify(table));
+
+        console.log(clone)
+        setDrawBoardElements(( () => [
+            ...drawBoardElements.filter(drawBoardElement => !(drawBoardElement.id === tableId)),
+            clone
+        ]))
+    }
+
     return (
 
         <div>
-            <div className="canvasStyle" id="canvas" >
+            <div className="canvasStyle" id="canvas" onClick={() => onCanvasSelected(null)}>
 
                 {/* The draw board   */}
                 <DrawBoard
@@ -197,7 +230,8 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
                     ))}
 
                 </DrawBoard>
-
+                <RelationalRightBar drawBoardElements={drawBoardElements} selectedObjectId={selectedObjectId} changeDataType={changeDataType}/>
+                <SqlPopUp sqlCode={sqlServerResult} generateSql={generateSql}/>
             </div>
         </div>
     );
