@@ -103,6 +103,12 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
     },[importedContent, triggerImportComplete])
 
+    const prepareSqlRequest = () => {
+        let dto = { projectVersion: 1, projectName: "", projectType: "",
+                    drawBoardContent: {tables: drawBoardElements, connections: connections}};
+        generateSql(dto)
+    }
+
     /**
      * Function given to DrawBoardElement to update the position in the state
      * @param elementId The id of the element
@@ -231,7 +237,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
                 </DrawBoard>
                 <RelationalRightBar drawBoardElements={drawBoardElements} selectedObjectId={selectedObjectId} changeDataType={changeDataType}/>
-                <SqlPopUp sqlCode={sqlServerResult} generateSql={generateSql}/>
+                <SqlPopUp sqlCode={sqlServerResult} prepareSqlRequest={prepareSqlRequest}/>
             </div>
         </div>
     );

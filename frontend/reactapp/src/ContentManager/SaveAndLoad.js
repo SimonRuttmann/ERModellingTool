@@ -71,10 +71,10 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
     const [sqlServerResult, setSqlSeverResult] = useState(null)
     const urlSql = "http://localhost:8080/convert/sql"
-    function generateSql(){
+    function generateSql(dto){  //TODO schauen was sinnvoller ist, ich nehm hier das dto, da die sync noch nicht funktioniert. TOOODOO
         console.log("GENERATE SQL")
 
-        axios.post(urlSql, relationalContent.current).
+        axios.post(urlSql, dto).
         then((response) => {
 
             setSqlSeverResult(response.data);
