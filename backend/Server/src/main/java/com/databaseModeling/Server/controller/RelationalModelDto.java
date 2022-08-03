@@ -1,5 +1,6 @@
 package com.databaseModeling.Server.controller;
 
+import com.databaseModeling.Server.sqlGeneration.RelationalDataTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -57,6 +58,7 @@ public class RelationalModelDto{
                 private boolean isPrimaryKey;
                 private boolean isForeignKey;
                 private String foreignKeyReferencedId;
+                private RelationalDataTypes dataType;
             }
         }
     }
