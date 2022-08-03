@@ -151,13 +151,13 @@ public class Controller {
 
         StringBuilder sql = new StringBuilder();
 
+        if(!success){
+            sql.append("Circular dependencies between the sql tables through foreign key constraints detected!\n\n");
+        }
+
         for(var table : resultSet){
             sql.append(SqlGenerator.generateSqlForTable(table, resultSet));
             sql.append("\n\n");
-        }
-
-        if(!success){
-            sql.append("Circular dependencies between the sql tables through foreign key constraints detected!");
         }
 
         return sql.toString();
