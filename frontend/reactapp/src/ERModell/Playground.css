@@ -505,3 +505,29 @@ input:checked + .mergeCheckBoxSlider:before {
   text-align: left;
   background-color: #222222;
 }
+
+.SqlPopUp {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  background-color: #222222;
+  text-align: left;
+  height: 70%;
+  overflow: scroll;
+}
+
+.SqlContent {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  background-color: #222222;
+  text-align: left;
+  color: #cccccc;
+}
+
+
+.SqlHighlightedWord {
+  color: #e5430a
+}
