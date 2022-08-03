@@ -403,30 +403,39 @@ Menge 2
  * @param drawBoardElements
  */
 export const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
-    const {isa, entity} = resolveEntityIsA(element, selectedObject)
 
-    let superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
+    //Rule only applies to isa and entity
+    if( (element.erType        === ERTYPE.IsAStructure.name && selectedObject.erType === ERTYPE.StrongEntity.name) ||
+        (selectedObject.erType === ERTYPE.IsAStructure.name && element.erType        === ERTYPE.StrongEntity.name) ) {
 
-    addFakeMissingSuperTypes(drawBoardElements, connections);
-    //ensure circle free //E1 -> A1       A1->  E3   E3 -> A3
-                         //E1 -> A2       A2 -> E4   E4 -> A3   //collision!
-    //if(superType == null){
+
+        const {isa, entity} = resolveEntityIsA(element, selectedObject)
+
+        let superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
+
+        addFakeMissingSuperTypes(drawBoardElements, connections);
+        //ensure circle free //E1 -> A1       A1->  E3   E3 -> A3
+        //E1 -> A2       A2 -> E4   E4 -> A3   //collision!
+        //if(superType == null){
         //return ensureEntityAsSubTypeToIsANoMultipleInheritance_handleNoSupertype(element, connections, selectedObject, drawBoardElements)
-   // }
+        // }
 
-    if(superType == null) superType = isa.fakeSuperType;
+        if (superType == null) superType = isa.fakeSuperType;
 
-    const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
+        const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
 
-    const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
+        const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
 
-    removeFakeMissingSuperTypes(drawBoardElements, connections);
+        removeFakeMissingSuperTypes(drawBoardElements, connections);
 
 
-    return areCollectionsDisjoint(superTypeSet, impactedSet);
-    //if( ! areCollectionsDisjoint(superTypeSet, impactedSet) ) return false;
+        return areCollectionsDisjoint(superTypeSet, impactedSet);
+        //if( ! areCollectionsDisjoint(superTypeSet, impactedSet) ) return false;
 
-    //return ensureEntityAsSubTypeToIsANoMultipleInheritance_handleNoSupertype(element, connections, selectedObject, drawBoardElements)
+        //return ensureEntityAsSubTypeToIsANoMultipleInheritance_handleNoSupertype(element, connections, selectedObject, drawBoardElements)
+    }
+
+    return true;
 }
 
 const removeFakeMissingSuperTypes = (drawBoardElements, connections) => {
@@ -539,18 +548,25 @@ const collectionContains = (element, collection) => {
 
 export const ensureEntityAsSuperTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
 
-    const impactedSet = [];
-    const {isa, entity} = resolveEntityIsA(element, selectedObject);
+    //Rule only applies to isa and entity
+    if((element.erType        === ERTYPE.IsAStructure.name && selectedObject.erType === ERTYPE.StrongEntity.name) ||
+       (selectedObject.erType === ERTYPE.IsAStructure.name && element.erType        === ERTYPE.StrongEntity.name) ) {
 
-    const subTypesOfIsA = getSubTypesOfIsA(isa, connections, drawBoardElements)
-    for (let subType of subTypesOfIsA){
-        let impactedEntities = collectImpactedEntitySet(subType, connections, drawBoardElements)
-        addAllIfNotExists(impactedEntities, impactedSet)
+        const impactedSet = [];
+        const {isa, entity} = resolveEntityIsA(element, selectedObject);
+
+        const subTypesOfIsA = getSubTypesOfIsA(isa, connections, drawBoardElements)
+        for (let subType of subTypesOfIsA) {
+            let impactedEntities = collectImpactedEntitySet(subType, connections, drawBoardElements)
+            addAllIfNotExists(impactedEntities, impactedSet)
+        }
+
+        const superTypeSet = collectSuperTypeSetOfEntity(entity, connections, drawBoardElements)
+
+        return areCollectionsDisjoint(superTypeSet, impactedSet)
     }
 
-    const superTypeSet = collectSuperTypeSetOfEntity(entity, connections, drawBoardElements)
-
-    return areCollectionsDisjoint(superTypeSet, impactedSet)
+    return true;
 }
 
 export const areCollectionsDisjoint = (firstCollection, secondCollection) => {
@@ -637,7 +653,8 @@ const collectSubTypeSetOfEntityRecursive = (element, connections, drawBoardEleme
  */
 const collectSuperTypeSetOfEntity = (element, connections, drawBoardElements) => {
     let collectedElements = [];
-
+    console.log("A")
+    console.log(element)
     addIfNotExists(element, collectedElements);
     collectSuperTypeSetOfEntityRecursive(element, connections, drawBoardElements, collectedElements)
     return collectedElements;
