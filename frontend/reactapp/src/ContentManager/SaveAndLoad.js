@@ -4,7 +4,7 @@ import Upload from "./Upload";
 import {DiagramTypes} from "../ERModell/Model/Diagram";
 import axios from "axios";
 import PrivacyPolicy from "./PrivacyPolicy";
-
+//TODO owning side 1:1 in rightSideBar prüfen!
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
     const [currentDiagram, updateDiagram] = useState(DiagramTypes.erDiagram)
@@ -69,10 +69,25 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     const [serverResult, setServerResult] = useState(null)
     const [error, setError] = useState(false)
 
+    const [sqlServerResult, setSqlSeverResult] = useState(null)
+    const urlSql = "http://localhost:8080/convert/sql"
+    function generateSql(){
+        console.log("GENERATE SQL")
+
+        axios.post(urlSql, relationalContent.current).
+        then((response) => {
+
+            setSqlSeverResult(response.data);
+            console.log("Received")
+
+        }).
+        catch(error => setError(true));
+    }
+
+
 
     function transformToRel(){
         let content = JSON.stringify(erContent.current);
-
 
         axios.post(url, erContent.current).
         then((response) => {
@@ -105,7 +120,9 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         syncRelContent: syncRelContent,
         importedContent: importedContent,
         triggerImportComplete: triggerImportComplete,
-        transformToRel: transformToRel
+        transformToRel: transformToRel,
+        generateSql:generateSql,
+        sqlServerResult:sqlServerResult
     }
 
 
