@@ -1,7 +1,7 @@
 import {OBJECTTYPE} from "./Model/ActionState";
 import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "./Model/ErType";
-import {AssociationTypeDetails, ConnectionType} from "./Model/Diagram";
+import {ConnectionType} from "./Model/Diagram";
 import {isElementOfCategoryAttribute} from "./ErRules/ErRulesUtil";
 
 
@@ -16,13 +16,11 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
     let withLabel = true;
     let connectionType = ConnectionType.association;
     let withArrow = false;
-    let associationTypeDetails = AssociationTypeDetails.association;
 
     //Connections to attributes do not have cardinality
     if(isPartOfAttribute(startElement, endElement)) {
         withLabel = false;
-        connectionType = ConnectionType.association;
-        associationTypeDetails = AssociationTypeDetails.attributeConnector;
+        connectionType = ConnectionType.attributeConnector;
     }
 
     //Connections to/from IsA-Structures do not have cardinality
@@ -74,8 +72,7 @@ export const createConnection = (drawBoardElements, idStart, idEnd, connectionIn
         isSelected: false,
         withArrow: withArrow,
         withLabel: withLabel,
-        connectionType: connectionType,
-        associationTypeDetails: associationTypeDetails
+        connectionType: connectionType
     };
 
 }

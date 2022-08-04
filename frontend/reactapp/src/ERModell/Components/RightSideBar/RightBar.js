@@ -4,7 +4,7 @@ import {ConnectionCardinality, OBJECTTYPE} from "../../Model/ActionState";
 import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../Util/ObjectUtil";
-import {AssociationTypeDetails, ConnectionType} from "../../Model/Diagram";
+import {ConnectionType} from "../../Model/Diagram";
 import EnhancedSettings from "./EnhancedSettings";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setMergeProperty, setOwningSideProperty}) => {
@@ -55,9 +55,7 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     }
 
     function filterAndSortNonAttributeConnections(){
-        return filterAndSortConnections().filter(connection =>
-            ! ( connection.connectionType === ConnectionType.association &&
-                connection.associationTypeDetails === AssociationTypeDetails.attributeConnector));
+        return filterAndSortConnections().filter(connection => connection.connectionType !== ConnectionType.attributeConnector);
     }
 
 
@@ -107,7 +105,7 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
                 <div>Min: {selectedObject.min} Max: {selectedObject.max} </div>
             </React.Fragment>
 
-      if(selectedObject.associationTypeDetails === AssociationTypeDetails.attributeConnector)
+      if(selectedObject.connectionType === ConnectionType.attributeConnector)
           cardinality = null;
 
     return (
