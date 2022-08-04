@@ -1,5 +1,6 @@
 package com.databaseModeling.Server.services.util;
 
+import com.databaseModeling.Server.model.ElementMetaInformation;
 import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
@@ -31,6 +32,10 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     public static ErType resolveErType(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
 
         return resolveErData(erElement).getErType();
+    }
+
+    public static ElementMetaInformation resolveMetaInformation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
+        return resolveErData(erElement).getElementMetaInformation();
     }
 
     public static EntityRelationElement resolveErData(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){

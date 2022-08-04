@@ -12,6 +12,13 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 import static com.databaseModeling.Server.services.util.ErUtil.resolveErType;
 public class TransformAttributesService implements ITransformAttributesService {
 
+
+    public TransformAttributesService (TableManager tablemanager){
+        this.tableManager = tablemanager;
+    }
+
+    private final TableManager tableManager;
+
     @Override
     public void transformAttributes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
 
@@ -121,13 +128,13 @@ public class TransformAttributesService implements ITransformAttributesService {
         var childTable = child.getTreeData().getTable();
         var parentTable = parent.getTreeData().getTable();
 
-        TableManager.AddColumns(parentTable, childTable.getColumns());
+        tableManager.addColumns(parentTable, childTable.getColumns());
 
         //Get all references to the child table and update them to the parent table
         var referencedByChild = childTable.getReferencesToChildAttributeTables();
         parentTable.addAllReferencesToChildAttributeTable(referencedByChild);
 
-        child.getTreeData().removeTable();
+        tableManager.removeTable(child.getTreeData());
     }
 
     /**
@@ -152,32 +159,10 @@ public class TransformAttributesService implements ITransformAttributesService {
 
         for(var childTable : referencedTables){
 
-            TableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
+            tableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
 
             updateReferences(childTable);
         }
-        /*
-        //Added for more readability
-        if(parent.isLeaf()) return;
-
-
-        for(var child : parent.getChildren()){
-            var childData = child.getTreeData();
-
-            if(! childData.hasTable() ) continue;
-
-            var childTable = childData.getTable();
-            //TODO Version 1, kindtabellen (der 1. stufe) muss das attributeTable aktualisiert werden
-            //var parentTable = childData.getTable().referencedAttributeTable;
-            //TODO Version 2, die kinder werden bei einem merge ebenfalls gemergt (whr. besser?)
-            var parentTable = parent.getTreeData().getTable();
-
-            TableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
-
-            updateReferences(child);
-        }
-        */
-
 
     }
 

@@ -13,11 +13,16 @@ import com.databaseModeling.Server.services.transformation.interfaces.ITransform
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
-import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
 import static com.databaseModeling.Server.services.util.ErUtil.*;
 
 public class TransformWeakTypesService implements ITransformWeakTypesService {
+
+    public TransformWeakTypesService (TableManager tablemanager){
+        this.tableManager = tablemanager;
+    }
+
+    private final TableManager tableManager;
+
 
     @Override
     public void transformWeakTypes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
@@ -62,7 +67,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
         var isReferenceTransformedWeakEntityTable = table.getReferencedIdentifyingTable().isTransformed();
         
         if(isReferenceStrongEntityTable || isReferenceTransformedWeakEntityTable){
-            TableManager.AddForeignKeysToTableAsPrimaryKeys(table.getReferencedIdentifyingTable(), table);
+            tableManager.AddForeignKeysToTableAsPrimaryKeys(table.getReferencedIdentifyingTable(), table);
             table.setTransformed(true);
         }
 
@@ -141,7 +146,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
             weakEntityData.getTable().setReferencedIdentifyingTable(identifyingEntityData.getTable());
 
             //Merge relation into weak entity
-            MergeTables(weakEntity, identifyingRelation);
+            tableManager.MergeTables(weakEntity, identifyingRelation);
 
             resolveErData(identifyingRelation).setTransformed(true);
             break;

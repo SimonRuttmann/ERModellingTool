@@ -1,24 +1,31 @@
 package com.databaseModeling.Server.services.transformation.implementation;
 
-import com.databaseModeling.Server.model.NodeTableManager;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformManyToOneService;
 
 import java.util.Objects;
 
-import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
-import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
 import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
 import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRelationsOfDeg2;
 
 public class TransformManyToOneService implements ITransformManyToOneService {
 
-//Achtung min,max ist umgekehrt
+
+
+    public TransformManyToOneService (TableManager tablemanager){
+        this.tableManager = tablemanager;
+    }
+
+    private final TableManager tableManager;
+
+
+    //Achtung min,max ist umgekehrt
     // A - 1,N -AB - 1 - B
     // 1 A hat n viele b
     // 1 B hat 1 A
@@ -59,20 +66,20 @@ public class TransformManyToOneService implements ITransformManyToOneService {
 
             var relationData = resolveErData(relation);
 
-            NodeTableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-            NodeTableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+            tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+            tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
 
             relationData.setTransformed(true);
             return;
         }
 
 
-        MergeTables(manyNode, relation);
-        AddForeignKeysAsNormalColumn(singleNode, manyNode);
+        tableManager.MergeTables(manyNode, relation);
+        tableManager.AddForeignKeysAsNormalColumn(singleNode, manyNode);
 
         var relationData = resolveErData(relation);
         relationData.setTransformed(true);
-        relationData.removeTable();
+        tableManager.removeTable(relationData);
     }
 
 

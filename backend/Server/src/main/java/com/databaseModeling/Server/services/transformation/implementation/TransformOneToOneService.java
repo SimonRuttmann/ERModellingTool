@@ -1,6 +1,5 @@
 package com.databaseModeling.Server.services.transformation.implementation;
 
-import com.databaseModeling.Server.model.NodeTableManager;
 import com.databaseModeling.Server.model.conceptionalModel.Cardinality;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
@@ -8,15 +7,24 @@ import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformOneToOneService;
 
 import java.util.Objects;
 
-import static com.databaseModeling.Server.model.NodeTableManager.AddForeignKeysAsNormalColumn;
-import static com.databaseModeling.Server.model.NodeTableManager.MergeTables;
-import static com.databaseModeling.Server.services.util.ErUtil.*;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRelationsOfDeg2;
 
 public class TransformOneToOneService implements ITransformOneToOneService {
+
+
+    public TransformOneToOneService (TableManager tablemanager){
+        this.tableManager = tablemanager;
+    }
+
+    private final TableManager tableManager;
+
+
 
     @Override
     public void transformOneToOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
@@ -48,15 +56,15 @@ public class TransformOneToOneService implements ITransformOneToOneService {
 
             if(resolveErData(relation).isShouldBeMerged()){
 
-                MergeTables(nodeOfFirstEge, relation);
-                AddForeignKeysAsNormalColumn(nodeOfFirstEge, nodeOfFirstEge);
+                tableManager.MergeTables(nodeOfFirstEge, relation);
+                tableManager.AddForeignKeysAsNormalColumn(nodeOfFirstEge, nodeOfFirstEge);
 
-                relationData.removeTable();
+                tableManager.removeTable(relationData);
             }
             else{
 
-                NodeTableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-                NodeTableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+                tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+                tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
 
             }
 
@@ -89,13 +97,13 @@ public class TransformOneToOneService implements ITransformOneToOneService {
         }
 
         //Merge relation into owning node
-        MergeTables(owningNode, relation);
+        tableManager.MergeTables(owningNode, relation);
         //Add foreign keys to the owning node
-        AddForeignKeysAsNormalColumn(nodeToReference, owningNode);
+        tableManager.AddForeignKeysAsNormalColumn(nodeToReference, owningNode);
 
         var relationData = resolveErData(relation);
         relationData.setTransformed(true);
-        relationData.removeTable();
+        tableManager.removeTable(relationData);
     }
 
     private boolean isOptionalToOptional(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> firstEdge,

@@ -1,16 +1,24 @@
 package com.databaseModeling.Server.services.transformation.implementation;
 
-import com.databaseModeling.Server.model.NodeTableManager;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
+import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformManyToManyService;
 
-import static com.databaseModeling.Server.services.util.ErUtil.*;
+import static com.databaseModeling.Server.services.util.ErUtil.ResolveEntitiesConnectedToRelation;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRelations;
 
 public class TransformManyToManyService implements ITransformManyToManyService {
+
+
+    public TransformManyToManyService (TableManager tablemanager){
+        this.tableManager = tablemanager;
+    }
+
+    private final TableManager tableManager;
 
 
     @Override
@@ -28,7 +36,7 @@ public class TransformManyToManyService implements ITransformManyToManyService {
         var entities = ResolveEntitiesConnectedToRelation(relation);
 
         entities.forEach(entity ->
-                NodeTableManager.AddForeignKeysAsPrimaryKeys(entity,relation));
+                tableManager.AddForeignKeysAsPrimaryKeys(entity,relation));
 
         relation.getNodeData().getTreeData().setTransformed(true);
     }
