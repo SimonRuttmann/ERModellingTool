@@ -5,7 +5,6 @@ import com.databaseModeling.Server.model.relationalModel.Table;
 
 public class EntityRelationElement {
 
-
     public EntityRelationElement(ErType erType, boolean merging, String owningSide, ElementMetaInformation elementMetaInformation) {
         this.erType = erType;
         this.shouldBeMerged = merging;
@@ -13,65 +12,30 @@ public class EntityRelationElement {
         this.elementMetaInformation = elementMetaInformation;
     }
 
-    public void addInitialTable(Table table){
-        this.table = table;
-    }
-
-    public EntityRelationElement(ErType erType, ElementMetaInformation elementMetaInformation) {
-        this.erType = erType;
-        this.elementMetaInformation = elementMetaInformation;
-    }
-
-    private boolean isTransformed = false;
-    public boolean isTransformed() {return isTransformed;}
-    public void setTransformed(boolean transformed) {
-        isTransformed = transformed;
-    }
-
-    //Optional! TODO
-    private boolean shouldBeMerged = false;
-
-    //Optional! TODO
-    private String owningSide;
-
-    public boolean isShouldBeMerged() {
-        return shouldBeMerged;
-    }
-    public void setShouldBeMerged(boolean shouldBeMerged) {
-        this.shouldBeMerged = shouldBeMerged;
-    }
-
-    public String getOwningSide() {
-        return owningSide;
-    }
-    public boolean hasOwningSide(){
-        return owningSide != null && !owningSide.isEmpty() && !owningSide.isBlank();
-    }
-    public void setOwningSide(String owningSide) {
-        this.owningSide = owningSide;
-    }
-
-    private ErType erType;
+    //ER-Data properties
+    private final ErType erType;
     public ErType getErType() { return erType; }
-    public void setErType(ErType erType) {
-        this.erType = erType;
-    }
 
     private final ElementMetaInformation elementMetaInformation;
     public ElementMetaInformation getElementMetaInformation() {return elementMetaInformation;}
 
+    //Transformation properties
+    private boolean isTransformed = false;
+    public boolean isTransformed() {return isTransformed;}
+    public void setTransformed(boolean transformed) {isTransformed = transformed;}
+
     private Table table;
-
+    public void addInitialTable(Table table){this.table = table;}
     public Table getTable(){return table;}
+    public void removeTable(){this.table = null;}
 
-    public boolean hasTable(){
-        return table != null;
-    }
 
-    //TODO only allow this from tableManager
-    public void removeTable(){
-        this.table = null;
-    }
+    //Optional properties for 1:1 and 1:N
+    private final boolean shouldBeMerged;
+    public boolean isShouldBeMerged() {return shouldBeMerged;}
 
+    private final String owningSide;
+    public String getOwningSide() {return owningSide;}
+    public boolean hasOwningSide(){return owningSide != null && !owningSide.isEmpty() && !owningSide.isBlank();}
 
 }
