@@ -29,43 +29,4 @@ public interface ITransformWeakTypesService {
      */
     void generateIdentifyingPrimaryKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph);
 
-
-    //TODO
-    // 1:N      trivial
-    // N:M      trivial
-    // 1:1      frei -- mergebar
-    // 01:1     01 seite
-    // 01:01    frei
-    // Testen!!!!
-
-    ///IDDEEE!!!!
-
-    // Halte eine liste aller tabellen
-    // Alle tabellen haben objektverweise
-    // so wie .z.b. Tabelle a mit froeign key auf Tabelle b, dann a hat objectverweis auf tabelle b
-    // Damit können alle algorithmen (der 1. davon) ausgeführt werden.
-
-    //Bei zuvoriger übersetztung der primary keys
-    // Im anschluss daran ist es möglich, beim einem "MERGE" einer 1:1 tabelle alle tabellen ermittelt werden, welche davon betroffen sind
-    // diese können sich dann entsprechend updaten
-
-    //Bei späterer übersetzung der primary kesys
-    //Es kann bei einem emerge alle betroffenen tabellen ermittelt werden
-    //Diese referenzen der Tabellen auf andere können dan geupdated werden
-
-    //Dsa Tranform attribute service ist davon nicht betroffen, wir behandeln hier einfach nur Entity oder Relation tabellen
-    //Wird eine Entitätstabelle geändert, so werden alle columns kopiert.
-
-    //Alle tabelle der Attribute werden folgendermaßen geändert.
-    // Es werden alle childs einer knoten geommen. wenn sie einen tabelle haben, dann ist die neue referencedTable diese Tabelle (nur suche auf 1. Stufe, nicht kinder der kinder)
-
-    //Bei der alten version reicht es aus, die kinder zum parent zu kopieren, die kinder verweisen dann auf den neuen parent und der parent auf die kinder
-
-    //Algo
-    /*
-    Wir gehen den ganzen algo n-1 mal durch, woebei n die anzahl der nodes im graphen ist
-    1. Suche die Weak enttity, die mit einer weak relation auf ein strong entity zeigt
-    2. Füge schlüssel hinzu
-    3. Ändere Typ zu Strong
-     */
 }
