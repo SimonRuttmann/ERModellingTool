@@ -6,7 +6,6 @@ import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +15,16 @@ import java.util.stream.Collectors;
 // Zugriff der Elemente über die Conenction start und end ids mittels der Hashsets!
 public class ErTreeGraphFactory {
 
+    /**
+     * Creates a graph based on the given dto
+     *
+     * The graph will contain nodes for entities, relations, isAs and weak types
+     * Each node is also the root of a tree containing all attributes
+     *
+     * @param drawBoardContent Based on the information of this object the graph will be created
+     * @return A graph representation of the entity relationship diagram
+     *
+     */
     public static Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> createGraph(
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
     {
@@ -31,8 +40,6 @@ public class ErTreeGraphFactory {
         return erGraph;
     }
 
-
-
     private static void addNode(
             Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph,
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
@@ -47,26 +54,11 @@ public class ErTreeGraphFactory {
                                     new TreeNode<>(node.getId(), createNodeData(node))));
     }
 
-    private static EntityRelationElement createNodeData(ConceptionalModelDto.DrawBoardContent.Element element){
-        return new EntityRelationElement(
-                element.getErType(),
-                element.getIsMerging(),
-                element.getOwningSide(),
-                ElementMetaInformationFactory.createElementMetaInformation(element));
-    }
 
-    private static EntityRelationAssociation createEdgeData(ConceptionalModelDto.DrawBoardContent.Connection connection){
-        return new EntityRelationAssociation(
-                connection.getMin(),
-                connection.getMax(),
-                connection.getAssociationType());
-    }
     private static void addEdges(
             Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph,
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
     {
-
-
          drawBoardContent.
                 getConnections().
                 stream().
@@ -94,9 +86,8 @@ public class ErTreeGraphFactory {
                 map(attribute ->
                         new TreeNode<>(
                                 attribute.getId(),
-                                new EntityRelationElement(
-                                        attribute.getErType(),
-                                        ElementMetaInformationFactory.createElementMetaInformation(attribute)))).
+                                createNodeData(attribute))).
+
                 collect(Collectors.toList());
 
 
@@ -148,7 +139,7 @@ public class ErTreeGraphFactory {
                 child = treeNodes.stream().filter(treeNode -> treeNode.getId().equals(connector.getStart())).findFirst().orElseThrow();
             }
 
-                //Resolve child and add connection
+            //Resolve child and add connection
 
             if(child != null) {
                 children.add(child);
@@ -169,6 +160,24 @@ public class ErTreeGraphFactory {
         }
 
         //End recursion
+    }
+
+
+    private static EntityRelationElement createNodeData(ConceptionalModelDto.DrawBoardContent.Element element){
+        var metaInformation = ElementMetaInformationFactory.createElementMetaInformation(element);
+
+        return new EntityRelationElement(
+                element.getErType(),
+                element.getIsMerging(),
+                element.getOwningSide(),
+                metaInformation);
+    }
+
+    private static EntityRelationAssociation createEdgeData(ConceptionalModelDto.DrawBoardContent.Connection connection){
+        return new EntityRelationAssociation(
+                connection.getMin(),
+                connection.getMax(),
+                connection.getAssociationType());
     }
 
 
