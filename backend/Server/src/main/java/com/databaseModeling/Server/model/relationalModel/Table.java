@@ -8,9 +8,10 @@ import java.util.stream.Collectors;
 
 public final class Table {
 
-    private final String id;
+    private String id;
 
     public String getId() {return id;}
+    public void setId(String id){this.id = id;}
 
     private String originDisplayName;
 
@@ -52,8 +53,7 @@ public final class Table {
     }
 
     //end used for weak entity tables
-    public Table(String id, ElementMetaInformation elementMetaInformation) {
-        this.id = id;
+    public Table(ElementMetaInformation elementMetaInformation) {
         this.elementMetaInformation = elementMetaInformation;
     }
     private final List<Column> columns = new ArrayList<>();
