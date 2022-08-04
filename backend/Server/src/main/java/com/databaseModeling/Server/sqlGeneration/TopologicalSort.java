@@ -25,6 +25,7 @@ public class TopologicalSort<M> {
         return !hasCircle;
     }
 
+
     public List<M> resolveResultSet(){
         return  finishTimeList.stream().
                 sorted(Comparator.comparing(node -> node.finishTime)).

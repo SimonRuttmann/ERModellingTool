@@ -1,6 +1,5 @@
 package com.databaseModeling.Server.sqlGeneration;
 
-import com.databaseModeling.Server.controller.Controller;
 import com.databaseModeling.Server.controller.RelationalModelDto;
 
 import java.util.List;
@@ -40,7 +39,12 @@ public class SqlGenerator {
         return dataType;
     }
 
-    protected static String createPrimaryKeyConstraint(RelationalModelDto.DrawBoardContent.TableDTO table){
+    private static String createColumnDefinition(RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO column){
+        return SqlUtil.getSpaceLessDisplayName("\t" + column.getDisplayName()) + " " + getDataType(column).sqlType + ",\n";
+    }
+
+
+    private static String createPrimaryKeyConstraint(RelationalModelDto.DrawBoardContent.TableDTO table){
 
         StringBuilder primaryKeyConstraint = new StringBuilder();
         primaryKeyConstraint.append("\tPRIMARY KEY (");
@@ -48,45 +52,42 @@ public class SqlGenerator {
         boolean firstTime = true;
         for(var column : table.getColumns()){
             if(column.isPrimaryKey() && firstTime) {
-                primaryKeyConstraint.append(getSpaceLessDisplayName(column.getDisplayName()));
+
+                primaryKeyConstraint.append(SqlUtil.getSpaceLessDisplayName(column.getDisplayName()));
                 firstTime = false;
+
             }
             else if(column.isPrimaryKey())
+
                 primaryKeyConstraint.
                         append(",").
-                        append(getSpaceLessDisplayName(column.getDisplayName()));
+                        append(SqlUtil.getSpaceLessDisplayName(column.getDisplayName()));
         }
 
         primaryKeyConstraint.append("),\n");
         return primaryKeyConstraint.toString();
     }
 
-    protected static String createForeignKeyConstraint(RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO column,
+    private static String createForeignKeyConstraint(RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO column,
                                                        List<RelationalModelDto.DrawBoardContent.TableDTO> tables){
 
         StringBuilder foreignKeyConstraint = new StringBuilder();
         if(column.isForeignKey()){
-            var referencedTable = Controller.GetTableForId(tables, column.getForeignKeyReferencedId());
-            var referencedColumn = Controller.GetColumnForId(referencedTable, column.getForeignKeyReferencedId());
+            var referencedTable = SqlUtil.GetTableForId(tables, column.getForeignKeyReferencedId());
+            var referencedColumn = SqlUtil.GetColumnForId(referencedTable, column.getForeignKeyReferencedId());
+
             foreignKeyConstraint.
                     append("\tFOREIGN KEY (").
-                    append(getSpaceLessDisplayName(column.getDisplayName())).
+                    append(SqlUtil.getSpaceLessDisplayName(column.getDisplayName())).
                     append(") REFERENCES [").
-                    append(getSpaceLessDisplayName(referencedTable.getDisplayName())).
+                    append(SqlUtil.getSpaceLessDisplayName(referencedTable.getDisplayName())).
                     append("].").
-                    append(getSpaceLessDisplayName(referencedColumn.getDisplayName())).
+                    append(SqlUtil.getSpaceLessDisplayName(referencedColumn.getDisplayName())).
                     append(",\n");
         }
 
         return foreignKeyConstraint.toString();
     }
 
-    protected static String createColumnDefinition(RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO column){
-        return getSpaceLessDisplayName("\t" + column.getDisplayName()) + " " + getDataType(column).sqlType + ",\n";
-    }
-
-    protected static String getSpaceLessDisplayName(String displayName){
-        return displayName.replace(" ", "_");
-    }
 
 }
