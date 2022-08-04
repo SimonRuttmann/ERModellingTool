@@ -47,13 +47,13 @@ public class TransformIsAStructureService implements ITransformIsAStructureServi
 
     private void transformIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure) {
 
-        var parent = ResolveParentOfIsAStructure(isAStructure);
+        var parent = resolveParentOfIsAStructure(isAStructure);
 
         //Get connected isA`s
-        var connectedElements = ResolveElementsConnectionToEntity(parent);
+        var connectedElements = resolveElementsConnectionToEntity(parent);
         var connectedIsA = connectedElements.stream().
                             filter(elements -> resolveErType(elements) == ErType.IsAStructure).
-                            filter(isAs -> ResolveParentOfIsAStructure(isAs) != parent);
+                            filter(isAs -> resolveParentOfIsAStructure(isAs) != parent);
 
         var unhandledIsAs = connectedIsA.filter(this::isIsANotHandled).count();
 
@@ -62,10 +62,10 @@ public class TransformIsAStructureService implements ITransformIsAStructureServi
         if(unhandledIsAs > 0) return;
 
         //All isAs in the higher stages are resolved, therefore we can resolve this isa
-        var inheritors = ResolveInheritorsOfIsAStructure(isAStructure);
+        var inheritors = resolveInheritorsOfIsAStructure(isAStructure);
 
         inheritors.forEach(entity ->
-                tableManager.AddForeignKeysAsPrimaryKeys(parent, entity));
+                tableManager.addForeignKeysAsPrimaryKeys(parent, entity));
 
         isAStructure.getNodeData().getTreeData().setTransformed(true);
 

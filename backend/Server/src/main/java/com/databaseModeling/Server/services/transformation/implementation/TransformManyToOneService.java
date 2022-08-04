@@ -66,20 +66,19 @@ public class TransformManyToOneService implements ITransformManyToOneService {
 
             var relationData = resolveErData(relation);
 
-            tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-            tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+            tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+            tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
 
             relationData.setTransformed(true);
             return;
         }
 
 
-        tableManager.MergeTables(manyNode, relation);
-        tableManager.AddForeignKeysAsNormalColumn(singleNode, manyNode);
+        tableManager.mergeTables(manyNode, relation);
+        tableManager.addForeignKeysAsNormalColumn(singleNode, manyNode);
 
         var relationData = resolveErData(relation);
         relationData.setTransformed(true);
-        tableManager.removeTable(relationData);
     }
 
 

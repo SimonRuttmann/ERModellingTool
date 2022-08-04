@@ -67,7 +67,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
         var isReferenceTransformedWeakEntityTable = table.getReferencedIdentifyingTable().isTransformed();
         
         if(isReferenceStrongEntityTable || isReferenceTransformedWeakEntityTable){
-            tableManager.AddForeignKeysToTableAsPrimaryKeys(table.getReferencedIdentifyingTable(), table);
+            tableManager.addForeignKeysToTableAsPrimaryKeys(table.getReferencedIdentifyingTable(), table);
             table.setTransformed(true);
         }
 
@@ -117,7 +117,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
         var identifyingEntitiesRelations = createNodeMap();
 
         for (var identifyingRelation : identifyingRelations) {
-            var connectedOtherEntity = ResolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation).get(0);
+            var connectedOtherEntity = resolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation).get(0);
             identifyingEntitiesRelations.put(connectedOtherEntity, identifyingRelation);
         }
 
@@ -146,7 +146,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
             weakEntityData.getTable().setReferencedIdentifyingTable(identifyingEntityData.getTable());
 
             //Merge relation into weak entity
-            tableManager.MergeTables(weakEntity, identifyingRelation);
+            tableManager.mergeTables(weakEntity, identifyingRelation);
 
             resolveErData(identifyingRelation).setTransformed(true);
             break;
@@ -162,7 +162,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
     private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
             ResolveIdentifyingRelations(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
 
-        var relations = ResolveRelationsOfEntity(weakEntity);
+        var relations = resolveRelationsOfEntity(weakEntity);
 
         return  relations.
                 stream().
@@ -186,7 +186,7 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
                                                         GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> identifyingRelation)
                                                         throws NoSuchElementException
     {
-        var entities = ResolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation);
+        var entities = resolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation);
 
         return entities.stream().findFirst().orElseThrow();
     }

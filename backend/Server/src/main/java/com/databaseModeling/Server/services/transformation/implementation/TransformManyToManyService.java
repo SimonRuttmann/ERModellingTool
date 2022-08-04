@@ -8,7 +8,7 @@ import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 import com.databaseModeling.Server.model.relationalModel.TableManager;
 import com.databaseModeling.Server.services.transformation.interfaces.ITransformManyToManyService;
 
-import static com.databaseModeling.Server.services.util.ErUtil.ResolveEntitiesConnectedToRelation;
+import static com.databaseModeling.Server.services.util.ErUtil.resolveEntitiesConnectedToRelation;
 import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRelations;
 
 public class TransformManyToManyService implements ITransformManyToManyService {
@@ -33,10 +33,10 @@ public class TransformManyToManyService implements ITransformManyToManyService {
 
         if(! isManyToMany(relation)) return;
 
-        var entities = ResolveEntitiesConnectedToRelation(relation);
+        var entities = resolveEntitiesConnectedToRelation(relation);
 
         entities.forEach(entity ->
-                tableManager.AddForeignKeysAsPrimaryKeys(entity,relation));
+                tableManager.addForeignKeysAsPrimaryKeys(entity,relation));
 
         relation.getNodeData().getTreeData().setTransformed(true);
     }

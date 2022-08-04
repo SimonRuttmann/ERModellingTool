@@ -56,15 +56,15 @@ public class TransformOneToOneService implements ITransformOneToOneService {
 
             if(resolveErData(relation).isShouldBeMerged()){
 
-                tableManager.MergeTables(nodeOfFirstEge, relation);
-                tableManager.AddForeignKeysAsNormalColumn(nodeOfFirstEge, nodeOfFirstEge);
+                tableManager.mergeTables(nodeOfFirstEge, relation);
+                tableManager.addForeignKeysAsNormalColumn(nodeOfFirstEge, nodeOfFirstEge);
 
                 tableManager.removeTable(relationData);
             }
             else{
 
-                tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-                tableManager.AddForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+                tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+                tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
 
             }
 
@@ -97,9 +97,9 @@ public class TransformOneToOneService implements ITransformOneToOneService {
         }
 
         //Merge relation into owning node
-        tableManager.MergeTables(owningNode, relation);
+        tableManager.mergeTables(owningNode, relation);
         //Add foreign keys to the owning node
-        tableManager.AddForeignKeysAsNormalColumn(nodeToReference, owningNode);
+        tableManager.addForeignKeysAsNormalColumn(nodeToReference, owningNode);
 
         var relationData = resolveErData(relation);
         relationData.setTransformed(true);

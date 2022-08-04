@@ -159,7 +159,7 @@ public class TransformAttributesService implements ITransformAttributesService {
 
         for(var childTable : referencedTables){
 
-            tableManager.AddForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
+            tableManager.addForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
 
             updateReferences(childTable);
         }
