@@ -10,8 +10,6 @@ public class ElementMetaInformationFactory {
 
         metaInformation.setXPos(element.getX());
         metaInformation.setYPos(element.getY());
-        metaInformation.setHeight(element.getHeight());
-        metaInformation.setWidth(element.getWidth());
         metaInformation.setDisplayName(element.getDisplayName());
 
         return metaInformation;

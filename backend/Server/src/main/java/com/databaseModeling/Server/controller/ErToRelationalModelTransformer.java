@@ -2,7 +2,6 @@ package com.databaseModeling.Server.controller;
 
 import com.databaseModeling.Server.model.ErTreeGraphFactory;
 import com.databaseModeling.Server.model.TableDtoFactory;
-import com.databaseModeling.Server.model.ValidationResult;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
@@ -55,7 +54,7 @@ public class ErToRelationalModelTransformer {
 
         tableCreatorService.createTables(graph);
 
-        cardinalityResolverService.ResolveCardinalities(graph, new ValidationResult());
+        cardinalityResolverService.ResolveCardinalities(graph);
 
         return graph;
     }

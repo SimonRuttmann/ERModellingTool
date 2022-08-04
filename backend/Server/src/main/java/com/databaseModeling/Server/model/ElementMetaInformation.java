@@ -12,8 +12,6 @@ public class ElementMetaInformation {
 
     private double xPos;
     private double yPos;
-    private double height;
-    private double width;
     private String displayName;
 
     public String getDisplayName(){

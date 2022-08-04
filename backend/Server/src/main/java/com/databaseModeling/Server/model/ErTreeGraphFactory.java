@@ -177,7 +177,7 @@ public class ErTreeGraphFactory {
         return new EntityRelationAssociation(
                 connection.getMin(),
                 connection.getMax(),
-                connection.getAssociationType());
+                connection.getConnectionType());
     }
 
 
