@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.databaseModeling.Server.services.util.ErUtil.*;
+
 @RestController
 public class Controller {
 
@@ -48,8 +50,15 @@ public class Controller {
         System.out.println(type.getDrawBoardContent().getElements().size());
         var validationResult = new ValidationResult();
 
+        var tableManager = new TableManager();
+
         //Create graph
         var graph = ErTreeGraphFactory.createGraph(type.getDrawBoardContent());
+
+        for(var node : graph.graphNodes){
+            var table = tableManager.createTable(resolveErType(node), resolveMetaInformation(node));
+            resolveErData(node).addInitialTable(table);
+        }
 
         //Resolve associations
         ICardinalityResolverService cardinalityResolverService = new CardinalityResolverService();
@@ -58,31 +67,31 @@ public class Controller {
         //TRANSFORMATION
 
         //Transform attributes by object references
-        ITransformAttributesService transformAttributesService = new TransformAttributesService();
+        ITransformAttributesService transformAttributesService = new TransformAttributesService(tableManager);
         transformAttributesService.transformAttributes(graph);
 
-        var tables = TableManager.getTableRegister();
+        var tables = tableManager.getTables();
 
-            var isaStructureService = new TransformIsAStructureService();
+            var isaStructureService = new TransformIsAStructureService(tableManager);
             isaStructureService.transformIsAStructures(graph);
 
             //Transform weak entities by object reference
-            ITransformWeakTypesService weakTypesService = new TransformWeakTypesService();
+            ITransformWeakTypesService weakTypesService = new TransformWeakTypesService(tableManager);
             weakTypesService.transformWeakTypes(graph);
 
             //Create and cascade primary keys of weak entities
             weakTypesService.generateIdentifyingPrimaryKeys(graph);
 
             //Transform one to one
-            var oneToOneService = new TransformOneToOneService();
+            var oneToOneService = new TransformOneToOneService(tableManager);
             oneToOneService.transformOneToOneRelations(graph);
 
             //Transform many to one
-            var manyToOneService = new TransformManyToOneService();
+            var manyToOneService = new TransformManyToOneService(tableManager);
             manyToOneService.transformManyToOneRelations(graph);
 
             //Transform many to many
-            var manyToManyService = new TransformManyToManyService();
+            var manyToManyService = new TransformManyToManyService(tableManager);
             manyToManyService.transformManyToManyRelations(graph);
 
         //Create and cascade primary keys of attributes
@@ -90,7 +99,7 @@ public class Controller {
 
         var response = new RelationalModelDto();
         var content = new RelationalModelDto.DrawBoardContent();
-        content.setTables(TableDtoFactory.createTableDto(TableManager.getTableRegister()));
+        content.setTables(TableDtoFactory.createTableDto(tableManager.getTables()));
         response.setDrawBoardContent(content);
         response.setProjectName(type.getProjectName());
         response.setProjectVersion(type.getProjectVersion());
@@ -98,7 +107,7 @@ public class Controller {
 
         System.out.println(response);
         System.out.println(response.getDrawBoardContent().getTables().size());
-        System.out.println(TableManager.getTableRegister().size());
+        System.out.println(tableManager.getTables().size());
 
 
         AtomicLong connectionIdCounter = new AtomicLong();
@@ -119,10 +128,8 @@ public class Controller {
         }
 
         content.setConnections(connectionDTOList);
-        TableManager.getTableRegister().clear();
 
-
-
+        tableManager.clear();
 
         return response;
     }
