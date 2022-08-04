@@ -1,54 +1,57 @@
 package com.databaseModeling.Server.model.relationalModel;
 
 import com.databaseModeling.Server.model.ElementMetaInformation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
+import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
+import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+
+import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
 
 public class TableManager {
 
-    private static final AtomicLong tableIdCounter = new AtomicLong();
+    public TableManager(){
+        tableRegister = new TableRegister();
+    }
 
-    private static final List<Table> tableRegister = new ArrayList<>();
-    public static Table createTable(ErType erType, ElementMetaInformation elementMetaInformation){
+    private final TableRegister tableRegister;
 
-        if(erType == ErType.IsAStructure) return null;
+    /**
+     * Creates a new table instance based on the entity relationship element
+     * and adds the table to an intern register
+     * @param erType The entity relationship element to create a table for
+     * @param elementMetaInformation Additional meta information which will be added to the table
+     */
+    public Table createTable(ErType erType, ElementMetaInformation elementMetaInformation){
+        return TableFactory.createTable(erType, elementMetaInformation, tableRegister);
+    }
 
-        var tableId = generateTableId();
-        Table table = new Table(tableId, elementMetaInformation);
-        table.setOriginDisplayName(elementMetaInformation.getDisplayName());
-        tableRegister.add(table);
+    /**
+     * @return All registered tables
+     */
+    public List<Table> getTables(){
+        return tableRegister.receiveRegisteredTables();
+    }
 
-        var columnId = generateColumnId(table);
-        Column column = new Column();
-        column.setId(columnId);
-        column.setOriginDisplayName(elementMetaInformation.getDisplayName());
+    /**
+     * Removes the table from the intern register
+     * @param entityRelationElement The entity relationship element to remove the table from
+     */
+    public void removeTable(EntityRelationElement entityRelationElement){
+        tableRegister.unregisterTable(entityRelationElement.getTable());
+        entityRelationElement.removeTable();
+    }
 
-        if(erType == ErType.WeakEntity) table.setWeakEntityTable(true);
+    public void clear(){
+        tableRegister.clearRegister();
+    }
 
-        //If it is no attribute, we return the table without columns
-        switch (erType){
-            case StrongEntity:
-            case WeakEntity:
-            case StrongRelation:
-            case WeakRelation:
-                return table;
-        }
 
-        //Mark column as primary key
-        switch (erType){
-            case IdentifyingAttribute:
-            case WeakIdentifyingAttribute:  column.getKey().setIsPrimaryKey(true);
-        }
-
-        table.addColumn(column);
-
-        return table;
+    public void addColumns(Table table, List<Column> columns) {
+        columns.forEach(table::addColumn);
     }
 
     /**
@@ -56,7 +59,7 @@ public class TableManager {
      * The foreign keys will be primary keys
      * @see TableManager#AddForeignKeysToTable(Table, Table, boolean)
      */
-    public static void AddForeignKeysToTableAsPrimaryKeys(Table referencedTable, Table referencingTable){
+    public void AddForeignKeysToTableAsPrimaryKeys(Table referencedTable, Table referencingTable){
         AddForeignKeysToTable(referencedTable, referencingTable, true);
     }
 
@@ -65,7 +68,7 @@ public class TableManager {
      * The foreign keys will be normal columns
      * @see TableManager#AddForeignKeysToTable(Table, Table, boolean)
      */
-    public static void AddForeignKeysToTableAsNormalColumn(Table referencedTable, Table referencingTable){
+    public void AddForeignKeysToTableAsNormalColumn(Table referencedTable, Table referencingTable){
         AddForeignKeysToTable(referencedTable, referencingTable, false);
     }
 
@@ -79,12 +82,12 @@ public class TableManager {
      * @see Table
      * @see Column
      */
-    private static void AddForeignKeysToTable(Table referencedTable, Table referencingTable, boolean withPrimaryKey){
+    private void AddForeignKeysToTable(Table referencedTable, Table referencingTable, boolean withPrimaryKey){
 
         for (var primaryKey : referencedTable.getPrimaryKeys()) {
 
             Column column = new Column();
-            column.setId(generateColumnId(referencingTable));
+            column.setId(TableFactory.generateColumnId(referencingTable.getId(), referencingTable.getColumns().size()));
             column.setOriginDisplayName(primaryKey.getOriginDisplayName());
 
             column.getKey().setIsForeignKey(true);
@@ -95,32 +98,39 @@ public class TableManager {
         }
     }
 
+    public void AddForeignKeysAsNormalColumn( GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
+                                                     GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
 
-    private static String generateTableId(){
-        return tableIdCounter.getAndIncrement() + "-- Table";
-    }
+        var referencedTable = resolveErData(referencedNode).getTable();
+        var referencingTable = resolveErData(referencingNode).getTable();
+        AddForeignKeysToTableAsNormalColumn(referencedTable, referencingTable);
 
-    private static String generateColumnId(Table table){
-        return table.getId() + " -- Column" + table.getColumns().size();
-    }
-
-    public static void AddColumns(Table table, List<Column> columns) {
-        columns.forEach(table::addColumn);
     }
 
 
-    public static void unregisterTable(Table table){
-        tableRegister.remove(table);
+    public void AddForeignKeysAsPrimaryKeys ( GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
+                                              GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
+
+        var referencedTable = resolveErData(referencedNode).getTable();
+        var referencingTable = resolveErData(referencingNode).getTable();
+        AddForeignKeysToTableAsPrimaryKeys(referencedTable, referencingTable);
+
     }
 
-    public static List<Table> getTableRegister(){
-        return tableRegister;
+
+    public void MergeTables(
+            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> owningNode,
+            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> nodeToMerge){
+
+        var tableToMerge = resolveErData(nodeToMerge).getTable();
+        var referencingTables = tableToMerge.getReferencesToChildAttributeTables();
+
+        var owningTable = resolveErData(owningNode).getTable();
+        owningTable.addAllReferencesToChildAttributeTable(referencingTables);
+
+        addColumns(owningTable, tableToMerge.getColumns());
+        resolveErData(nodeToMerge).removeTable();
     }
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class IdName<T,V> {
-        private T id;
-        private V name;
-    }
+
+
 }
