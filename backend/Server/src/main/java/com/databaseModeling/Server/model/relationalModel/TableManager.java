@@ -45,10 +45,6 @@ public class TableManager {
         entityRelationElement.removeTable();
     }
 
-    public void clear(){
-        tableRegister.clearRegister();
-    }
-
 
     public void addColumns(Table table, List<Column> columns) {
         columns.forEach(table::addColumn);
@@ -57,19 +53,19 @@ public class TableManager {
     /**
      * Creates foreign keys, referencing the primary keys of the table
      * The foreign keys will be primary keys
-     * @see TableManager#AddForeignKeysToTable(Table, Table, boolean)
+     * @see TableManager#addForeignKeysToTable(Table, Table, boolean)
      */
-    public void AddForeignKeysToTableAsPrimaryKeys(Table referencedTable, Table referencingTable){
-        AddForeignKeysToTable(referencedTable, referencingTable, true);
+    public void addForeignKeysToTableAsPrimaryKeys(Table referencedTable, Table referencingTable){
+        addForeignKeysToTable(referencedTable, referencingTable, true);
     }
 
     /**
      * Creates foreign keys, referencing the primary keys of the table
      * The foreign keys will be normal columns
-     * @see TableManager#AddForeignKeysToTable(Table, Table, boolean)
+     * @see TableManager#addForeignKeysToTable(Table, Table, boolean)
      */
-    public void AddForeignKeysToTableAsNormalColumn(Table referencedTable, Table referencingTable){
-        AddForeignKeysToTable(referencedTable, referencingTable, false);
+    public void addForeignKeysToTableAsNormalColumn(Table referencedTable, Table referencingTable){
+        addForeignKeysToTable(referencedTable, referencingTable, false);
     }
 
 
@@ -82,7 +78,7 @@ public class TableManager {
      * @see Table
      * @see Column
      */
-    private void AddForeignKeysToTable(Table referencedTable, Table referencingTable, boolean withPrimaryKey){
+    private void addForeignKeysToTable(Table referencedTable, Table referencingTable, boolean withPrimaryKey){
 
         for (var primaryKey : referencedTable.getPrimaryKeys()) {
 
@@ -98,27 +94,27 @@ public class TableManager {
         }
     }
 
-    public void AddForeignKeysAsNormalColumn( GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
-                                                     GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
+    public void addForeignKeysAsNormalColumn(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
+                                             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
 
         var referencedTable = resolveErData(referencedNode).getTable();
         var referencingTable = resolveErData(referencingNode).getTable();
-        AddForeignKeysToTableAsNormalColumn(referencedTable, referencingTable);
+        addForeignKeysToTableAsNormalColumn(referencedTable, referencingTable);
 
     }
 
 
-    public void AddForeignKeysAsPrimaryKeys ( GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
-                                              GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
+    public void addForeignKeysAsPrimaryKeys(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
+                                            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
 
         var referencedTable = resolveErData(referencedNode).getTable();
         var referencingTable = resolveErData(referencingNode).getTable();
-        AddForeignKeysToTableAsPrimaryKeys(referencedTable, referencingTable);
+        addForeignKeysToTableAsPrimaryKeys(referencedTable, referencingTable);
 
     }
 
 
-    public void MergeTables(
+    public void mergeTables(
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> owningNode,
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> nodeToMerge){
 
@@ -129,7 +125,7 @@ public class TableManager {
         owningTable.addAllReferencesToChildAttributeTable(referencingTables);
 
         addColumns(owningTable, tableToMerge.getColumns());
-        resolveErData(nodeToMerge).removeTable();
+        removeTable(nodeToMerge.getNodeData().getTreeData());
     }
 
 
