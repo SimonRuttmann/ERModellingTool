@@ -5,59 +5,54 @@ import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssocia
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;
-import com.databaseModeling.Server.model.dataStructure.graph.GraphEdge;
 import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 import java.util.List;
 
-public class ErUtil { //Extends ISAUtil, RelationUtil, EntityUtil
+/**
+ * This class holds a collection of methods to traverse a given Er-graph more easily
+ * The implementation of specific ER-Elements can be found in
+ * @see ErEntityUtil
+ * @see ErIsAUtil
+ * @see ErRelationUtil
+ */
+public class ErUtil {
 
-    public static String resolveAssociationQualifiedName(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> edge){
-
-        var sourceDesc = resolveErTypeQualifiedName(edge.getSource());
-        var destDesc = resolveErTypeQualifiedName(edge.getDestination());
-
-        return "Association from " + sourceDesc + " to " + destDesc;
-    }
-
-    public static String resolveErTypeQualifiedName(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
-
-        var erData = resolveErData(erElement);
-        return erData.getErType().displayName + " with name " +erData.getElementMetaInformation().getDisplayName();
-    }
-
+    /**
+     * Shortcut to receive the erType for a node element
+     */
     public static ErType resolveErType(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
         return resolveErData(erElement).getErType();
     }
 
+    /**
+     * Shortcut to receive the erType for a tree element
+     */
     public static ErType resolveErType(TreeNode<EntityRelationElement> erElement){
         return erElement.getTreeData().getErType();
     }
 
-    public static ElementMetaInformation resolveMetaInformation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
-        return resolveErData(erElement).getElementMetaInformation();
-    }
-
+    /**
+     * Shortcut to receive the meta information for a tree element
+     */
     public static ElementMetaInformation resolveMetaInformation(TreeNode<EntityRelationElement> erElement){
         return erElement.getTreeData().getElementMetaInformation();
     }
 
+    /**
+     * Shortcut to receive the element data for a node element
+     */
     public static EntityRelationElement resolveErData(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
-
         return erElement.getNodeData().getTreeData();
     }
 
 
+    /**
+     * Shortcut to receive the element data for a tree element
+     */
     public static EntityRelationElement resolveErData(TreeNode<EntityRelationElement> erElement){
         return erElement.getTreeData();
-    }
-
-
-    public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
-    resolveEntityById(String id, Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
-
-        return ErEntityUtil.resolveEntityById(id, erGraph);
     }
 
     /**
@@ -116,7 +111,6 @@ public class ErUtil { //Extends ISAUtil, RelationUtil, EntityUtil
         return ErEntityUtil.resolveElementsConnectionToEntity(entity);
     }
 
-
     /**
      * Resolves all inheritors of the given IsA Structure
      * @param isAStructure The IsA Structure to query for
@@ -127,8 +121,6 @@ public class ErUtil { //Extends ISAUtil, RelationUtil, EntityUtil
 
         return ErIsAUtil.resolveInheritorsOfIsAStructure(isAStructure);
     }
-
-    //TODO VALIDATION IF ISA HAS NO BASE
 
     /**
      * Resolves the base entity of the given IsA Structure
@@ -141,24 +133,24 @@ public class ErUtil { //Extends ISAUtil, RelationUtil, EntityUtil
         return ErIsAUtil.resolveParentOfIsAStructure(isAStructure);
     }
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    resolveRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        return ErRelationUtil.resolveRelations(erGraph);
-    }
-
+    /**
+     * Resolves all nodes which represent strong relations
+     * @param erGraph The graph to query for
+     * @return A list of nodes representing strong relations
+     */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveStrongRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         return ErRelationUtil.resolveStrongRelations(erGraph);
     }
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    resolveRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
-
-        return ErRelationUtil.resolveRelationsOfDeg2(erGraph);
-    }
-
+    /**
+     * Resolves all nodes which represent strong relations and have a degree of 2,
+     * e.g. are connected to exactly 2 other entities
+     * @param erGraph The graph to query for
+     * @return A list of nodes representing strong relations with degree of 2
+     */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveStrongRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 

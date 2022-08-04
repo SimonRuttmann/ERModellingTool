@@ -14,7 +14,7 @@ import static com.databaseModeling.Server.services.util.ErUtil.resolveErType;
 
 public class ErRelationUtil {
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    protected static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         return erGraph.graphNodes.
@@ -25,7 +25,7 @@ public class ErRelationUtil {
 
     }
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    protected static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveStrongRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         return resolveRelations(erGraph).stream().
@@ -34,7 +34,7 @@ public class ErRelationUtil {
 
     }
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    private static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         return resolveRelations(erGraph).stream().
@@ -43,7 +43,7 @@ public class ErRelationUtil {
 
     }
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    protected static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveStrongRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         return resolveRelationsOfDeg2(erGraph).stream().

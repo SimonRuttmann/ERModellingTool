@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class ErIsAUtil {
 
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    protected static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveTypesConnectedToIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure, AssociationType type){
 
         return  isAStructure.
@@ -22,23 +22,13 @@ public class ErIsAUtil {
                 collect(Collectors.toList());
     }
 
-    /**
-     * Resolves all inheritors of the given IsA Structure
-     * @param isAStructure The IsA Structure to query for
-     * @return All inheritors of the isA Structure
-     */
-    public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    protected static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveInheritorsOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
         return  resolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Inheritor);
     }
 
-    /**
-     * Resolves the base entity of the given IsA Structure
-     * @param isAStructure The IsA Structure to query for
-     * @return The parent of the isA Structure
-     */
-    public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
+    protected static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
     resolveParentOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
         return  resolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Parent).stream().findFirst().orElseThrow();
