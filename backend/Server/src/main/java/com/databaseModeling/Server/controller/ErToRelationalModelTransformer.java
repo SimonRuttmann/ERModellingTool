@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * This class is responsible for managing the entire transformation of an entity relationship model to a relational model
+ */
 public class ErToRelationalModelTransformer {
 
     private final TableManager tableManager;
@@ -39,6 +42,11 @@ public class ErToRelationalModelTransformer {
     }
 
 
+    /**
+     * Executes the transformation of the entity relationship model to the relational model
+     * @param conceptionalModelDto The conceptional dto to transform
+     * @return A dto representation of the relational model
+     */
     public RelationalModelDto transform(ConceptionalModelDto conceptionalModelDto){
 
         var graph = buildErGraph(conceptionalModelDto.getDrawBoardContent());
@@ -49,7 +57,14 @@ public class ErToRelationalModelTransformer {
     }
 
 
+    /**
+     * Converts a drawBoardContent object to an Er graph, containing all information required for transformation
+     * This includes a table to each graph node and tree node and all cardinality information on the edge nodes
+     * @param drawBoardContent The drawBoardContent to convert
+     * @return The Er graph
+     */
     private Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> buildErGraph(ConceptionalModelDto.DrawBoardContent drawBoardContent){
+
         var graph = ErTreeGraphFactory.createGraph(drawBoardContent);
 
         tableCreatorService.createTables(graph);
@@ -59,11 +74,21 @@ public class ErToRelationalModelTransformer {
         return graph;
     }
 
+    /**
+     * Creates a relational model based on the tables connected to each graph and tree node
+     * The execution alters the tables registered in the tableManager
+     * @param erGraph The Er graph containing all Er elements, tables and cardinalities
+     */
     private void executeTransformation(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation>  erGraph){
+
+        //This execution order is fixed and cannot be altered
+        //This is to ensure that all primary keys for an algorithm are present
+        //Each algorithm alters the tables referenced by each graph and tree node
 
         //Transform attributes by object references
         transformAttributesService.transformAttributes(erGraph);
 
+        //Transform isa structures
         transformIsAStructureService.transformIsAStructures(erGraph);
 
         //Transform weak entities by object reference
@@ -86,6 +111,11 @@ public class ErToRelationalModelTransformer {
 
     }
 
+    /**
+     * Packs the relational model into a dto and adds meta information based on the given conceptional model dto
+     * @param conceptionalModelDto The conceptional model dto the transformation was executed on
+     * @return A relational model dto
+     */
     private RelationalModelDto buildResult(ConceptionalModelDto conceptionalModelDto){
 
         var response = new RelationalModelDto();

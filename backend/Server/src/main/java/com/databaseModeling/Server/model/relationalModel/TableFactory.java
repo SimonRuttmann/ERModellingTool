@@ -27,7 +27,7 @@ public class TableFactory {
         var columnId = generateColumnId(registerId, table.getColumns().size());
         Column column = new Column();
         column.setId(columnId);
-        column.setOriginDisplayName(elementMetaInformation.getDisplayName());
+        column.setColumnName(elementMetaInformation.getDisplayName());
 
         if(erType == ErType.WeakEntity) table.setWeakEntityTable(true);
 

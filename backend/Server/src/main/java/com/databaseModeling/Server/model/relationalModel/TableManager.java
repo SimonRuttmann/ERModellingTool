@@ -17,6 +17,9 @@ public class TableManager {
         tableRegister = new TableRegister();
     }
 
+    /**
+     * Register which holds all tables created by this table manager instance
+     */
     private final TableRegister tableRegister;
 
     /**
@@ -45,7 +48,11 @@ public class TableManager {
         entityRelationElement.removeTable();
     }
 
-
+    /**
+     * Adds a collection of columns to the table
+     * @param table The table to add columns to
+     * @param columns The columns to add
+     */
     public void addColumns(Table table, List<Column> columns) {
         columns.forEach(table::addColumn);
     }
@@ -61,13 +68,12 @@ public class TableManager {
 
     /**
      * Creates foreign keys, referencing the primary keys of the table
-     * The foreign keys will be normal columns
+     * The foreign keys will be normal columns, no primary key columns
      * @see TableManager#addForeignKeysToTable(Table, Table, boolean)
      */
     public void addForeignKeysToTableAsNormalColumn(Table referencedTable, Table referencingTable){
         addForeignKeysToTable(referencedTable, referencingTable, false);
     }
-
 
     /**
      * Creates for each primary key of the referenced table a foreign key in the referencing table
@@ -75,8 +81,6 @@ public class TableManager {
      * @param referencedTable The table which need to be referenced to
      * @param referencingTable The table which references the given table
      * @param withPrimaryKey If true, all created foreign keys will be primary keys in the referencing table
-     * @see Table
-     * @see Column
      */
     private void addForeignKeysToTable(Table referencedTable, Table referencingTable, boolean withPrimaryKey){
 
@@ -84,7 +88,7 @@ public class TableManager {
 
             Column column = new Column();
             column.setId(TableFactory.generateColumnId(referencingTable.getId(), referencingTable.getColumns().size()));
-            column.setOriginDisplayName(primaryKey.getOriginDisplayName());
+            column.setColumnName(primaryKey.getColumnName());
 
             column.getKey().setIsForeignKey(true);
             column.getKey().setReferencesId(primaryKey.getId());
@@ -94,6 +98,10 @@ public class TableManager {
         }
     }
 
+    /**
+     * Convenient method to add the foreign keys of the graph nodes tables directly as normal, not primary key, columns
+     * @see TableManager#addForeignKeysToTableAsNormalColumn(Table, Table)
+     */
     public void addForeignKeysAsNormalColumn(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
                                              GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
 
@@ -103,7 +111,10 @@ public class TableManager {
 
     }
 
-
+    /**
+     * Convenient method to add the foreign keys of the graph nodes tables directly as primary key columns
+     * @see TableManager#addForeignKeysToTableAsPrimaryKeys(Table, Table)
+     */
     public void addForeignKeysAsPrimaryKeys(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencedNode,
                                             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> referencingNode){
 
@@ -113,7 +124,12 @@ public class TableManager {
 
     }
 
-
+    /**
+     * Merges to tables of given graph nodes by adding all columns of the table to merge into the owning table
+     * The referenced tables of the table to merge will be added to the references of the owning table
+     * @param owningNode The node, which table will receive all columns and references of the table to merge
+     * @param nodeToMerge The node, which table will be merged into the owning nodes table
+     */
     public void mergeTables(
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> owningNode,
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> nodeToMerge){

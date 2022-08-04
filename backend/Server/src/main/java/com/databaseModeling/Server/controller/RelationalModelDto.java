@@ -8,7 +8,12 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This data transfer object represents the relational model
+ * It represents the interface for the controller http endpoints
+ * @see Controller#convertToRelational(ConceptionalModelDto)
+ * @see Controller#convertToSql(RelationalModelDto)
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

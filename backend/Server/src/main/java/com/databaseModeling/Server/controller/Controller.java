@@ -19,6 +19,11 @@ public class Controller {
     }
 
 
+    /**
+     * Endpoint to convert an entity relationship model to a relational model
+     * @param type The entity relationship model
+     * @return The relational model
+     */
     @PostMapping("/convert/relational")
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     public RelationalModelDto convertToRelational(
@@ -32,6 +37,11 @@ public class Controller {
 
     }
 
+    /**
+     * Endpoint to generate sql from a relational model
+     * @param type The relational model
+     * @return The generated sql
+     */
     @PostMapping("/convert/sql")
     @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
     public String convertToSql(

@@ -5,33 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+/**
+ * Data representation of a column in a table
+ * Columns are explicit created by the table manager (and its factory)
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public final class Column {
 
     private String id;
-    private String originDisplayName;
-    private String newDisplayName;
+    private String columnName;
 
     private Key key = new Key(false, false, null);
-
-    public boolean isForeignKey(){
-        return key.isForeignKey;
-    }
-
-    public boolean isPrimaryKey(){
-        return key.isPrimaryKey;
-    }
-
-    public Key getKey(){
-        return key;
-    }
-
-    public Column(String id, String originDisplayName, Key key) {
-        this.originDisplayName = originDisplayName;
-        this.key = key;
-    }
+    public Key getKey(){return key;}
+    public boolean isForeignKey(){return key.isForeignKey;}
+    public boolean isPrimaryKey(){return key.isPrimaryKey;}
 
     @Data
     @NoArgsConstructor

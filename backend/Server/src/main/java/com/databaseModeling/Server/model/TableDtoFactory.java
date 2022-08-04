@@ -27,7 +27,7 @@ public class TableDtoFactory {
     private static RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO createColumnDto(Column column){
         var dto = new RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO();
         dto.setId(column.getId());
-        dto.setDisplayName(column.getOriginDisplayName());
+        dto.setDisplayName(column.getColumnName());
         dto.setPrimaryKey(column.isPrimaryKey());
         dto.setForeignKey(column.isForeignKey());
         dto.setForeignKeyReferencedId(column.getKey().getReferencesId());

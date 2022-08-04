@@ -9,16 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- *
- * First paragraph.
- * <p><ul>
- * <li>the first item
- * <li>the second item
- * <li>the third item
- * </ul><p>
- * Second paragraph.
- *
- * <p>abc</p>This class is representing the object received by the client
+ * This data transfer object represents the conceptional entity relationship model
+ * It represents the interface for the controller http endpoints
  * @see Controller#convertToRelational(ConceptionalModelDto)
  */
 @Data

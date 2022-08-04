@@ -14,6 +14,11 @@ public class TableRegister {
 
     private final AtomicLong tableIdCounter = new AtomicLong();
 
+    /**
+     * Registers the table and assigns it a unique id for this register
+     * @param table The table to register
+     * @return The assigned id
+     */
     public String registerTable(Table table){
         if(register.contains(table)) return null;
         var tableId = generateTableId();

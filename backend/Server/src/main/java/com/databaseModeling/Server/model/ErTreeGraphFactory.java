@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//TODO Performanceverbesserung
-// Halte für jedes Element eine HashSet mit <Id, Element>
-// Zugriff der Elemente über die Conenction start und end ids mittels der Hashsets!
+
+/**
+ * This class is responsible for the creation of an Er graph
+ */
 public class ErTreeGraphFactory {
 
     /**
@@ -91,7 +92,8 @@ public class ErTreeGraphFactory {
                 collect(Collectors.toList());
 
 
-        //Resolve attribute connectors
+        //Resolve attribute connectors by checking if the start or end point
+        //of the connection is not connected to any graph node
         var attributeConnectors = drawBoardContent.
                 getConnections().
                 stream().
@@ -116,7 +118,7 @@ public class ErTreeGraphFactory {
      * and starts recursion step with children
      * @param parent The current root element of the tree
      * @param connectors The remaining connections
-     * @param treeNodes All tree nodes TODO optimization possible! Use a hash set, also AttributeConnector is given!
+     * @param treeNodes All tree nodes
      */
     private static void orderTreeRecursive(
             TreeNode<EntityRelationElement> parent,

@@ -1,5 +1,9 @@
 package com.databaseModeling.Server.model.conceptionalModel;
 
+/**
+ * Represents the concrete type for an Er element
+ * Also hold information if the element is hold in a graph node or tree node
+ */
 public enum ErType {
     StrongEntity(true, "Strong Entity"),
     WeakEntity(true, "Weak Entity"),

@@ -1,15 +1,11 @@
 package com.databaseModeling.Server.model.conceptionalModel;
 
-//TODO durch die enum, kann die factory vereinfacht werden
+/**
+ * Represents the type of connection between two elements
+ */
 public enum AssociationType {
     Association,
     AttributeConnector,
     Inheritor,
     Parent
 }
-
-
-/*
-export const ConnectionType = {association: "association", inheritor: "inheritor", parent:"parent"}
-export const AssociationTypeDetails = {association: "association", attributeConnector: "attributeConnector"}
- */
