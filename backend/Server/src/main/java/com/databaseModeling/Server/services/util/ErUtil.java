@@ -1,7 +1,6 @@
 package com.databaseModeling.Server.services.util;
 
 import com.databaseModeling.Server.model.ElementMetaInformation;
-import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
@@ -11,9 +10,8 @@ import com.databaseModeling.Server.model.dataStructure.graph.GraphNode;
 import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
+public class ErUtil { //Extends ISAUtil, RelationUtil, EntityUtil
 
     public static String resolveAssociationQualifiedName(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> edge){
 
@@ -26,16 +24,23 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     public static String resolveErTypeQualifiedName(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
 
         var erData = resolveErData(erElement);
-
         return erData.getErType().displayName + " with name " +erData.getElementMetaInformation().getDisplayName();
     }
-    public static ErType resolveErType(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
 
+    public static ErType resolveErType(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
         return resolveErData(erElement).getErType();
+    }
+
+    public static ErType resolveErType(TreeNode<EntityRelationElement> erElement){
+        return erElement.getTreeData().getErType();
     }
 
     public static ElementMetaInformation resolveMetaInformation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
         return resolveErData(erElement).getElementMetaInformation();
+    }
+
+    public static ElementMetaInformation resolveMetaInformation(TreeNode<EntityRelationElement> erElement){
+        return erElement.getTreeData().getElementMetaInformation();
     }
 
     public static EntityRelationElement resolveErData(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> erElement){
@@ -44,12 +49,15 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
     }
 
 
-    //ENTITY UTIL
+    public static EntityRelationElement resolveErData(TreeNode<EntityRelationElement> erElement){
+        return erElement.getTreeData();
+    }
+
 
     public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
     resolveEntityById(String id, Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
 
-        return erGraph.graphNodes.stream().filter(node -> node.getId().equals(id)).findFirst().orElseThrow();
+        return ErEntityUtil.resolveEntityById(id, erGraph);
     }
 
     /**
@@ -58,15 +66,10 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
      * @return A list of graph nodes, representing the relations
      */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    ResolveRelationsOfEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
+    resolveRelationsOfEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
 
-        return  entity.
-                getEdges().
-                stream().
-                map(edge -> edge.getOtherSide(entity)).
-                collect(Collectors.toList());
+        return ErEntityUtil.resolveRelationsOfEntity(entity);
     }
-
 
     /**
      * Returns all entities connected to the relation
@@ -79,13 +82,9 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
      * @return A list of GraphNodes representing the entities
      */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    ResolveEntitiesConnectedToRelation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
+    resolveEntitiesConnectedToRelation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
 
-        return  relation.
-                getEdges().
-                stream().
-                map(edge -> edge.getOtherSide(relation)).
-                collect(Collectors.toList());
+        return ErEntityUtil.resolveEntitiesConnectedToRelation(relation);
     }
 
     /**
@@ -100,41 +99,23 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
      * @return A list of GraphNodes representing the entities
      */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    ResolveOtherEntitiesConnectedToRelation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> originEntity,
+    resolveOtherEntitiesConnectedToRelation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> originEntity,
                                             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
 
-        return  ResolveEntitiesConnectedToRelation(relation).
-                stream().
-                filter(node -> !node.equals(originEntity)).
-                collect(Collectors.toList());
-
+        return ErEntityUtil.resolveOtherEntitiesConnectedToRelation(originEntity, relation);
     }
 
-    //ISA UTIL
     /**
      * Returns all elements the given entity is connected to
      * @param entity The entity to query for
      * @return A list of graph nodes, representing the other elements
      */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    ResolveElementsConnectionToEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
+    resolveElementsConnectionToEntity(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> entity){
 
-        return  entity.
-                getEdges().
-                stream().
-                map(edge -> edge.getOtherSide(entity)).
-                collect(Collectors.toList());
+        return ErEntityUtil.resolveElementsConnectionToEntity(entity);
     }
-    private static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    ResolveTypesConnectedToIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure, AssociationType type){
 
-        return  isAStructure.
-                getEdges().
-                stream().
-                filter(edge -> edge.getEdgeData().getAssociationType() == type).
-                map(edge -> edge.getOtherSide(isAStructure)).
-                collect(Collectors.toList());
-    }
 
     /**
      * Resolves all inheritors of the given IsA Structure
@@ -142,9 +123,9 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
      * @return All inheritors of the isA Structure
      */
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-    ResolveInheritorsOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
+    resolveInheritorsOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
-        return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Inheritor);
+        return ErIsAUtil.resolveInheritorsOfIsAStructure(isAStructure);
     }
 
     //TODO VALIDATION IF ISA HAS NO BASE
@@ -155,48 +136,32 @@ public class ErUtil  { //Extends ISAUtil, RelationUtil, EntityUtil
      * @return The parent of the isA Structure
      */
     public static GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
-    ResolveParentOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
+    resolveParentOfIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure){
 
-        return  ResolveTypesConnectedToIsAStructure(isAStructure, AssociationType.Parent).stream().findFirst().orElseThrow();
+        return ErIsAUtil.resolveParentOfIsAStructure(isAStructure);
     }
-
-
-    //RELATION UTIL
 
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        return erGraph.graphNodes.
-                stream().
-                filter(node -> resolveErType(node) == ErType.StrongRelation ||
-                        resolveErType(node) == ErType.WeakRelation).
-                collect(Collectors.toList());
-
+        return ErRelationUtil.resolveRelations(erGraph);
     }
 
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveStrongRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        return resolveRelations(erGraph).stream().
-                filter(node -> resolveErType(node) == ErType.StrongRelation).
-                collect(Collectors.toList());
-
+        return ErRelationUtil.resolveStrongRelations(erGraph);
     }
 
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        return resolveRelations(erGraph).stream().
-                filter(node -> node.getDegree() == 2).
-                collect(Collectors.toList());
-
+        return ErRelationUtil.resolveRelationsOfDeg2(erGraph);
     }
 
     public static List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
     resolveStrongRelationsOfDeg2(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
-        return resolveRelationsOfDeg2(erGraph).stream().
-                filter(node -> resolveErType(node) == ErType.StrongRelation).
-                collect(Collectors.toList());
+        return ErRelationUtil.resolveStrongRelationsOfDeg2(erGraph);
     }
 }
