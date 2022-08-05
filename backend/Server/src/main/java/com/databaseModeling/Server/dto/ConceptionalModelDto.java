@@ -1,5 +1,6 @@
-package com.databaseModeling.Server.controller;
+package com.databaseModeling.Server.dto;
 
+import com.databaseModeling.Server.controller.Controller;
 import com.databaseModeling.Server.model.conceptionalModel.ErType;
 import com.databaseModeling.Server.model.conceptionalModel.AssociationType;
 import lombok.AllArgsConstructor;

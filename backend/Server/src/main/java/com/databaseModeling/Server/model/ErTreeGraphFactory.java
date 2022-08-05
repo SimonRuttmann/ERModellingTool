@@ -1,6 +1,6 @@
 package com.databaseModeling.Server.model;
 
-import com.databaseModeling.Server.controller.ConceptionalModelDto;
+import com.databaseModeling.Server.dto.ConceptionalModelDto;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationElement;
 import com.databaseModeling.Server.model.dataStructure.graph.Graph;

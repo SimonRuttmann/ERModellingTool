@@ -1,6 +1,6 @@
 package com.databaseModeling.Server.model;
 
-import com.databaseModeling.Server.controller.ConceptionalModelDto;
+import com.databaseModeling.Server.dto.ConceptionalModelDto;
 
 /**
  * Factory to create element meta information based on conceptional model elements

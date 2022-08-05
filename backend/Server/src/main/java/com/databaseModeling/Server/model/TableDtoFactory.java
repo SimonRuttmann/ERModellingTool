@@ -1,6 +1,6 @@
 package com.databaseModeling.Server.model;
 
-import com.databaseModeling.Server.controller.RelationalModelDto;
+import com.databaseModeling.Server.dto.RelationalModelDto;
 import com.databaseModeling.Server.model.relationalModel.Column;
 import com.databaseModeling.Server.model.relationalModel.Table;
 

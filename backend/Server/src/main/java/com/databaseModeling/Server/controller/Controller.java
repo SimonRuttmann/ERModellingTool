@@ -1,6 +1,7 @@
 package com.databaseModeling.Server.controller;
 
-import com.databaseModeling.Server.sqlGeneration.RelationalModelToSqlTranslator;
+import com.databaseModeling.Server.dto.ConceptionalModelDto;
+import com.databaseModeling.Server.dto.RelationalModelDto;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 

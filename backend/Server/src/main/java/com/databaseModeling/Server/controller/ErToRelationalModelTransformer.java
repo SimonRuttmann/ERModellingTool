@@ -1,5 +1,7 @@
 package com.databaseModeling.Server.controller;
 
+import com.databaseModeling.Server.dto.ConceptionalModelDto;
+import com.databaseModeling.Server.dto.RelationalModelDto;
 import com.databaseModeling.Server.model.ErTreeGraphFactory;
 import com.databaseModeling.Server.model.TableDtoFactory;
 import com.databaseModeling.Server.model.conceptionalModel.EntityRelationAssociation;

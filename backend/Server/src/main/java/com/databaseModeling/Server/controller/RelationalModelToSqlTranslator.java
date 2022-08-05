@@ -1,6 +1,9 @@
-package com.databaseModeling.Server.sqlGeneration;
+package com.databaseModeling.Server.controller;
 
-import com.databaseModeling.Server.controller.RelationalModelDto;
+import com.databaseModeling.Server.dto.RelationalModelDto;
+import com.databaseModeling.Server.sqlGeneration.SqlGenerator;
+import com.databaseModeling.Server.sqlGeneration.SqlUtil;
+import com.databaseModeling.Server.sqlGeneration.TopologicalSort;
 
 
 /**

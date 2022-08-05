@@ -1,5 +1,6 @@
-package com.databaseModeling.Server.controller;
+package com.databaseModeling.Server.dto;
 
+import com.databaseModeling.Server.controller.Controller;
 import com.databaseModeling.Server.sqlGeneration.RelationalDataTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
