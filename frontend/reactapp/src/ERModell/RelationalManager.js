@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import './Playground.css';
 import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
@@ -6,16 +6,25 @@ import DrawBoard from "./Components/DrawBoard/DrawBoard";
 import {DiagramTypes} from "./Model/Diagram";
 import SqlPopUp from "./SqlPopUp";
 import RelationalRightBar from "./RelationalRightBar";
-import {ACTIONSTATE, OBJECTTYPE} from "./Model/ActionState";
-import {resolveObjectById} from "./Components/Util/ObjectUtil";
+import {
+    ChangeDataTypeOfDrawBoardElement,
+    selectRelationalContentSlice,
+    UpdateDrawBoardElementPosition,
+    UpdateDrawBoardElementSize
+} from "../store/RelationalContentSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {SqlDataTypes} from "./Components/ErObjectComponents/SqlDataTypes";
 
-const RelationalManager = ({syncRelContent, importedContent, triggerImportComplete, generateSql, sqlServerResult}) => {
+const RelationalManager = ({generateSql, sqlServerResult}) => {
+
+    const relationalContentStore = useSelector(selectRelationalContentSlice);
+    const relationalContentStoreAccess = useDispatch();
 
     const table = {
         id: "",
         displayName: "",
         x: "",
-        y: "",
+        y: "",//width, height
         column: []
     }
 
@@ -23,89 +32,22 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
         id: "",
         foreignKey: false,
         foreignKeyReferencedId: "",
-        primaryKey: false
+        primaryKey: false,
+        dataType: SqlDataTypes.INT
     }
 
-    /**
-     * Schema for drawBoardElements
-     * id: newId,
-     * displayName: "new "+ erType + " " + counter,
-     * isHighlighted: false,
-     * isSelected: false,
-     * x: e.clientX - x - 50,
-     * y: e.clientY - y - 50,
-     * width: 150,
-     * height: 100,
-     * objectType: OBJECTTYPE.DrawBoardElement,
-     * erType: erType
-     */
-    const [drawBoardElements, setDrawBoardElements] = useState([]);
-
-    /**
-     * Schema for connections
-     * id: `${idStart} --> ${idEnd} - ${Date.now()}`,
-     * start: idStart,
-     * end: idEnd,
-     * min: 1,
-     * max: 1,
-     * objectType: OBJECTTYPE.Connection,
-     * isSelected: false,
-     * withArrow: false
-     */
-    const [connections, setConnections] = useState([]);
 
     //The currently selected object id, or null
     const [selectedObjectId, setSelectedObjectId] = useState(null);
 
-    /**
-     * Synchronize data with parent for download and transformation
-     */
-    useEffect( () => {
-        syncRelContent(drawBoardElements);
-    },[drawBoardElements])
-
-
-    /**
-     * Import functionality
-     */
-    useEffect( () => {
-
-        console.log("Importing project")
-        console.log(importedContent)
-
-
-        if(importedContent == null) return;
-
-        if(importedContent.drawBoardContent != null){
-
-            console.log(importedContent.drawBoardContent.tables)
-
-            if(Array.isArray(importedContent.drawBoardContent.tables)) {
-                setDrawBoardElements(() => [
-                    ...importedContent.drawBoardContent.tables
-                ])
-            }
-
-            console.log(importedContent.drawBoardContent.connections)
-            if(Array.isArray(importedContent.drawBoardContent.connections)) {
-
-                const updatedConnections = importedContent.drawBoardContent.connections.map(connection => {
-                    return {...connection, withLabel: false, horizontalAlignment: true, withArrow: true, isSelected: false}
-                });
-
-                setConnections(() => [
-                    ...updatedConnections
-                ])
-            }
-
-            triggerImportComplete()
-        }
-
-    },[importedContent, triggerImportComplete])
 
     const prepareSqlRequest = () => {
         let dto = { projectVersion: 1, projectName: "", projectType: "",
-                    drawBoardContent: {tables: drawBoardElements, connections: connections}};
+                    drawBoardContent: {
+                        tables: relationalContentStore.drawBoardElements,
+                        connections: relationalContentStore.connections
+                    }};
+
         generateSql(dto)
     }
 
@@ -117,21 +59,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
      * @see DrawBoardElement
      */
     const updateDrawBoardElementPosition = (elementId, x, y) => {
-
-        let element = drawBoardElements.find(element => element.id === elementId)
-
-        let otherElements = drawBoardElements.filter(element => !(element.id === elementId))
-
-        let clone = Object.assign({}, element)
-        clone.x = x;
-        clone.y = y;
-
-        setDrawBoardElements( ()=> [
-            ...otherElements,
-            clone
-        ])
-
-
+        relationalContentStoreAccess(UpdateDrawBoardElementPosition({id: elementId, x: x, y: y}))
     }
 
     /**
@@ -143,20 +71,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
      * @see resolveErComponent
      */
     const updateDrawBoardElementSize = (elementId, width, height) => {
-
-        let element = drawBoardElements.find(element => element.id === elementId)
-
-        let otherElements = drawBoardElements.filter(element => !(element.id === elementId))
-
-        let clone = Object.assign({}, element)
-        clone.width = width;
-        clone.height = height;
-
-        setDrawBoardElements( ()=> [
-            ...otherElements,
-            clone
-        ])
-
+        relationalContentStoreAccess(UpdateDrawBoardElementSize({id: elementId, width: width, height: height}))
     }
 
     const onDropOnDrawBoard = (e) => {e.stopPropagation()};
@@ -171,8 +86,6 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
         setSelectedObjectId(null);
     }
 
-    console.log("SQL SERVER RESULT")
-    console.log(sqlServerResult)
     /**
      * The offset between the canvas and the inner drawBoard
      * The "border" of the background page is set to 30 px offset to the mostOuter and therefore canvas
@@ -181,19 +94,7 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
 
     const changeDataType = (tableId, columnId, dataType) => {
-        let table = resolveObjectById(tableId, drawBoardElements)
-        let column = resolveObjectById(columnId, table.columns)
-
-        column.dataType = dataType;
-
-        //Deep clone required, as column is a nested object inside table
-        let clone = JSON.parse(JSON.stringify(table));
-
-        console.log(clone)
-        setDrawBoardElements(( () => [
-            ...drawBoardElements.filter(drawBoardElement => !(drawBoardElement.id === tableId)),
-            clone
-        ]))
+       relationalContentStoreAccess(ChangeDataTypeOfDrawBoardElement(tableId, columnId, dataType))
     }
 
     return (
@@ -204,12 +105,12 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
                 {/* The draw board   */}
                 <DrawBoard
                     onDropHandler={onDropOnDrawBoard}
-                    drawBoardElements={drawBoardElements}
+                    drawBoardElements={relationalContentStore.drawBoardElements}
                     drawBoardBorderOffset={drawBoardBorderOffset}
                     diagramType={DiagramTypes.relationalDiagram}>
 
                     {/* The elements inside the draw board */}
-                    {drawBoardElements.map((drawBoardElement) => (
+                    {relationalContentStore.drawBoardElements.map((drawBoardElement) => (
                         <DrawBoardElement  key={drawBoardElement.id}
 
                                            onDrawBoardElementSelected={onDrawBoardElementSelected}
@@ -224,19 +125,19 @@ const RelationalManager = ({syncRelContent, importedContent, triggerImportComple
 
 
                     {/* The connections of the elements inside the draw board */}
-                    {connections.map((connection, i) => (
+                    {relationalContentStore.connections.map((connection, i) => (
                         <ConnectionElement
                             key={connection.id + " -- " + i}
 
-                            connections={connections}
+                            connections={relationalContentStore.connections}
                             thisConnection={connection}
                             onConnectionSelected={onConnectionSelected}
 
                         />
                     ))}
-
                 </DrawBoard>
-                <RelationalRightBar drawBoardElements={drawBoardElements} selectedObjectId={selectedObjectId} changeDataType={changeDataType}/>
+
+                <RelationalRightBar drawBoardElements={relationalContentStore.drawBoardElements} selectedObjectId={selectedObjectId} changeDataType={changeDataType}/>
                 <SqlPopUp sqlCode={sqlServerResult} prepareSqlRequest={prepareSqlRequest}/>
             </div>
         </div>
