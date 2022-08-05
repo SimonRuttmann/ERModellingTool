@@ -7,7 +7,7 @@ import {resolveObjectById} from "../Util/ObjectUtil";
 import {ConnectionType} from "../../Model/Diagram";
 import EnhancedSettings from "./EnhancedSettings";
 
-const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setMergeProperty, setOwningSideProperty}) => {
+const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setOwningSideProperty}) => {
 
     if(selectedObjectId == null) return null;
 
@@ -85,7 +85,6 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
                 <EnhancedSettings selectedObject={selectedObject}
                                   drawBoardElements={drawBoardElements}
                                   connections={connections}
-                                  setMergeProperty={setMergeProperty}
                                   setOwningSideProperty={setOwningSideProperty}
                 />
             </React.Fragment>

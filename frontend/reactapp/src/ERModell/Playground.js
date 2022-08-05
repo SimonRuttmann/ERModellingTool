@@ -307,7 +307,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
         height: 100,
         objectType: OBJECTTYPE.DrawBoardElement,
         erType: erType,
-        isMerging: true,
         owningSide: null
       };
 
@@ -469,30 +468,12 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
 
-  const setElementMergeProperty = (id, elements, shouldMerge) => {
-
-    return elements.map(element => {
-      if (element.id === id) return {...element, isMerging: shouldMerge}
-      return {...element}
-    });
-  }
-
   const setElementOwningSideProperty = (id, elements, owningSideId) => {
 
     return elements.map(element => {
       if (element.id === id) return {...element, owningSide: owningSideId}
       return {...element}
     });
-  }
-
-  const setMergeProperty = (selectedRelationId, shouldMerge) => {
-
-    let elements = setElementMergeProperty(selectedRelationId, drawBoardElements, shouldMerge);
-
-    setDrawBoardElements(() => [
-        ...elements
-    ])
-
   }
 
   const setOwningSideProperty = (selectedRelationId, owningElementId) => {
@@ -570,7 +551,6 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     setDisplayName: setDisplayName,
     editConnectionNotation: editConnectionNotation,
     toAddConnectionState: toAddConnectionState,
-    setMergeProperty: setMergeProperty,
     setOwningSideProperty: setOwningSideProperty
   }
 

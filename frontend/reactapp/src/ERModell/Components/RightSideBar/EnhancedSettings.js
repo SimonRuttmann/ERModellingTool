@@ -1,17 +1,9 @@
 import {resolveObjectById} from "../Util/ObjectUtil";
 import {ERTYPE} from "../../Model/ErType";
 import {getOtherElementsOfConnectors} from "../../ErRules/ErRulesUtil";
-import React, {useRef} from "react";
+import React from "react";
 
-const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setMergeProperty, setOwningSideProperty}) => {
-
-    const mergeBoxRef = useRef(null);
-
-
-    const setMerge = () => {
-        setMergeProperty(selectedObject.id, mergeBoxRef.current.checked)
-    }
-
+const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setOwningSideProperty}) => {
 
     const setOwningSide = (e) => {
         setOwningSideProperty(selectedObject.id, e.target.value)
@@ -62,18 +54,12 @@ const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setMe
     let showOwningSide = false;
     let owningSideDisplay = null;
 
-    let showMerge = false;
-    let mergeDisplay = null;
-
     if(connectedStrongEntities.length !== 2 || connectedWeakEntities.length !== 0) return null
-
 
     if(connectionsToStrongEntities.every(connection => isOneToOne(connection))){
         showOwningSide = true;
-        showMerge = true;
     }
     else if(connectionsToStrongEntities.every(connection => isZeroOneToZeroOne(connection))){
-
         showOwningSide = true;
     }
     else return null;
@@ -85,7 +71,7 @@ const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setMe
     let secondEntityDisplayName = connectedStrongEntities[1].displayName;
     let secondEntityId = connectedStrongEntities[1].id;
 
-    //If both entities are the same, we have a reflexive relation and can not merge or set an owning side
+    //If both entities are the same, we have a reflexive relation and can not set an owning side
     if(firstEntityId === secondEntityId) return null;
 
     if(showOwningSide){
@@ -119,32 +105,8 @@ const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setMe
             </React.Fragment>
     }
 
-    if(showMerge){
-
-        mergeDisplay =
-
-            <React.Fragment>
-
-                <div>Merge Entities: </div>
-
-                <div className="spacerSmall"/>
-
-                <label className="mergeCheckBoxSwitch">
-                    <input type="checkbox" ref={mergeBoxRef} onClick={setMerge} defaultChecked={selectedObject.isMerging}/>
-                    <span className="mergeCheckBoxSlider mergeCheckBoxSliderContent"></span>
-                </label>
-
-                <div className="spacerSmall"/>
-
-            </React.Fragment>
-
-    }
-
-
-
     return (
         <React.Fragment>
-            {mergeDisplay}
             {owningSideDisplay}
         </React.Fragment>
     )
