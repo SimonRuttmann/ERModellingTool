@@ -2,18 +2,26 @@ import React, {useState} from "react";
 import ReactModal from "react-modal"
 import sqlIcon from "../Resources/sql.svg";
 
-export function SqlPopUp({prepareSqlRequest, sqlCode}){
+/**
+ * Renders a modal containing the sql generated from the relational model
+ * Also renders the button to open the modal
+ * @param prepareSqlRequest A function execution when opening the modal
+ * @param sqlCode The sql code as string to display
+ * @returns {JSX.Element} The rendered modal and open button
+ */
+const SqlPopUp = ({prepareSqlRequest, sqlCode}) => {
 
     const [isShown, setIsShown] = useState(false);
 
-    function showSqlPopUp(e){
+    const showSqlPopUp = (e) => {
         prepareSqlRequest(e);
         setIsShown(true)
     }
 
-    function closeSqlPopUp(e){
+    const closeSqlPopUp = () => {
         setIsShown(false)
     }
+
     if(sqlCode == null) sqlCode = "";
 
     return (
@@ -42,11 +50,14 @@ export function SqlPopUp({prepareSqlRequest, sqlCode}){
     );
 }
 
-function SqlLine({line}) {
+/**
+ * Renders and formats a line of sql
+ * @param line The sql line as string to render
+ * @returns {JSX.Element} Renders the formatted sql
+ */
+const SqlLine = ({line}) => {
 
     if(line == null || line === "") return <React.Fragment> <br/> </React.Fragment>
-    console.log("LINE")
-    console.log(line)
 
     if(line.includes("\t")) {
         return (
