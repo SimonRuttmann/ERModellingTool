@@ -61,6 +61,22 @@ const relationalContentSlice = createSlice({
             element.y = y;
 
             return state;
+        },
+        /**
+         *
+         * @param state
+         * @param action
+         */
+        ChangeDataTypeOfDrawBoardElement: (state, action) => {
+            let tableId = action.payload.tableId;
+            let columnId = action.payload.columnId;
+            let dataType = action.payload.dataType;
+
+            let table = state.drawBoardElements.find(table => table.id === tableId);
+            let column = table.columns.find(column => column.id === columnId);
+            column.dataType = dataType;
+
+            return state;
         }
     }
 })
@@ -68,7 +84,8 @@ const relationalContentSlice = createSlice({
 export const {
     ImportContent,
     UpdateDrawBoardElementSize,
-    UpdateDrawBoardElementPosition
+    UpdateDrawBoardElementPosition,
+    ChangeDataTypeOfDrawBoardElement
     } = relationalContentSlice.actions;
 
 export default relationalContentSlice.reducer;
