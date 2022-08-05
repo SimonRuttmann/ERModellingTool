@@ -18,7 +18,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
     // avoid setting refs during rendering
     const erContent = useRef({...metaInformation, projectType: DiagramTypes.erDiagram, elements: [], connections: []})
-    const relationalContent = useRef({...metaInformation, projectType: DiagramTypes.relationalDiagram, tables: []})
+    const relationalContent = useRef({...metaInformation, projectType: DiagramTypes.relationalDiagram, tables: [], connections: []})
 
 
     function syncErContent(drawBoardElements, connections){
@@ -33,15 +33,15 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     }
 
 
-    function syncRelContent(tables){
+    function syncRelContent(tables, connections){
 
-      //  if(loadProcessIsActive) return;
+        if(loadProcessIsActive) return;
 
-      //  relationalContent.current = {
-      //      ...metaInformation,
-      //      projectType: DiagramTypes.relationalDiagram,
-      //      drawBoardContent: {tables: tables}
-      //  }
+        relationalContent.current = {
+            ...metaInformation,
+            projectType: DiagramTypes.relationalDiagram,
+            drawBoardContent: {tables: tables, connections: connections}
+        }
     }
 
     /**
@@ -72,13 +72,13 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     const [sqlServerResult, setSqlSeverResult] = useState(null)
     const urlSql = "http://localhost:8080/convert/sql"
     function generateSql(dto){  //TODO schauen was sinnvoller ist, ich nehm hier das dto, da die sync noch nicht funktioniert. TOOODOO
-        console.log("GENERATE SQL")
+
 
         axios.post(urlSql, dto).
         then((response) => {
 
             setSqlSeverResult(response.data);
-            console.log("Received")
+
 
         }).
         catch(error => setError(true));
