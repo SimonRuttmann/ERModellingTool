@@ -30,7 +30,7 @@ const erContentSlice = createSlice({
          * @param state
          * @param action
          */
-        SelectElement: (state, action) => {
+        SelectAnyElement: (state, action) => {
             let id = action.payload;
 
             //Resolve selected object
@@ -53,7 +53,7 @@ const erContentSlice = createSlice({
          * @param state
          * @param action
          */
-        HighlightElements: (state, action) => {
+        HighlightDrawBoardElements: (state, action) => {
             let ids = action.payload;
 
             state.drawBoardElements = state.drawBoardElements.map(element => {
@@ -71,26 +71,14 @@ const erContentSlice = createSlice({
          * @param state
          * @param action
          */
-        UnselectAndUnHighlightElement: (state, action) => {
-            let id = action.payload;
+        UnselectAndUnHighlightAllElements: (state) => {  //TODO rename, unselect any element and unhighlight all
+            state.connections = state.connections.map(element => {
+                return {...element, isHighlighted: false}
+            });
 
-            //Resolve selected object
-            let element = state.drawBoardElements.find(element => element.id === id);
-
-            //Unselect connection
-            if(element == null){
-                state.connections = state.connections.map(element => {
-                    if (element.id === id) return {...element, isSelected: false, isHighlighted: false}
-                    return {...element, isHighlighted: false}
-                });
-            }
-            //Unselect drawBoardElement
-            else{
-                state.drawBoardElements = state.drawBoardElements.map(element => {
-                    if (element.id === id) return {...element, isSelected: false, isHighlighted: false}
-                    return {...element, isHighlighted: false}
-                });
-            }
+            state.drawBoardElements = state.drawBoardElements.map(element => {
+                return {...element, isHighlighted: false}
+            });
 
             return state;
         },
@@ -253,9 +241,9 @@ const erContentSlice = createSlice({
 
 export const {
     ImportContent,
-    SelectElement,
-    HighlightElements,
-    UnselectAndUnHighlightElement,
+    SelectAnyElement,
+    HighlightDrawBoardElements,
+    UnselectAndUnHighlightAllElements,
     AddDrawBoardElement,
     RemoveDrawBoardElement,
     UpdateDrawBoardElementSize,
