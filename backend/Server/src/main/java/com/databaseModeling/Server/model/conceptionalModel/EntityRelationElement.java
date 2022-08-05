@@ -9,9 +9,8 @@ import com.databaseModeling.Server.model.relationalModel.Table;
  */
 public class EntityRelationElement {
 
-    public EntityRelationElement(ErType erType, boolean merging, String owningSide, ElementMetaInformation elementMetaInformation) {
+    public EntityRelationElement(ErType erType, String owningSide, ElementMetaInformation elementMetaInformation) {
         this.erType = erType;
-        this.shouldBeMerged = merging;
         this.owningSide = owningSide;
         this.elementMetaInformation = elementMetaInformation;
     }
@@ -32,10 +31,6 @@ public class EntityRelationElement {
     public void addInitialTable(Table table){this.table = table;}
     public Table getTable(){return table;}
     public void removeTable(){this.table = null;}
-
-    //Optional properties for 1:1 and 1:N
-    private final boolean shouldBeMerged;
-    public boolean isShouldBeMerged() {return shouldBeMerged;}
 
     private final String owningSide;
     public String getOwningSide() {return owningSide;}

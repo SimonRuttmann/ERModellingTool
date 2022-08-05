@@ -61,18 +61,8 @@ public class TransformOneToOneService implements ITransformOneToOneService {
         if(isReflexive){
             var relationData = resolveErData(relation);
 
-            if(resolveErData(relation).isShouldBeMerged()){
-
-                tableManager.mergeTables(nodeOfFirstEge, relation);
-                tableManager.addForeignKeysAsNormalColumn(nodeOfFirstEge, nodeOfFirstEge);
-
-                tableManager.removeTable(relationData);
-            }
-            else{
-
-                tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-                tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-            }
+            tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
+            tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
 
             relationData.setTransformed(true);
             return;

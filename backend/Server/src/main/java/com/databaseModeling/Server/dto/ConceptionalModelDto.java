@@ -42,7 +42,6 @@ public class ConceptionalModelDto {
             private double x;
             private double y;
             private ErType erType;
-            private Boolean isMerging;  //Optional!
             private String owningSide;  //Optional!
         }
 

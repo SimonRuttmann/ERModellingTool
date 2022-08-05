@@ -180,7 +180,6 @@ public class ErTreeGraphFactory {
 
         return new EntityRelationElement(
                 element.getErType(),
-                element.getIsMerging(),
                 element.getOwningSide(),
                 metaInformation);
     }
