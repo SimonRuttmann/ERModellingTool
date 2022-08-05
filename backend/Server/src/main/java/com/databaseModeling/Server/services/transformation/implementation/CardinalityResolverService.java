@@ -55,6 +55,11 @@ public class CardinalityResolverService implements ICardinalityResolverService {
 
         int number = 0;
 
+        if (! matcher.matches()) {
+            System.out.println("Can not match cardinality");
+            return 0;
+        }
+
         if(matcher.group(numericValue) != null && !matcher.group(numericValue).isEmpty())
             return getNumberOfValue(matcher.group(numericValue));
 

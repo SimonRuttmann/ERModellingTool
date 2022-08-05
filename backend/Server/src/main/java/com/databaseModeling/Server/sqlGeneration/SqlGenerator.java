@@ -30,8 +30,13 @@ public class SqlGenerator {
 
         //Add foreign key constraints
         for(var column : table.getColumns()){
-            tableDefinition.append(createForeignKeyConstraint(column, allTables));
+            if(column.isForeignKey()){
+                tableDefinition.append(createForeignKeyConstraint(column, allTables));
+            }
         }
+
+        var duplicateComma = tableDefinition.lastIndexOf(",");
+        tableDefinition.deleteCharAt(duplicateComma);
 
         //Add footer
         tableDefinition.append(");");
@@ -75,22 +80,21 @@ public class SqlGenerator {
     }
 
     private static String createForeignKeyConstraint(RelationalModelDto.DrawBoardContent.TableDTO.ColumnDTO column,
-                                                       List<RelationalModelDto.DrawBoardContent.TableDTO> tables){
+                                                     List<RelationalModelDto.DrawBoardContent.TableDTO> tables){
 
         StringBuilder foreignKeyConstraint = new StringBuilder();
-        if(column.isForeignKey()){
-            var referencedTable = SqlUtil.GetTableForId(tables, column.getForeignKeyReferencedId());
-            var referencedColumn = SqlUtil.GetColumnForId(referencedTable, column.getForeignKeyReferencedId());
 
-            foreignKeyConstraint.
-                    append("\tFOREIGN KEY (").
-                    append(SqlUtil.getSpaceLessDisplayName(column.getDisplayName())).
-                    append(") REFERENCES [").
-                    append(SqlUtil.getSpaceLessDisplayName(referencedTable.getDisplayName())).
-                    append("].").
-                    append(SqlUtil.getSpaceLessDisplayName(referencedColumn.getDisplayName())).
-                    append(",\n");
-        }
+        var referencedTable = SqlUtil.GetTableForId(tables, column.getForeignKeyReferencedId());
+        var referencedColumn = SqlUtil.GetColumnForId(referencedTable, column.getForeignKeyReferencedId());
+
+        foreignKeyConstraint.
+                append("\tFOREIGN KEY (").
+                append(SqlUtil.getSpaceLessDisplayName(column.getDisplayName())).
+                append(") REFERENCES [").
+                append(SqlUtil.getSpaceLessDisplayName(referencedTable.getDisplayName())).
+                append("].").
+                append(SqlUtil.getSpaceLessDisplayName(referencedColumn.getDisplayName())).
+                append(",\n");
 
         return foreignKeyConstraint.toString();
     }
