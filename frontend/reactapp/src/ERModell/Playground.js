@@ -4,7 +4,7 @@ import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
 import RightBar from './Components/RightSideBar/RightBar';
 import ConnectionElement from './Components/DrawBoard/ConnectionElement';
 import {ERTYPE} from './Model/ErType';
-import {ACTIONSTATE, ConnectionCardinality, OBJECTTYPE} from "./Model/ActionState";
+import {ACTIONSTATE, OBJECTTYPE} from "./Model/ActionState";
 import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
 import DrawBoard from "./Components/DrawBoard/DrawBoard";
@@ -13,15 +13,22 @@ import {ConnectionType, DiagramTypes} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
 import {createSelection} from "./ErRules/ErDrawingRuleEnforcer";
 import ErFeedbackSystem from "./ErRules/ErFeedbackSystem";
+import {useSelector, useDispatch} from "react-redux";
+import {
+  AddConnection,
+  AddDrawBoardElement, EditConnectionNotation, HighlightDrawBoardElements,
+  RemoveConnection,
+  RemoveDrawBoardElement,
+  SelectAnyElement,
+  selectErContentSlice,
+  SetDrawBoardElementDisplayName,
+  SetDrawBoardElementOwningSide,
+  UnselectAndUnHighlightAllElements,
+  UpdateDrawBoardElementPosition,
+  UpdateDrawBoardElementSize
+} from "../store/ErContentSlice";
 
-const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
-
-  //TODO This class should be converted to a pure interaction class
-  //Separate following logic
-  //1. Invalid messages --> Validator
-  //2. Update position and update size --> DrawBoard util // Element render util
-  //This component then holds only interaction specific logic
-  // Maybe create a interaction state machine, for state management
+const PlayGround = ({transformToRel}) => {
 
   /**
    * Schema for drawBoardElements
@@ -36,8 +43,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
    * objectType: OBJECTTYPE.DrawBoardElement,
    * erType: erType
    */
-  const [drawBoardElements, setDrawBoardElements] = useState([]);
-  
+
   /**
    * Schema for connections
    * id: `${idStart} --> ${idEnd} - ${Date.now()}`,
@@ -50,17 +56,19 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
    * withArrow: false,
    * withLabel: true,
    */
-  const [connections, setConnections] = useState([]);
 
+  const erContentStore = useSelector(selectErContentSlice);
+  const erContentStoreAccess = useDispatch();
 
   //Adding the default display name based on this counter
   const [counter, setCounter] = useState(0);
 
-  //The currently selected object id, or null
+  //The currently selected object id, or null//TODO reanme to currentSelectedObjectId
   const [selectedObjectId, setSelectedObjectId] = useState(null);
 
   //The current ActionState, representing the current user action
   const [actionState, setActionState] = useState(ACTIONSTATE.Default);
+
   //This state only indicate which kind of connection should be added
   const [connectionInformation, addConnectionInformation] = useState(ConnectionType.association)
 
@@ -84,147 +92,76 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
   }
 
   /**
-   * Synchronize data with parent for download and transformation
+   * Integration of FeedbackSystem
    */
-  useEffect( () => {
-
-    syncErContent(drawBoardElements, connections);
-  },[drawBoardElements, connections, syncErContent])
-
 
   const [invalidMessages, setInvalidMessages] = useState([])
 
   useEffect( () => {
 
-    const errorMessages = ErFeedbackSystem.validateErDiagram(connections, drawBoardElements)
+    const errorMessages = ErFeedbackSystem.validateErDiagram(erContentStore.connections, erContentStore.drawBoardElements)
 
     setInvalidMessages([...errorMessages])
 
-  },[drawBoardElements, connections])
+  },[erContentStore])
 
-
-  /**
-   * Import functionality
-   */
-  useEffect( () => {
-
-    if(importedContent == null) return;
-
-    if(importedContent.drawBoardContent != null){
-
-       if(Array.isArray(importedContent.drawBoardContent.connections)) {
-         setConnections(() => [
-           ...importedContent.drawBoardContent.connections
-         ])
-       }
-
-      if(Array.isArray(importedContent.drawBoardContent.elements)) {
-
-        setDrawBoardElements(() => [
-          ...importedContent.drawBoardContent.elements
-        ])
-      }
-
-      triggerImportComplete()
-    }
-
-  },[importedContent, triggerImportComplete])
 
 
   const onCanvasSelected = () => {
 
     if(selectedObjectId == null) return;
 
-    const newElementState = unselectPreviousElement(connections, drawBoardElements);
-    setSelectedObjectId(null);
+    erContentStoreAccess(UnselectAndUnHighlightAllElements())
 
+    setSelectedObjectId(null);
     changeActionState(ACTIONSTATE.Default);
 
-    setElementState(newElementState.type, newElementState.elements)
-
   }
 
-  const setElementState = (type, elements) => {
 
-    if (type === OBJECTTYPE.Connection)
-      setConnections( () => [
-          ...elements
-      ])
-
-    if(type === OBJECTTYPE.DrawBoardElement)
-      setDrawBoardElements(() => [
-          ...elements
-      ])
-
-  }
-
+  /**
+   * Click on a draw board element
+   * @param drawBoardElementId
+   */
   const onDrawBoardElementSelected = (drawBoardElementId) => {
 
-    //click on draw board element
-    let selectedObject = drawBoardElements.find(element => element.id === drawBoardElementId);
+    let newSelectedObject = erContentStore.drawBoardElements.find(element => element.id === drawBoardElementId);
+    let previousSelectedObjectId = selectedObjectId;
+    let previousSelectedObject = resolveObjectById(previousSelectedObjectId, erContentStore.connections, erContentStore.drawBoardElements);
 
-    if(selectedObject == null) return;
+    if(newSelectedObject == null) return;
 
+    if(actionState === ACTIONSTATE.Default) {
 
-    if( actionState === ACTIONSTATE.Default) {
+      if(previousSelectedObjectId == null){
 
-      if(selectedObjectId == null){
-
-        const updatedElements = selectElement(drawBoardElements, drawBoardElementId)
-
-        setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
-
-        setSelectedObjectId(selectedObject.id);
-
+        erContentStoreAccess(SelectAnyElement(newSelectedObject.id))
+        setSelectedObjectId(newSelectedObject.id);
       }
       else{
-
-        const unselectedElements = unselectPreviousElement(connections, drawBoardElements);
-
-        if(unselectedElements.type === OBJECTTYPE.Connection){
-          setElementState(OBJECTTYPE.Connection, unselectedElements.elements)
-
-          const updatedElements = selectElement(drawBoardElements, drawBoardElementId)
-          setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
-        }
-
-        if(unselectedElements.type === OBJECTTYPE.DrawBoardElement){
-
-          const updatedElements = selectElement(unselectedElements.elements, drawBoardElementId)
-          setElementState(OBJECTTYPE.DrawBoardElement, updatedElements)
-
-        }
-
-
-        setSelectedObjectId(selectedObject.id);
+        erContentStoreAccess(UnselectAndUnHighlightAllElements())
+        erContentStoreAccess(SelectAnyElement(newSelectedObject.id))
+        setSelectedObjectId(newSelectedObject.id);
       }
 
-
-
     }
-
 
     if( actionState === ACTIONSTATE.AddConnection) {
 
       //Only allow new connections on highlighted elements
-      if(selectedObject.isHighlighted === false) return;
+      if(newSelectedObject.isHighlighted === false) return;
 
+      //Restore default behaviour
+      //Default actionState, unselect previous element, clear selected object id
       changeActionState(ACTIONSTATE.Default)
-
-      let previousSelectedObject = selectedObjectId;
       setSelectedObjectId(null);
+      erContentStoreAccess(UnselectAndUnHighlightAllElements())
 
-      const unselectedElements = unselectPreviousElement(connections, drawBoardElements);
+      if(previousSelectedObject.objectType === OBJECTTYPE.Connection) return;
 
-      if(unselectedElements.type === OBJECTTYPE.Connection) return;
-
-      //Selected Object ID is the previously selected element
-      addConnection(previousSelectedObject,drawBoardElementId, connectionInformation)
-
-      setDrawBoardElements(() => [
-          ...unselectedElements.elements
-      ])
-
+      //Add new connection
+      let newConnection = createConnection(erContentStore.drawBoardElements, previousSelectedObjectId, drawBoardElementId, connectionInformation);
+      erContentStoreAccess(AddConnection(newConnection))
     }
 
   };
@@ -236,46 +173,19 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
     if( actionState === ACTIONSTATE.Default ||
         actionState === ACTIONSTATE.AddConnection) {
 
-      let connection = connections.find(connection => connection.id === connectionId)
+      let connection = erContentStore.find(connection => connection.id === connectionId)
       setSelectedObjectId(connection.id);
 
 
+      //If no element was previously selected, select the connection
       if(selectedObjectId == null){
-
-        const updatedConnections = selectElement(connections, connectionId)
-        setConnections(() => [
-          ...updatedConnections
-        ])
-
+        erContentStoreAccess(SelectAnyElement(connection.id))
         return;
       }
 
-
-      const unselectedElements = unselectPreviousElement(connections, drawBoardElements);
-
-      if(unselectedElements.type === OBJECTTYPE.Connection) {
-
-        const updatedConnections = selectElement(unselectedElements.elements, connectionId)
-        setConnections(() => [
-          ...updatedConnections
-        ])
-
-        return;
-      }
-
-
-
-      if(unselectedElements.type === OBJECTTYPE.DrawBoardElement){
-        setElementState(OBJECTTYPE.DrawBoardElement, unselectedElements.elements)
-
-        const updatedConnections = selectElement(connections, connectionId)
-        setConnections(() => [
-          ...updatedConnections
-        ])
-
-
-      }
-
+      //There is a element selected, so unselect it and highlight the new connection
+      erContentStoreAccess(UnselectAndUnHighlightAllElements())
+      erContentStoreAccess(SelectAnyElement(connectionId))
     }
 
   };
@@ -310,16 +220,12 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
         owningSide: null
       };
 
-      setDrawBoardElements([
-          ...drawBoardElements,
-        newDrawBoardElement]);
-
+      erContentStoreAccess(AddDrawBoardElement(newDrawBoardElement))
+      //TODO bei import ist der counter nicht geschickt... generell eher für jedes element zählen
       setCounter(counter+1);
 
       e.stopPropagation();
     }
-
-
   };
 
 
@@ -331,21 +237,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
    * @see DrawBoardElement
    */
   const updateDrawBoardElementPosition = (elementId, x, y) => {
-
-    let element = drawBoardElements.find(element => element.id === elementId)
-
-    let otherElements = drawBoardElements.filter(element => !(element.id === elementId))
-
-    let clone = Object.assign({}, element)
-    clone.x = x;
-    clone.y = y;
-
-    setDrawBoardElements( ()=> [
-      ...otherElements,
-      clone
-    ])
-
-
+    erContentStoreAccess(UpdateDrawBoardElementPosition(elementId, x, y));
   }
 
 
@@ -358,185 +250,44 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
    * @see resolveErComponent
    */
   const updateDrawBoardElementSize = (elementId, width, height) => {
-
-    let element = drawBoardElements.find(element => element.id === elementId)
-
-    let otherElements = drawBoardElements.filter(element => !(element.id === elementId))
-
-    let clone = Object.assign({}, element)
-    clone.width = width;
-    clone.height = height;
-
-    setDrawBoardElements( ()=> [
-      ...otherElements,
-      clone
-    ])
-
+    erContentStoreAccess(UpdateDrawBoardElementSize(elementId, width, height));
   }
 
   const removeElement = (id) => {
 
-
-    let elementsToUpdate = drawBoardElements;
-    let connectionsToUpdate = connections;
-
-    let selectedObject = resolveObjectById(id, elementsToUpdate, connectionsToUpdate)
+    //TODO rename selectedObject to objectToDelete
+    let selectedObject = resolveObjectById(id, erContentStore.drawBoardElements, erContentStore.connections)
 
     if(selectedObject.objectType === OBJECTTYPE.Connection) {
-
       console.log("Remove connection")
-      console.log(connectionsToUpdate)
-      connectionsToUpdate = removeConnectionDirect(selectedObject, connectionsToUpdate)
-      console.log("after remove connection")
-      console.log(connectionsToUpdate)
+      erContentStoreAccess(RemoveConnection(selectedObject.id))
     }
     if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement){
-
-      const updatedObjects = removeDrawBoardElement(selectedObject.id, elementsToUpdate, connectionsToUpdate)
-      elementsToUpdate = updatedObjects.updatedDrawBoardElements;
-      connectionsToUpdate = updatedObjects.updatedConnections;
-
+      console.log("Remove drawBoardElement")
+      erContentStoreAccess(RemoveDrawBoardElement(selectedObject.id))
     }
 
-    const newElementState = unselectElements(connectionsToUpdate, elementsToUpdate);
-
+    erContentStoreAccess(UnselectAndUnHighlightAllElements())
     setSelectedObjectId(null);
-
     changeActionState(ACTIONSTATE.Default);
-
-    elementsToUpdate = newElementState.elements;
-    connectionsToUpdate = newElementState.connections;
-
-    setElementState(OBJECTTYPE.DrawBoardElement, elementsToUpdate)
-    setElementState(OBJECTTYPE.Connection, connectionsToUpdate)
-
-  }
-
-  const removeDrawBoardElement = (elementId, drawBoardElements, connections) => {
-
-    const updatedConnections = connections.filter(connection => !(connection.start === elementId || connection.end === elementId))
-    const updatedDrawBoardElements = drawBoardElements.filter((element) => !(element.id === elementId))
-
-    return {updatedConnections: updatedConnections,
-            updatedDrawBoardElements: updatedDrawBoardElements}
-  }
-
-  const removeConnectionDirect = (connectionToRemove, connections) => {
-
-    return connections.filter((connection)=>!(connectionToRemove.id === connection.id))
-
-  }
-
-
-  const addConnection = (idStart, idEnd, connectionInformation) => {
-
-    let newConnection = createConnection(drawBoardElements, idStart, idEnd, connectionInformation);
-
-    setConnections((prevState) => [
-      ...prevState,
-      newConnection
-    ])
-  }
-
-  const unselectElements = (connections, drawBoardElements) => {
-      const unselectedElements = setElementNotSelectedNotHighlighted(null, drawBoardElements)
-      const unselectedConnections = setElementNotSelectedNotHighlighted(null, connections)
-
-      return {elements: unselectedElements, connections: unselectedConnections}
-  }
-
-  const unselectPreviousElement = (connections, drawBoardElements) => {
-
-    let selectedObject = resolveObjectById(selectedObjectId, connections, drawBoardElements);
-
-    if(selectedObject.objectType === OBJECTTYPE.Connection)
-      return { type: OBJECTTYPE.Connection,
-               elements: setElementNotSelectedNotHighlighted(selectedObjectId, connections)}
-    else
-      return { type: OBJECTTYPE.DrawBoardElement,
-               elements: setElementNotSelectedNotHighlighted(selectedObjectId, drawBoardElements)}
-
-  }
-
-  const setElementNotSelectedNotHighlighted = (id, elements) => {
-
-    return elements.map(element => {
-      if (element.id === id) return {...element, isSelected: false, isHighlighted: false}
-      return {...element, isHighlighted: false}
-    });
-
-  }
-
-
-  const setElementOwningSideProperty = (id, elements, owningSideId) => {
-
-    return elements.map(element => {
-      if (element.id === id) return {...element, owningSide: owningSideId}
-      return {...element}
-    });
   }
 
   const setOwningSideProperty = (selectedRelationId, owningElementId) => {
-
-    let elements = setElementOwningSideProperty(selectedRelationId, drawBoardElements, owningElementId)
-
-    setDrawBoardElements(() => [
-        ...elements
-    ])
+    erContentStoreAccess(SetDrawBoardElementOwningSide({id: selectedRelationId, owningSide: owningElementId}))
   }
 
-  const selectElement = (elements, id) => {
-
-    let shallowCopy = [...elements];
-    let selectedElement = shallowCopy.find(element => element.id === id)
-    selectedElement.isSelected = true;
-
-    return[...shallowCopy];
-
+  const setDisplayName = (id, displayName) => {
+    erContentStoreAccess(SetDrawBoardElementDisplayName(id, displayName))
   }
 
-  const setDisplayName = (elementId, value) => {
-
-    let changedElements = drawBoardElements.map( (element) =>  {
-      if(element.id === elementId)
-        return {...element, displayName: value};
-        return element;
-    } )
-
-
-    setDrawBoardElements(( () => [
-      ...changedElements
-    ]))
-
+  const editConnectionNotation = (id, minMax, notation) => {
+    erContentStoreAccess(EditConnectionNotation(id, minMax, notation));
   }
-
-  const editConnectionNotation = (connectionId, minMax, notation) => {
-
-    let changedConnection = connections.find(connection => connection.id === connectionId)
-
-    if(minMax === ConnectionCardinality.Min) changedConnection.min = notation;
-    if(minMax === ConnectionCardinality.Max) changedConnection.max = notation;
-
-    let clone = Object.assign({}, changedConnection)
-    setConnections(( () => [
-        ...connections.filter(connection => !(connection.id === connectionId)),
-        clone
-    ]))
-
-  }
-
-
 
   const toAddConnectionState = (id, type) => {
-
     changeActionState(ACTIONSTATE.AddConnection, type)
-
-    const selectionElements = createSelection(id, type, drawBoardElements, connections)
-
-    setDrawBoardElements(( () => [
-      ...selectionElements
-    ]))
-
+    const highlightedIds = createSelection(id, type, erContentStore.drawBoardElements, erContentStore.connections)
+    erContentStoreAccess(HighlightDrawBoardElements({ids: highlightedIds}))
   }
 
   /**
@@ -545,8 +296,8 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
    */
   const rightBarProps = {
     selectedObjectId: selectedObjectId,
-    connections: connections,
-    drawBoardElements: drawBoardElements,
+    connections: erContentStore.connections,
+    drawBoardElements: erContentStore.drawBoardElements,
     removeElement: removeElement,
     setDisplayName: setDisplayName,
     editConnectionNotation: editConnectionNotation,
@@ -570,12 +321,12 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
           {/* The draw board   */}
           <DrawBoard onDropHandler={addDrawBoardElement}
-                     drawBoardElements={drawBoardElements}
+                     drawBoardElements={erContentStore.drawBoardElements}
                      drawBoardBorderOffset={drawBoardBorderOffset}
                      diagramType={DiagramTypes.erDiagram}>
 
             {/* The elements inside the draw board */}
-            {drawBoardElements.map((drawBoardElement) => (
+            {erContentStore.drawBoardElements.map((drawBoardElement) => (
                 <DrawBoardElement  key={drawBoardElement.id}
 
                                    onDrawBoardElementSelected={onDrawBoardElementSelected}
@@ -590,11 +341,11 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
 
             {/* The connections of the elements inside the draw board */}
-            {connections.map((connection, i) => (
+            {erContentStore.connections.map((connection, i) => (
                 <ConnectionElement
                     key={connection.id + " -- " + i}
 
-                    connections={connections}
+                    connections={erContentStore.connections}
                     thisConnection={connection}
                     onConnectionSelected={onConnectionSelected}
 
