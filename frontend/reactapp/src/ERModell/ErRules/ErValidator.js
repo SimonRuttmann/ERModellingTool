@@ -8,6 +8,7 @@ import {
 } from "./ErRulesUtil";
 import {ERTYPE} from "../Model/ErType";
 import {ConnectionType} from "../Model/Diagram";
+import {resolveObjectById} from "../Components/Util/ObjectUtil";
 
 export const validateErDiagram = (connections, drawBoardElements) => {
 
@@ -95,7 +96,7 @@ export const validateErDiagram = (connections, drawBoardElements) => {
 
     }
 
-    //For every ISa Parent + Inheritor is present
+    //For every IsA Parent + Inheritor is present
 
     let isAStructures = drawBoardElements.filter(element => element.erType === ERTYPE.IsAStructure.name);
 
@@ -126,5 +127,90 @@ export const validateErDiagram = (connections, drawBoardElements) => {
             invalidMessages.push(`The weak entity "${weakEntity.displayName}" is not identified by a strong type!`);
 
     }
+
+
+    //Every association has valid cardinalities
+
+    //1. Für jede relation connection 1 < connection 2 und connection 1 und 2 sind 0,1 oder ABCDEFGHIJKLMNOPQRSTUVWXYZ (groß, klein)
+    for (let relation of relations){
+
+        let connectors = getConnectorsOfObject(relation, connections);
+        let associations = connectors.filter(connection => connection.connectionType === ConnectionType.association);
+
+        for (let association of associations){
+            let {valid, message} = validateConnectionsCardinality(association.min, association.max)
+            if(valid) continue;
+
+            let start = resolveObjectById(association.start, drawBoardElements);
+            let end = resolveObjectById(association.end, drawBoardElements);
+
+            invalidMessages.push(`The cardinality of the association between "${start.displayName}" and "${end.displayName}" is not valid because ` + message)
+        }
+    }
     return invalidMessages;
 }
+
+
+const resolveCardinality = (value) => {
+
+    if(value == null) value = "---";
+
+    const cardinalityResolverRegex = /^\s*((?<AlphabeticValue>[A-Za-z]+)|(?<NumericValue>\d+))\s*$/;
+    let match = cardinalityResolverRegex.exec(value);
+    let alphabeticValue = match?.groups?.AlphabeticValue;
+    let numericValue = match?.groups?.NumericValue;
+
+    let isValid = false;
+    let isNumber = false;
+    let number = 0;
+
+    if(numericValue != null) {
+        isValid = true;
+        isNumber = true;
+        number = parseInt(numericValue);
+    }
+    else if(alphabeticValue != null) {
+        isValid = true;
+        isNumber = false;
+    }
+
+    return {isValid: isValid, isNumber: isNumber, number: number }
+}
+
+const validateConnectionsCardinality = (min, max) => {
+    let minCardinality = resolveCardinality(min);
+    let maxCardinality = resolveCardinality(max);
+
+    if(!(minCardinality.isValid && maxCardinality.isValid))
+        return {valid: false, message:"it values can only be a number or an alphabetic value"}
+
+    //both are alphabetic
+    if(!minCardinality.isNumber && !maxCardinality.isNumber)
+        return {valid: true}
+
+    //fist is alphabetic but second is number
+    if( (!minCardinality.isNumber && maxCardinality.isNumber) )
+        return {valid: false, message: "the min cardinality is a variable and therefore higher than the max cardinality "}
+
+    //min number and max alphabetic
+    if(minCardinality.isNumber && !maxCardinality.isNumber)
+        return {valid: true}
+
+    let areNumbers = minCardinality.isNumber && maxCardinality.isNumber;
+
+    //both are numbers but the min is greater than the max
+    if ( areNumbers && minCardinality.number > maxCardinality.number)
+        return {valid: false, message: "the min cardinality is higher than the max cardinality"}
+
+    //both are numbers but the max is 0
+    if ( areNumbers && maxCardinality.number === 0 )
+        return {valid: false, message: "the max cardinality can not be 0"}
+
+    //max greater equals min and max not 0
+    if(areNumbers && maxCardinality.number >= minCardinality.number && maxCardinality.number !== 0)
+        return {valid: true}
+
+    console.log("FUUUUUCK")
+    return {valid: false, message: "the cardinality could not be resolved"}
+}
+
