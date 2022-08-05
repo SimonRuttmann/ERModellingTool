@@ -9,7 +9,7 @@ const relationalContentSlice = createSlice({
          * @param state
          * @param action
          */
-        ImportContent: (state, action) => {
+        ImportRelContent: (state, action) => {
             let drawBoardElements = action.payload.tables;
             let connections = action.payload.connections;
 
@@ -82,7 +82,7 @@ const relationalContentSlice = createSlice({
 })
 
 export const {
-    ImportContent,
+    ImportRelContent,
     UpdateDrawBoardElementSize,
     UpdateDrawBoardElementPosition,
     ChangeDataTypeOfDrawBoardElement

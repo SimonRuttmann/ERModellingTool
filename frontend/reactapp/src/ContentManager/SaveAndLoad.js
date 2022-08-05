@@ -1,140 +1,82 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Download from "./Download";
 import Upload from "./Upload";
 import {DiagramTypes} from "../ERModell/Model/Diagram";
 import axios from "axios";
 import PrivacyPolicy from "./PrivacyPolicy";
-//TODO owning side 1:1 in rightSideBar prüfen!
+import {useDispatch, useSelector} from "react-redux";
+import {ImportErContent, selectErContentSlice} from "../store/ErContentSlice";
+import {ImportRelContent, selectRelationalContentSlice} from "../store/RelationalContentSlice";
+
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
+    const erContentStore = useSelector(selectErContentSlice);
+    const erContentStoreAccess = useDispatch();
+
+    const relationalContentStore = useSelector(selectRelationalContentSlice);
+    const relationalContentStoreAccess = useDispatch();
+
     const [currentDiagram, updateDiagram] = useState(DiagramTypes.erDiagram)
-    const [loadProcessIsActive, setLoadProcessStatus] = useState(false)
-
-    if(currentDiagram !== diagramType) {
-        updateDiagram(diagramType)
-        setLoadProcessStatus(true)
-    }
-
-    //We use useRef as "instance variable" (normally used for DOM Refs) https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables
-    // avoid setting refs during rendering
-    const erContent = useRef({...metaInformation, projectType: DiagramTypes.erDiagram, elements: [], connections: []})
-    const relationalContent = useRef({...metaInformation, projectType: DiagramTypes.relationalDiagram, tables: [], connections: []})
 
 
-    function syncErContent(drawBoardElements, connections){
+    useEffect( () => {
+        if(currentDiagram !== diagramType) updateDiagram(diagramType)
+    },[diagramType])
 
-        if(loadProcessIsActive) return;
 
-        erContent.current = {
-            ...metaInformation,
-            projectType: DiagramTypes.erDiagram,
-            drawBoardContent: {elements: drawBoardElements, connections: connections}
-        }
+    //Download
+    function createDownloadPackage(){
+
+        let downloadPackage = {erContent: erContentStore, relContent: relationalContentStore}
+
+        return JSON.stringify(downloadPackage, null, 2);
     }
 
 
-    function syncRelContent(tables, connections){
-
-        if(loadProcessIsActive) return;
-
-        relationalContent.current = {
-            ...metaInformation,
-            projectType: DiagramTypes.relationalDiagram,
-            drawBoardContent: {tables: tables, connections: connections}
-        }
-    }
-
-    /**
-     * Upload logic
-     */
-
-        //Import project
-    const [importedContent, setImportedContent] = useState({})
-
+    //Upload
     function importDrawBoardData(importedContent){
-        console.log("parsing...")
-        let importedJson = JSON.parse(importedContent)
-        console.log("parsed")
-        console.log(importedJson)
-        setImportedContent(importedJson)
-    }
 
-    function triggerImportComplete(){
-        setImportedContent(null);
-        setLoadProcessStatus(false)
+        let importedJson = JSON.parse(importedContent)
+
+        relationalContentStoreAccess(ImportRelContent(importedJson.relationalContent))
+        erContentStoreAccess(ImportErContent(importedJson.erContent))
     }
 
 
     const url = "http://localhost:8080/convert/relational"
-    const [serverResult, setServerResult] = useState(null)
-    const [error, setError] = useState(false)
-
-    const [sqlServerResult, setSqlSeverResult] = useState(null)
-    const urlSql = "http://localhost:8080/convert/sql"
-    function generateSql(dto){  //TODO schauen was sinnvoller ist, ich nehm hier das dto, da die sync noch nicht funktioniert. TOOODOO
-
-
-        axios.post(urlSql, dto).
-        then((response) => {
-
-            setSqlSeverResult(response.data);
-
-
-        }).
-        catch(error => setError(true));
-    }
-
-
+    const [relationalEndpointError, setRelationalEndpointError] = useState(false)
 
     function transformToRel(){
-        let content = JSON.stringify(erContent.current);
+        let contentToSend = {...erContentStore, ...metaInformation};
 
-        axios.post(url, erContent.current).
+        axios.post(url, contentToSend).
         then((response) => {
-
-            setServerResult(response.data);
-            console.log("Received")
-
+            erContentStoreAccess(ImportRelContent(response.data))
         }).
-        catch(error => setError(true));
+        catch(error => setRelationalEndpointError(error));
     }
 
-    useEffect( () => {
-
-        console.log("Use effect of server result")
-        console.log(serverResult)
-        if(serverResult == null) return;
-
-        changeToRelationalDiagram();
-
-        setImportedContent(serverResult);
-        relationalContent.current = serverResult;
-
-        setServerResult(null);
-
-    },[serverResult])
 
 
+    const urlSql = "http://localhost:8080/convert/sql"
+    const [sqlServerResult, setSqlSeverResult] = useState(null)
+    const [sqlEndpointError, setSqlEndpointError] = useState(null)
+
+    function generateSql(dto){
+
+        axios.post(urlSql, dto).
+            then((response) => {
+                setSqlSeverResult(response.data);
+            }).
+            catch(error => setSqlEndpointError(error));
+    }
+
+    //Those properties are used, it is an ide fault
     const SaveAndLoadProps = {
-        syncErContent: syncErContent,
-        syncRelContent: syncRelContent,
-        importedContent: importedContent,
-        triggerImportComplete: triggerImportComplete,
         transformToRel: transformToRel,
         generateSql:generateSql,
-        sqlServerResult:sqlServerResult
+        sqlServerResult: sqlServerResult
     }
-
-
-    useEffect( () => {
-
-        if(diagramType === DiagramTypes.erDiagram)  setImportedContent(erContent.current)
-        if(diagramType === DiagramTypes.relationalDiagram) setImportedContent(relationalContent.current)
-
-        setLoadProcessStatus(false)
-
-    },[diagramType])
-
 
     const erTabActive = diagramType === DiagramTypes.erDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
     const relationalTabActive = diagramType === DiagramTypes.relationalDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
@@ -149,7 +91,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
                 <button className={erTabStyle} onClick={changeToErDiagram}>Er Diagram</button>
                 <button className={relationalTabStyle} onClick={changeToRelationalDiagram}>Relational Diagram</button>
                 <PrivacyPolicy/>
-                <Download erContent={erContent}/>
+                <Download createDownloadPackage={createDownloadPackage}/>
                 <Upload importDrawBoardData={importDrawBoardData}/>
             </div>
             {React.cloneElement(children, { ...SaveAndLoadProps  })}

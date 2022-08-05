@@ -10,7 +10,7 @@ const erContentSlice = createSlice({
          * @param state
          * @param action
          */
-        ImportContent: (state, action) => {
+        ImportErContent: (state, action) => {
             //action.payload.drawBoardContent
             if(Array.isArray(action.payload.elements) )
             {
@@ -240,7 +240,7 @@ const erContentSlice = createSlice({
 })
 
 export const {
-    ImportContent,
+    ImportErContent,
     SelectAnyElement,
     HighlightDrawBoardElements,
     UnselectAndUnHighlightAllElements,

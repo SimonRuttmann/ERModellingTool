@@ -1,13 +1,7 @@
 import React from "react";
 import downloadIcon from "../Resources/cloud-download.svg";
 
-export function Download({erContent}){
-
-    function createDownloadPackage(){
-        console.log(erContent.current)
-        console.log("create download package based on : " + erContent.current)
-        return JSON.stringify(erContent.current, null, 2);
-    }
+export function Download({createDownloadPackage}){
 
     function download(){
         //Receive and transform current sate
