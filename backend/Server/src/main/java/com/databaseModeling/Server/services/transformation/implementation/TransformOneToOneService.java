@@ -30,12 +30,17 @@ public class TransformOneToOneService implements ITransformOneToOneService {
     public void transformOneToOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
         var relations = resolveStrongRelationsOfDeg2(erGraph);
-        relations.forEach(this::transformOptionalOneToOptionalOneRelation);
+        relations.forEach(this::transformOneToOneRelation);
 
     }
 
-    //For one-to-one bidirectional relationships, the owning side corresponds to the side that contains the corresponding foreign key.
-    private void transformOptionalOneToOptionalOneRelation(
+    /**
+     *
+     * For one-to-one relationships, the "owning side" corresponds to the side
+     * that contains the corresponding foreign key.
+     * @param relation The relation to transform
+     */
+    private void transformOneToOneRelation(
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation) {
 
         var firstEdge = relation.getEdges().get(0);
@@ -51,6 +56,8 @@ public class TransformOneToOneService implements ITransformOneToOneService {
 
         if(!isOneToOneAnyKind(firstEdge, secondEdge)) return;
 
+        // Reflexive owning side resolution
+
         if(isReflexive){
             var relationData = resolveErData(relation);
 
@@ -65,13 +72,14 @@ public class TransformOneToOneService implements ITransformOneToOneService {
 
                 tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
                 tableManager.addForeignKeysAsPrimaryKeys(nodeOfFirstEge,relation);
-
             }
 
             relationData.setTransformed(true);
             return;
 
         }
+
+        // (0,1) : (0,1) and (1,1) : (1,1) owning side resolution
 
         //Owning side is specified
         if (isOptionalToOptional(firstEdge, secondEdge) || isMandatoryToMandatory(firstEdge, secondEdge)) {
@@ -85,6 +93,8 @@ public class TransformOneToOneService implements ITransformOneToOneService {
             }
         }
 
+        // (1,1) : (0,1) and (0,1) : (1,1) owning side resolution
+
         //Owning side is the mandatory side
         if(isMandatoryToOptional(firstEdge, secondEdge)){
             owningNode = nodeOfSecondEdge;
@@ -95,6 +105,8 @@ public class TransformOneToOneService implements ITransformOneToOneService {
             owningNode = nodeOfFirstEge;
             nodeToReference = nodeOfSecondEdge;
         }
+
+        //Transformation of the relation
 
         //Merge relation into owning node
         tableManager.mergeTables(owningNode, relation);
@@ -148,19 +160,4 @@ public class TransformOneToOneService implements ITransformOneToOneService {
                 isMandatoryToOptional(secondEdge, firstEdge);
     }
 
-    /*
-        private void mergeMandatoryOneToMandatoryOne(
-            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> owningNode,
-            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> nodeToMerge,
-            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
-
-        //A >-> B <-> C
-        // CB
-        // ACB
-        MergeTables(nodeToMerge, relation);
-        MergeTables(owningNode, nodeToMerge);
-
-    }
-
-     */
 }

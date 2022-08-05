@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 enum Color {white, grey, black}
 
+/**
+ * A generic implementation of topological sort with a depth first search
+ * @param <M> The type of element to sort
+ */
 public class TopologicalSort<M> {
     private final ArrayList<Node<M>> nodes = new ArrayList<>();          // Adjacency List
     private final ArrayList<Node<M>> finishTimeList = new ArrayList<>(); // Sorted list, populated by the algorithm
@@ -14,7 +18,12 @@ public class TopologicalSort<M> {
     private boolean hasCircle = false;
     private int currentTime = 1;
 
-    //returns true if the alg was successful (e.g. has no circle)
+
+    /**
+     * Executes the topological sort
+     * The result set can be accessed by using TopologicalSort.resolveResultSet()
+     * @return True, if there is no cycle and therefore the sort succeeds
+     */
     public boolean topologicalSort(){
         for (var node : nodes) {
             if(node.color == Color.white) {
@@ -26,6 +35,9 @@ public class TopologicalSort<M> {
     }
 
 
+    /**
+     * @return The sorted collection of elements
+     */
     public List<M> resolveResultSet(){
         return  finishTimeList.stream().
                 sorted(Comparator.comparing(node -> node.finishTime)).

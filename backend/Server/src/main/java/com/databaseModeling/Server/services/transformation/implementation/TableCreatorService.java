@@ -21,18 +21,22 @@ public class TableCreatorService implements ITableCreatorService {
 
     @Override
     public void createTables(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
+
+        //Recursively add tables for each graph node and tree node
         for(var node : erGraph.graphNodes){
-            createAttributeTables(node.getNodeData());
+            createNodeAndAttributeTables(node.getNodeData());
         }
     }
 
-    private void createAttributeTables(TreeNode<EntityRelationElement> parent){
+    private void createNodeAndAttributeTables(TreeNode<EntityRelationElement> parent){
+
+        //On the first execution the node table will be created, further iterations add the attribute tables
         var table = tableManager.createTable(resolveErType(parent), resolveMetaInformation(parent));
         resolveErData(parent).addInitialTable(table);
 
         //Traversal of tree
         for (var child : parent.getChildren()) {
-            createAttributeTables(child);
+            createNodeAndAttributeTables(child);
         }
     }
 }

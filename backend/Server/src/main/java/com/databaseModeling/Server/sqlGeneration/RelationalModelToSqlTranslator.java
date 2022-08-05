@@ -3,6 +3,12 @@ package com.databaseModeling.Server.sqlGeneration;
 import com.databaseModeling.Server.controller.RelationalModelDto;
 
 
+/**
+ * This class is responsible for translating a given relational model to sql
+ * Therefore it executes a topological sort on the tables and generates sql for all tables
+ * The topological sort is executed to ensure that the sql code creates no tables, which have references on
+ * not yet created tables
+ */
 public class RelationalModelToSqlTranslator {
 
 

@@ -27,10 +27,9 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
     @Override
     public void transformWeakTypes(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
 
-        //We execute the algorithm n - 1 times, as the longest possible chain
-        //can be n-1 weak entities with 1 strong entity
-        //E.g. SE -> WE -> WE -> WE -> ...
-        for (int i = 0; i < erGraph.graphNodes.size() - 1; i++){
+        var weakTypes = resolveWeakEntities(erGraph);
+
+        for (int i = 0; i < weakTypes.size(); i++){
 
             //Increase performance by only iterating through not handled weak entities
             var typesToIdentify = resolveTypesToIdentify(erGraph);
@@ -51,6 +50,78 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
             addForeignAsPrimaryKeysRecursive(weakEntityTable);
         }
         
+    }
+
+    /**
+     * Resolves an identifying type for a weak entity, if it is directly (with a weak relation)
+     * connected to an already identified entity
+     * If an identifying entity is found, the table of the weak relation will be merged with the weak entity
+     * and references as foreign keys to the identifying entity table are created
+     * @param weakEntity The weak entity to identify
+     */
+    private void resolveIdentifyingType(
+            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
+
+        //If the weak entity is already resolved, we can skip processing
+        if(resolveErData(weakEntity).getTable().isStrongWithReferences()) return;
+
+        //Returns all identifying relations connected to the weak entity
+        var identifyingRelations = ResolveIdentifyingRelations(weakEntity);
+
+        //Collect all entities of the other sides of the identifyingRelations
+        var identifyingEntitiesRelations = createNodeMap();
+
+        for (var identifyingRelation : identifyingRelations) {
+            var connectedOtherEntity = resolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation).get(0);
+            identifyingEntitiesRelations.put(connectedOtherEntity, identifyingRelation);
+        }
+
+
+        for (var entry : identifyingEntitiesRelations.entrySet()) {
+
+            // weakEntity               Identifying Relation         IdentifyingEntity
+            // Weak Entity A    -->     Weak Relation B     -->      Strong Entity C
+
+            var identifyingEntity = entry.getKey();
+            var identifyingRelation = entry.getValue();
+
+            var identifyingEntityData = resolveErData(identifyingEntity);
+            var weakEntityData = resolveErData(weakEntity);
+
+            //Note, that the defining type does not need to be a strong entity,
+            //it can also be a weak entity, which has already resolved its strong type
+
+            var isIdentifying =
+                    identifyingEntityData.getErType() == ErType.StrongEntity ||
+                            identifyingEntityData.getTable().isStrongWithReferences();
+
+            if(!isIdentifying) continue;
+
+            weakEntityData.getTable().setWeakEntityTable(true);
+            weakEntityData.getTable().setReferencedIdentifyingTable(identifyingEntityData.getTable());
+
+            //Merge relation into weak entity
+            tableManager.mergeTables(weakEntity, identifyingRelation);
+
+            resolveErData(identifyingRelation).setTransformed(true);
+            break;
+        }
+    }
+
+    /**
+     * Returns all identifying relations the given entity is connected to
+     * @param weakEntity The entity to query for
+     * @return A list of graph edges, representing the relations
+     */
+    private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
+    ResolveIdentifyingRelations(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
+
+        var relations = resolveRelationsOfEntity(weakEntity);
+
+        return  relations.
+                stream().
+                filter(connectedNode -> resolveErType(connectedNode) == ErType.WeakRelation).
+                collect(Collectors.toList());
     }
 
     /**
@@ -96,101 +167,8 @@ public class TransformWeakTypesService implements ITransformWeakTypesService {
 
     private Map< GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>,
                  GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> >
-            createNodeMap(){
+    createNodeMap(){
         return new HashMap<>();
     }
-    //Round is required for
-    // A --> B --> D (strong)
-    // C --> B                    To Prevent:  A --> C --> B --> D
-    private void resolveIdentifyingType(
-            GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
-
-        //If the weak entity is already resolved, we can skip processing
-        if(resolveErData(weakEntity).getTable().isStrongWithReferences()) return;
-
-        //Returns all identifying relations connected to the weak entity
-        var identifyingRelations = ResolveIdentifyingRelations(weakEntity);
-
-        //Collect all entities of the other sides of the identifyingRelations
-
-        //andere datenstruktur Relation <-> Weak Entity
-        var identifyingEntitiesRelations = createNodeMap();
-
-        for (var identifyingRelation : identifyingRelations) {
-            var connectedOtherEntity = resolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation).get(0);
-            identifyingEntitiesRelations.put(connectedOtherEntity, identifyingRelation);
-        }
-
-
-        for (var entry : identifyingEntitiesRelations.entrySet()) {
-
-            // weakEntity               Identifying Relation         IdentifyingEntity
-            // Weak Entity A    -->     Weak Relation B     -->      Strong Entity C
-
-            var identifyingEntity = entry.getKey();
-            var identifyingRelation = entry.getValue();
-
-            var identifyingEntityData = resolveErData(identifyingEntity);
-            var weakEntityData = resolveErData(weakEntity);
-
-            //Note, that the defining type does not need to be a strong entity,
-            //it can also be a weak entity, which has already resolved its strong type
-
-            var isIdentifying =
-                    identifyingEntityData.getErType() == ErType.StrongEntity ||
-                    identifyingEntityData.getTable().isStrongWithReferences();
-
-            if(!isIdentifying) continue;
-
-            weakEntityData.getTable().setWeakEntityTable(true);
-            weakEntityData.getTable().setReferencedIdentifyingTable(identifyingEntityData.getTable());
-
-            //Merge relation into weak entity
-            tableManager.mergeTables(weakEntity, identifyingRelation);
-
-            resolveErData(identifyingRelation).setTransformed(true);
-            break;
-        }
-    }
-
-
-    /**
-     * Returns all identifying relations the given entity is connected to
-     * @param weakEntity The entity to query for
-     * @return A list of graph edges, representing the relations
-     */
-    private List<GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>>
-            ResolveIdentifyingRelations(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity){
-
-        var relations = resolveRelationsOfEntity(weakEntity);
-
-        return  relations.
-                stream().
-                filter(connectedNode -> resolveErType(connectedNode) == ErType.WeakRelation).
-                collect(Collectors.toList());
-    }
-
-    //TODO This method can throw an exception, if the weak relation has only 1 connection
-    //TODO Such inconsistency needs to be checked via the validation!
-
-    /**
-     * Returns the entity connected to the relation, without the element specified in the first argument
-     * @param weakEntity The entity, which should be excluded from the result list
-     * @param identifyingRelation The relation which will be queried for
-     * @return A list of GraphNodes representing the entities
-     * @see TransformWeakTypesService#ResolveOtherEntityConnectedToRelation(GraphNode, GraphNode)
-     * @throws  java.util.NoSuchElementException
-     */
-    private GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation>
-                 ResolveOtherEntityConnectedToRelation( GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> weakEntity,
-                                                        GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> identifyingRelation)
-                                                        throws NoSuchElementException
-    {
-        var entities = resolveOtherEntitiesConnectedToRelation(weakEntity, identifyingRelation);
-
-        return entities.stream().findFirst().orElseThrow();
-    }
-
-
 
 }

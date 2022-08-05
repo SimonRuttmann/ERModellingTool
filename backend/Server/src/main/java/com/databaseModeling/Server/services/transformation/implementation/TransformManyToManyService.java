@@ -28,6 +28,10 @@ public class TransformManyToManyService implements ITransformManyToManyService {
         relations.forEach(this::transformManyToManyRelation);
     }
 
+    /**
+     * Transforms a many-to-many by adding foreign keys to the relation table referencing the connected entity tables
+     * @param relation The relation to transform
+     */
     private void transformManyToManyRelation(
             GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation) {
 

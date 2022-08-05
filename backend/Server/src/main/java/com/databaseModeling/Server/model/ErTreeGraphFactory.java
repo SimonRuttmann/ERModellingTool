@@ -41,6 +41,9 @@ public class ErTreeGraphFactory {
         return erGraph;
     }
 
+    /**
+     * Adds a node to the graph for each non attribute Er element in the draw board content
+     */
     private static void addNode(
             Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph,
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
@@ -55,7 +58,9 @@ public class ErTreeGraphFactory {
                                     new TreeNode<>(node.getId(), createNodeData(node))));
     }
 
-
+    /**
+     * Adds an edge to the graph for each connection between non attribute elements in the draw board content
+     */
     private static void addEdges(
             Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph,
             ConceptionalModelDto.DrawBoardContent drawBoardContent)
@@ -74,6 +79,11 @@ public class ErTreeGraphFactory {
 
     }
 
+    /**
+     * Adds a tree node to the graph for each attribute Er element in the draw board content
+     * Also handles the child - parent referenced between created tree nodes based on the
+     * attribute connections in the draw board content
+     */
     private static void addTreeElements(
             Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph,
             ConceptionalModelDto.DrawBoardContent drawBoardContent)

@@ -7,8 +7,16 @@ import com.databaseModeling.Server.model.relationalModel.Table;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Factory to create TableDTOs for relational tables
+ */
 public class TableDtoFactory {
 
+    /**
+     * Creates a tableDto for a relational table and adds the meta information connected to the given table
+     * @param table The relational table
+     * @return The created tableDto
+     */
     public static RelationalModelDto.DrawBoardContent.TableDTO createTableDto(Table table){
         var dto = new RelationalModelDto.DrawBoardContent.TableDTO();
         dto.setId(table.getId());
@@ -20,6 +28,10 @@ public class TableDtoFactory {
         return dto;
     }
 
+    /**
+     * Convenience method to create multiple tableDTOs
+     * @see TableDtoFactory#createTableDto(Table)
+     */
     public static List<RelationalModelDto.DrawBoardContent.TableDTO> createTableDto(List<Table> tables){
         return tables.stream().map(TableDtoFactory::createTableDto).collect(Collectors.toList());
     }

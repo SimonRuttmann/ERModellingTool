@@ -4,9 +4,15 @@ import com.databaseModeling.Server.controller.RelationalModelDto;
 
 import java.util.List;
 
+/**
+ * This class generates sql code for a given table
+ */
 public class SqlGenerator {
 
-    public static String generateSqlForTable(RelationalModelDto.DrawBoardContent.TableDTO table, List<RelationalModelDto.DrawBoardContent.TableDTO> allTables){
+    public static String generateSqlForTable(
+            RelationalModelDto.DrawBoardContent.TableDTO table,
+            List<RelationalModelDto.DrawBoardContent.TableDTO> allTables){
+
         StringBuilder tableDefinition = new StringBuilder();
 
         //Add header

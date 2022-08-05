@@ -26,18 +26,16 @@ public class TransformAttributesService implements ITransformAttributesService {
 
             if(resolveErType(root).isNode)
                 transformTree(root.getNodeData());
-
         }
-
     }
 
     @Override
     public void generateAttributeTableKeys(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph){
+
         for (var root : erGraph.graphNodes){
 
             if(resolveErType(root).isNode)
-                updateReferences(root.getNodeData().getTreeData().getTable());
-
+                cascadePrimaryKeys(root.getNodeData().getTreeData().getTable());
         }
     }
 
@@ -53,15 +51,15 @@ public class TransformAttributesService implements ITransformAttributesService {
      * 3. If the parent is a leaf stop execution
      * 4. Iterate through children
      *      4.1 If the table of the child is marked as fixed
-     *           4.1.1 If the table has at least one more children
-     *                    Create a reference from the child to the parent
-     *           4.1.2 Else (In this case it is a "pipe-attribute" and must be forwarded)
-     *                     Merge the child table with the parent table
-     *                     and update the sub children reference
-     *           4.1.3 Mark the table, to be persisted
+     *          If the table has only one more child and is not the root it is a "pipe-attribute" and must be forwarded
+     *              - Therefore merge the child table with the parent table and update the sub children reference
+     *              - Mark the new table also as fixed
+     *          In any other case
+     *              - Create a reference from the child to the parent
+     *                and update the sub children reference
      *      4.2. Else
-     *          4.2.1 Merge the table of the child with the parent table
-     *          4.2.2 Remove the child table
+     *          - Merge the child table with the parent table
+     *            and update the sub children reference
      *</pre>
      *
      * @param parent The parent element of the tree
@@ -98,22 +96,13 @@ public class TransformAttributesService implements ITransformAttributesService {
                     forwardAttributeTable(parent, child);
                     parentTable.setFixedAttributeTable(true);
                 }
-
                 else {
                     parentTable.addReferenceToChildAttributeTable(childTable);
-                    //childTable.referencedAttributeTable = parentTable;
                 }
-
-                //If it is a multivalued attribute it is marked above as isFixedAttributeTable
-                //parentTable.isFixedAttributeTable = true;
             }
-
             else{
-                //TableManager.AddColumns(parentTable, childTable.getColumns());
-                //child.getTreeData().removeTable();
-
-                //We always forward the attribute table, because the child table
-                //Could have references which would get lost by deleting the table
+                //We always forward the lower attribute table, because the child table
+                //could have references which would get lost by deleting the table
                 forwardAttributeTable(parent, child);
             }
 
@@ -121,6 +110,9 @@ public class TransformAttributesService implements ITransformAttributesService {
 
     }
 
+    /**
+     * Merges the tables of two tree nodes and updates the references from/to these tables accordingly
+     */
     private void forwardAttributeTable(
             TreeNode<EntityRelationElement> parent,
             TreeNode<EntityRelationElement> child){
@@ -149,7 +141,7 @@ public class TransformAttributesService implements ITransformAttributesService {
      *</pre>
      *
      */
-    private void updateReferences(Table parentTable){
+    private void cascadePrimaryKeys(Table parentTable){
 
         if(parentTable == null) return;
 
@@ -160,8 +152,7 @@ public class TransformAttributesService implements ITransformAttributesService {
         for(var childTable : referencedTables){
 
             tableManager.addForeignKeysToTableAsPrimaryKeys(parentTable, childTable);
-
-            updateReferences(childTable);
+            cascadePrimaryKeys(childTable);
         }
 
     }

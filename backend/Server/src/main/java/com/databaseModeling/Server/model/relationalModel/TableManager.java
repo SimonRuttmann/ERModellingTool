@@ -11,6 +11,9 @@ import java.util.List;
 
 import static com.databaseModeling.Server.services.util.ErUtil.resolveErData;
 
+/**
+ * This class is responsible for querying, creation, deletion and modification of tables
+ */
 public class TableManager {
 
     public TableManager(){

@@ -30,21 +30,22 @@ public class TransformIsAStructureService implements ITransformIsAStructureServi
                 filter(node -> resolveErType(node) == ErType.IsAStructure).
                 collect(Collectors.toList());
 
-        //We execute the algorithm n - 1 times, as the longest possible chain
-        //can be n/2 -1 isAs with 1 strong entity
-        //E.g. SE -> IsA -> SE -> IsA -> ...
-        var maxChainLength = (erGraph.graphNodes.size()/2) - 1;
-        for (int i = 0; i < maxChainLength; i++){
+        for (int i = 0; i < isaStructures.size(); i++){
 
             //Increase performance by only iterating through not handled isa structures
-            isaStructures = isaStructures.stream().filter(this::isIsANotHandled).collect(Collectors.toList());
-            if(isaStructures.isEmpty()) break;
+            var notHandledIsaStructures = isaStructures.stream().filter(this::isIsANotHandled).collect(Collectors.toList());
+            if(notHandledIsaStructures.isEmpty()) break;
 
-            isaStructures.forEach(this::transformIsAStructure);
-
+            notHandledIsaStructures.forEach(this::transformIsAStructure);
         }
     }
 
+    /**
+     * Transforms isA Structures by adding a reference from the subtypes to the supertypes of the isA
+     * Also cascades the primary keys
+     * If the isA can not be handled (yet) due to other isAs affecting the supertype the algorithm will skip the transformation
+     * @param isAStructure The isA to transform
+     */
     private void transformIsAStructure(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> isAStructure) {
 
         var parent = resolveParentOfIsAStructure(isAStructure);

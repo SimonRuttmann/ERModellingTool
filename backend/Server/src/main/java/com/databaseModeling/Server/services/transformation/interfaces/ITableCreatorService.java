@@ -7,5 +7,9 @@ import com.databaseModeling.Server.model.dataStructure.tree.TreeNode;
 
 public interface ITableCreatorService {
 
+    /**
+     * Creates tables for each graph and tree node in the given graph
+     * @param erGraph The graph to create tables for
+     */
     void createTables(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph);
 }

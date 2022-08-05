@@ -17,7 +17,6 @@ import static com.databaseModeling.Server.services.util.ErUtil.resolveStrongRela
 public class TransformManyToOneService implements ITransformManyToOneService {
 
 
-
     public TransformManyToOneService (TableManager tablemanager){
         this.tableManager = tablemanager;
     }
@@ -25,11 +24,6 @@ public class TransformManyToOneService implements ITransformManyToOneService {
     private final TableManager tableManager;
 
 
-    //Achtung min,max ist umgekehrt
-    // A - 1,N -AB - 1 - B
-    // 1 A hat n viele b
-    // 1 B hat 1 A
-    //Stimmt hier
     @Override
     public void transformManyToOneRelations(Graph<TreeNode<EntityRelationElement>, EntityRelationAssociation> erGraph) {
 
@@ -37,7 +31,16 @@ public class TransformManyToOneService implements ITransformManyToOneService {
         relations.forEach(this::transformOneToManyRelation);
     }
 
-
+    /**
+     * Transforms One-To-Many relations by merging the table of the relation to the table of the many side
+     * Also creates foreign keys to the table of the one side
+     *
+     * @param relation The relation to transform
+     *
+     * Remark:
+     * In Min-Max Notation the cardinalities are switched
+     * A - 1,N -AB - 1 - B => One A has multiple Bs and one B has one A
+     */
     private void transformOneToManyRelation(GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> relation){
 
         var edges = relation.getEdges();
@@ -73,15 +76,12 @@ public class TransformManyToOneService implements ITransformManyToOneService {
             return;
         }
 
-
         tableManager.mergeTables(manyNode, relation);
         tableManager.addForeignKeysAsNormalColumn(singleNode, manyNode);
 
         var relationData = resolveErData(relation);
         relationData.setTransformed(true);
     }
-
-
 
 
     private boolean isManyToOne(GraphEdge<TreeNode<EntityRelationElement>, EntityRelationAssociation> firstEdge,

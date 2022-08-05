@@ -10,7 +10,7 @@ public interface ITransformAttributesService {
     /**
      * Transforms all attributes to the relational model
      * Therefore each graph node will have a table containing the attributes
-     * In addition, there will be more tables created, if multivalued attributes are involved
+     * In addition, there will be more tables in existence if multivalued attributes are involved
      *
      * The parent table will have all primary keys from the attributes applied
      *
