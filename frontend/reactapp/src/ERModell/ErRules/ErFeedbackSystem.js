@@ -10,31 +10,35 @@ import {ERTYPE} from "../Model/ErType";
 import {ConnectionType} from "../Model/Diagram";
 import {resolveObjectById} from "../Components/Util/ObjectUtil";
 
-export const validateErDiagram = (connections, drawBoardElements) => {
+/**
+ * The ErFeedbackSystem currently consists only of the validateErDiagram method
+ * and is exported at the end of the file
+ */
+
+
+/**
+ * This method validates an Er diagram composed by the given connections and drawBoardElements
+ * it generates an error message for each vulnerability found
+ * @param connections The connections of the Er diagram
+ * @param drawBoardElements The drawBoardElements, e.g. Er elements of the Er diagram
+ * @returns {*[]} A collection of strings, containing the error messages
+ */
+const validateErDiagram = (connections, drawBoardElements) => {
 
     let invalidMessages = [];
 
-    //Check if all elements (except isa) have a name
+    //1. Check if all elements (except isa) have a name
+
     const nonIsa = drawBoardElements.filter(element => element.erType !== ERTYPE.IsAStructure.name);
     for (let namedElement of nonIsa){
         if(namedElement.displayName == null || namedElement.displayName === "" || namedElement.displayName.trim().length === 0)
             invalidMessages.push(`The element of type "${namedElement.erType}" has no name!`)
     }
 
-    //TODO THIS IS OPTIONAL!
-   // let alreadyUsedNames = [];
-
-  //  drawBoardElements.forEach(element => {
-  //      if (alreadyUsedNames[element.displayName.trim()])
-  //          invalidMessages.push(`The name "${element.displayName}" is used multiple times!`)
-  //      else
-  //          alreadyUsedNames[element.displayName.trim()] = true;
-  //  });
-
     if(connections.length === 0 && drawBoardElements.length === 0)
         invalidMessages.push("Diagram is empty!")
 
-    //For every attribute, the Root (Entity or Relation) != null
+    //2. For every attribute, the Root (Entity or Relation) != null
 
     let attributes = drawBoardElements.filter(element => isElementOfCategoryAttribute(element))
     for(let attribute of attributes){
@@ -45,7 +49,7 @@ export const validateErDiagram = (connections, drawBoardElements) => {
             invalidMessages.push(`The attribute "${attribute.displayName}" is not connected to a entity or relation!`)
     }
 
-    //For every Entity a key is present (top level key), or it is an inheritor of an isa structure
+    //3. For every Entity a key is present (top level key), or it is an inheritor of an isa structure
 
     let entities = drawBoardElements.filter(element => element.erType === ERTYPE.StrongEntity.name ||
                                                        element.erType === ERTYPE.WeakEntity.name);
@@ -74,7 +78,7 @@ export const validateErDiagram = (connections, drawBoardElements) => {
 
     }
 
-    //For every Relation >= 2 connections to entity category
+    //4. For every Relation >= 2 connections to entity category
 
     let relations = drawBoardElements.filter(element => element.erType === ERTYPE.StrongRelation.name ||
                                                         element.erType === ERTYPE.WeakRelation.name);
@@ -96,7 +100,7 @@ export const validateErDiagram = (connections, drawBoardElements) => {
 
     }
 
-    //For every IsA Parent + Inheritor is present
+    //5. For every IsA Parent + Inheritor is present
 
     let isAStructures = drawBoardElements.filter(element => element.erType === ERTYPE.IsAStructure.name);
 
@@ -114,7 +118,7 @@ export const validateErDiagram = (connections, drawBoardElements) => {
             invalidMessages.push(`IsA Structure has no inheritors`);
     }
 
-    //Every weak entity identified
+    //6. Every weak entity identified
 
     let weakEntities = drawBoardElements.filter(element => element.erType === ERTYPE.WeakEntity.name);
 
@@ -128,10 +132,8 @@ export const validateErDiagram = (connections, drawBoardElements) => {
 
     }
 
+    //7. Every association has valid cardinalities
 
-    //Every association has valid cardinalities
-
-    //1. Für jede relation connection 1 < connection 2 und connection 1 und 2 sind 0,1 oder ABCDEFGHIJKLMNOPQRSTUVWXYZ (groß, klein)
     for (let relation of relations){
 
         let connectors = getConnectorsOfObject(relation, connections);
@@ -150,7 +152,14 @@ export const validateErDiagram = (connections, drawBoardElements) => {
     return invalidMessages;
 }
 
-
+/**
+ * Resolved a cardinality for any given value
+ * @param value A nullable string to check
+ * @returns {{number: number, isNumber: boolean, isValid: boolean}}
+ * An isValid flag, indicating if a number or alphabetic value could be resolved
+ * A isNumber flag if the given value is valid and a number got resolved
+ * The number if the given value is valid and a number
+ */
 const resolveCardinality = (value) => {
 
     if(value == null) value = "---";
@@ -177,40 +186,56 @@ const resolveCardinality = (value) => {
     return {isValid: isValid, isNumber: isNumber, number: number }
 }
 
+/**
+ * Method to check, whether the cardinalities of a connection are valid
+ * @param min The min value of the connection
+ * @param max The max value of the connection
+ * @returns {{valid: boolean}|{valid: boolean, message: string}}
+ * A valid flag indicating if the cardinality is valid
+ * If it is not valid a message containing explanation is appended
+ */
 const validateConnectionsCardinality = (min, max) => {
+
     let minCardinality = resolveCardinality(min);
     let maxCardinality = resolveCardinality(max);
 
+    //One or both cardinalities are invalid e.g. empty, special chars...
     if(!(minCardinality.isValid && maxCardinality.isValid))
         return {valid: false, message:"it values can only be a number or an alphabetic value"}
 
-    //both are alphabetic
+    //Both are alphabetic
     if(!minCardinality.isNumber && !maxCardinality.isNumber)
         return {valid: true}
 
-    //fist is alphabetic but second is number
+    //Fist is alphabetic but second is number
     if( (!minCardinality.isNumber && maxCardinality.isNumber) )
         return {valid: false, message: "the min cardinality is a variable and therefore higher than the max cardinality "}
 
-    //min number and max alphabetic
+    //Min number and max alphabetic
     if(minCardinality.isNumber && !maxCardinality.isNumber)
         return {valid: true}
 
     let areNumbers = minCardinality.isNumber && maxCardinality.isNumber;
 
-    //both are numbers but the min is greater than the max
+    //Both are numbers but the min is greater than the max
     if ( areNumbers && minCardinality.number > maxCardinality.number)
         return {valid: false, message: "the min cardinality is higher than the max cardinality"}
 
-    //both are numbers but the max is 0
+    //Both are numbers but the max is 0
     if ( areNumbers && maxCardinality.number === 0 )
         return {valid: false, message: "the max cardinality can not be 0"}
 
-    //max greater equals min and max not 0
+    //Max greater or equal min and max not 0
     if(areNumbers && maxCardinality.number >= minCardinality.number && maxCardinality.number !== 0)
         return {valid: true}
 
-    console.log("FUUUUUCK")
+    //This case can not happen and should only be used as a fallback for production build
     return {valid: false, message: "the cardinality could not be resolved"}
 }
+
+const ErFeedbackSystem = {
+    validateErDiagram: validateErDiagram
+}
+
+export default ErFeedbackSystem;
 

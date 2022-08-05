@@ -12,7 +12,7 @@ import TransformButton from "./TransformButton";
 import {ConnectionType, DiagramTypes} from "./Model/Diagram";
 import {createConnection} from "./ConnectionCreationRules";
 import {createSelection} from "./ErRules/ErDrawingRuleEnforcer";
-import {validateErDiagram} from "./ErRules/ErValidator";
+import ErFeedbackSystem from "./ErRules/ErFeedbackSystem";
 
 const PlayGround = ({syncErContent, importedContent, triggerImportComplete, transformToRel}) => {
 
@@ -96,7 +96,7 @@ const PlayGround = ({syncErContent, importedContent, triggerImportComplete, tran
 
   useEffect( () => {
 
-    const errorMessages = validateErDiagram(connections, drawBoardElements)
+    const errorMessages = ErFeedbackSystem.validateErDiagram(connections, drawBoardElements)
 
     setInvalidMessages([...errorMessages])
 
