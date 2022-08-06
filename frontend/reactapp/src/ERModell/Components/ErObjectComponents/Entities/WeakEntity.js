@@ -1,7 +1,19 @@
 import React, {useLayoutEffect} from "react";
-import {resolveRequiredWidth} from "../../Util/SvgUtils"
+import SvgUtil from "../../Util/SvgUtils"
+import DisplayConfiguration from "../../../DisplayConfiguration";
 
-
+/**
+ * Renders a drawBoardElement as weak entity
+ * The fontSize and width/height of this element is determined by the text to display and the DisplayConfiguration
+ * @param id                            The id of the drawBoardElement
+ * @param displayText                   The text to render inside the element
+ * @param color                         The color this element has to fill
+ * @param fontFamily                    The font family the text should be rendered
+ * @param fontSize                      The font size the text should be rendered
+ * @param updateDrawBoardElementSize    A function, receiving the id, width and
+ *                                      height to update the drawBoardElement size
+ * @see DisplayConfiguration
+ */
 function WeakEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     const xOuter = 0;       const yOuter = 0;
@@ -10,8 +22,16 @@ function WeakEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoa
     const xInner = xOuter + 5;                  const yInner = yOuter + 5;
     let widthInner = widthOuter - 10;           const heightInner = heightOuter - 10;
 
-    //If necessary, increase width to fit text
-    widthInner = resolveRequiredWidth(widthInner, displayText, fontSize, fontFamily)
+    let adjustedFontSize = fontSize;
+    if(DisplayConfiguration.enableTextResizeBasedOnDisplayText){
+        widthInner = SvgUtil.resolveRequiredWidth(widthInner, DisplayConfiguration.defaultTextToFit, fontSize, fontFamily)
+        adjustedFontSize = SvgUtil.resolveRequiredFontSize(widthInner, displayText, fontFamily, fontSize);
+    }
+    else if(DisplayConfiguration.enableSvgResizeBasedOnDisplayText){
+        widthInner = SvgUtil.resolveRequiredWidth(widthInner, displayText, fontSize, fontFamily);
+    }
+
+
     widthOuter = widthInner + 10;
 
     useLayoutEffect( () => {
@@ -66,7 +86,7 @@ function WeakEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoa
 
                 //display text style
                 fontFamily={fontFamily}
-                fontSize={fontSize}
+                fontSize={adjustedFontSize}
 
                 //display style
                 stroke="#000"

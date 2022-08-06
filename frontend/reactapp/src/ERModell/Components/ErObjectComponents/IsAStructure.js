@@ -1,16 +1,23 @@
 import React, {useLayoutEffect} from "react";
-//import {resolveRequiredWidth} from "../Util/SvgUtils"
 
-
+/**
+ * Renders a drawBoardElement as isA-Structure
+ * This element currently does not resize, as it has no variable text to hold
+ * @param id                            The id of the drawBoardElement
+ * @param displayText                   The text to render inside the element
+ * @param color                         The color this element has to fill
+ * @param fontFamily                    The font family the text should be rendered
+ * @param fontSize                      The font size the text should be rendered
+ * @param updateDrawBoardElementSize    A function, receiving the id, width and
+ *                                      height to update the drawBoardElement size
+ * @see DisplayConfiguration
+ */
 function IsAStructure({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
     let width = 100;
     const widthHeightRatio = (2/3);
 
-    //Comment in and remove constantDisplayText to make text editable and scalable
-
-    //If necessary, increase width to fit text
-    //width = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
+    //Edit this to make the IsA editable and scalable
     const constantDisplayText = "IsA"
 
     let height= width * widthHeightRatio;

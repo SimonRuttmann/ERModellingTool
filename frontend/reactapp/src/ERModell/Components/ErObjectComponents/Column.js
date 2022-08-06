@@ -4,18 +4,9 @@ function Column({ width, height, x, y, fontFamily, fontSize, column}){
 
 
     /*
-
-             |---------------------------------|
-             |           Table Name            |
-             |---------------------------------|
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             |---------------------------------|
-
+             |--------------------------------------------|
+             | [PK] [FK] | Column Display Name | DataType |
+             |--------------------------------------------|
      */
 
     const getDataType = (column) => {

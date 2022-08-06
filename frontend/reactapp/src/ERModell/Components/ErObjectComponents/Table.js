@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from "react";
-import {resolveRequiredWidth} from "../Util/SvgUtils"
+import SvgUtil from "../Util/SvgUtils"
 import Column from "./Column";
 import TableUtil from "../../TableUtil";
 
@@ -10,16 +10,16 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
 
     /*
 
-             |---------------------------------|
-             |           Table Name            |
-             |---------------------------------|
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             | [PK] [FK] | Column Display Name |
-             |---------------------------------|
+             |--------------------------------------------|
+             |                 Table Name                 |
+             |--------------------------------------------|
+             | [PK] [FK] | Column Display Name | DataType |
+             | [PK] [FK] | Column Display Name | DataType |
+             | [PK] [FK] | Column Display Name | DataType |
+             | [PK] [FK] | Column Display Name | DataType |
+             | [PK] [FK] | Column Display Name | DataType |
+             | [PK] [FK] | Column Display Name | DataType |
+             |--------------------------------------------|
 
      */
 
@@ -34,7 +34,7 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
     const tableHeight = object.columns.length * columnHeight + headerHeight;
 
     //If necessary, increase width to fit text
-    let minCalcWidth = resolveRequiredWidth(width, displayText, fontSize, fontFamily)
+    let minCalcWidth = SvgUtil.resolveRequiredWidth(width, displayText, fontSize, fontFamily)
 
     if(minCalcWidth > width) width = minCalcWidth;
 

@@ -1,6 +1,12 @@
-
-
-export const resolveRequiredWidth = (width, displayText, fontSize, fontFamily) => {
+/**
+ *
+ * @param width
+ * @param displayText
+ * @param fontSize
+ * @param fontFamily
+ * @returns {number|*}
+ */
+const resolveRequiredWidth = (width, displayText, fontSize, fontFamily) => {
 
     let textWidth = getTextWidth(displayText, `${fontSize}pt ${fontFamily}`);
 
@@ -8,7 +14,13 @@ export const resolveRequiredWidth = (width, displayText, fontSize, fontFamily) =
     return width
 }
 
-function getTextWidth(text, font) {
+/**
+ *
+ * @param text
+ * @param font
+ * @returns {number}
+ */
+const getTextWidth = (text, font) => {
 
     let canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
 
@@ -18,8 +30,36 @@ function getTextWidth(text, font) {
     return context.measureText(text).width;
 }
 
+/**
+ *
+ * @param width
+ * @param displayText
+ * @param fontFamily
+ * @param initialFontSize
+ * @returns {number|*}
+ */
+const resolveRequiredFontSize = (width, displayText, fontFamily, initialFontSize) => {
 
-export const getBoundsOfSvg = () => {
+    const initialTextWidth = getTextWidth(displayText, `${initialFontSize}pt ${fontFamily}`);
+
+    if(initialTextWidth <= width) return initialFontSize;
+
+    let adjustedTextWidth = initialTextWidth;
+    let adjustedFontSize = initialFontSize;
+    while(adjustedTextWidth > width){
+        adjustedFontSize = adjustedFontSize -1;
+        adjustedTextWidth = getTextWidth(displayText, `${adjustedFontSize}pt ${fontFamily}`);
+        if(adjustedFontSize < 5) break;
+    }
+
+    return adjustedFontSize;
+}
+
+/**
+ *
+ * @returns {{top: number, left: number, bottom: number, right: number}}
+ */
+const getBoundsOfSvg = () => {
 
     let svgContainer = document.getElementById("boxesContainer");
     if(svgContainer === null) return;
@@ -32,3 +72,17 @@ export const getBoundsOfSvg = () => {
         bottom: bounds.bottom}
 
 }
+
+/**
+ * Util holding functions to resolve the size of svg`s,
+ * the width of the display text hold by the svg or which
+ * font size is required to fit into a given width
+ */
+const SvgUtil = {
+    resolveRequiredWidth: resolveRequiredWidth,
+    getTextWidth: getTextWidth,
+    resolveRequiredFontSize: resolveRequiredFontSize,
+    getBoundsOfSvg: getBoundsOfSvg
+}
+
+export default SvgUtil;
