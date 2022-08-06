@@ -6,7 +6,7 @@ import {ConnectionType} from "../DrawBoardModel/Diagram";
  * of the elements with the same start and ending point (also reverse),
  * therefore every element with the same path will obtain a self-managed and different offset value
  */
-export const calculateOffsets = (connections, thisConnection, offsetFactor) => {
+const calculateOffsets = (connections, thisConnection, offsetFactor) => {
 
     if(thisConnection.horizontalAlignment === true ) return calculateForeignKeyOffset(thisConnection);
 
@@ -61,13 +61,12 @@ const calculateOffsetsIsA = (defaultOffset, connections, thisConnection, offsetF
 
         let offsetValueEnd = calculateOffsetValue(connectionsSameDestination, thisConnection, offsetFactor)
         endOffset = [{position: "bottom",   offset:{x: offsetValueEnd} }]
-        //TODO maybe offsetValueEnd = 0 oder, da die koordinaten bekannt sind, schauen das das linke element den offset mit dem größten linkswert kriegt
     }
 
     return {endOffset: endOffset, startOffset: startOffset};
 }
 
-const calculateForeignKeyOffset  = (thisConnection) => {
+const calculateForeignKeyOffset  = () => {
     const offsetValue = 0;
 
     const newOffset =  [
@@ -120,3 +119,12 @@ const samePath = (connection, thisConnection) => {
     return connection.start === thisConnection.end && connection.end === thisConnection.start;
 
 }
+
+/**
+ * Contains functions to calculate the offset between connections on the same draw board element
+ */
+const OffsetCalculator = {
+    calculateOffsets: calculateOffsets
+}
+
+export default OffsetCalculator

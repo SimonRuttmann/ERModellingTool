@@ -1,5 +1,14 @@
 import React, {useEffect} from "react";
 
+/**
+ * This component is responsible for the creation of the background pages
+ * Also it registers on changes of the draw board elements to adjust the amount of pages rendered
+ * Those pages will affect the svg, where elements will be rendered
+ *
+ * This component is implemented as forward ref to enable the parent component
+ * to hold a reference to the background page
+ * @see SvgResizer
+ */
 const BackgroundPaging = React.forwardRef ((
     {   elements, children,
         drawBoardBorderOffset, backgroundPageSize,

@@ -6,6 +6,28 @@ import DrawBoardElement from "./DrawBoardElement";
 import ConnectionElement from "./ConnectionElement";
 import {DiagramTypes} from "../../Services/DrawBoardModel/Diagram";
 
+/**
+ * This component is responsible for all interaction and render logic regarding the drawing area
+ *
+ * It creates a svg each given DrawBoardElement-Component will be placed into
+ * Also creates a second svg to hold all Connection-Components
+ *
+ * In addition, background paging and svg resizing is applied
+ *
+ * @param children The elements to render within the draw board
+ * @param onDropHandler A function to register on any onDrop event of the draw board
+ * @param drawBoardElements The data of the elements to render within the draw board, required for the background paging
+ * @param drawBoardBorderOffset The offset of the diagram in the viewport
+ * @param diagramType The type of diagram, affects the position of this component based on css
+ *
+ * For example usages see
+ * @see RelationalContentManager
+ * @see ErContentManager
+ *
+ * For elements inside the drawBoard see
+ * @see DrawBoardElement
+ * @see ConnectionElement
+ */
 const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderOffset, diagramType}) => {
 
     const updateConnections = useXarrow();

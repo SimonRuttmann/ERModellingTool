@@ -3,35 +3,20 @@ import Draggable from 'react-draggable';
 import { useXarrow } from 'react-xarrows';
 import { resolveErComponent } from "../../Services/DrawBoardModel/ErType";
 
-
 /**
- * Creates an element which can be dragged within the given bounds inside the parent svg element <br>
- * Executes the handleSelect method when the object is selected
+ * Renders an element which can be dragged within the given bounds inside the parent svg element
+ * The component to render depends on the given object data
+ * Use this element as s child for the DrawBoard-Component
  *
- * <b> Parameter: </b>
+ * @param onDrawBoardElementSelected Function to handle the selection on this object
+ * @param thisObject The data of this object, based on this data the render type will be selected
+ * @param svgBounds The bounds, where this object should be constraint to (left and top margin to the svg)
+ * @param updateDrawBoardElementPosition Function to update the position of the element
+ * @param updateDrawBoardElementSize Function to update the size of the element
+ * @returns {JSX.Element} An draggable element, displayed inside the draw board
  *
- * <br> onDrawBoardElementSelected:
- * <br> Function to handle the selection on this object
- *
- * <br> updateDrawBoardElementPosition:
- * <br> Function to update the position of the element
- *
- * <br> thisObject:
- * <br> The data of this object
- *
- * <br> adjustBounds:
- * <br> Function to increase or decrease the amount of pages displayed in the canvas
- *
- * <br> svgBounds:
- * <br> The bounds, where this object should be constraint to (left and top margin to the svg)
- *
- * <br> updateDrawBoardElementSize:
- * <br> Function to update the size of the element
- *
- * @returns An draggable element, displayed inside the draw board
+ * @see DrawBoard
  */
-
-
 const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, updateDrawBoardElementPosition, updateDrawBoardElementSize}) => {
 
   const updateConnections = useXarrow();
@@ -45,6 +30,10 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
   if(thisObject.isSelected) background = "#e1b43c"
   else if(thisObject.isHighlighted) background = "#f8ec9a"
 
+  /**
+   * The properties a rendered component will receive
+   * @type {{displayText, fontFamily: string, color: string, fontSize: string, id, updateDrawBoardElementSize, object}}
+   */
   const propsForErComponent = {
     id: thisObject.id,
     displayText: thisObject.displayName,
@@ -55,7 +44,9 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     object: thisObject
   }
 
-  //Handles the selection of this component and subcomponents
+  /**
+   * Handles the selection of this component and subcomponents
+   */
   const handleClick = (e) => {
 
     e.stopPropagation();
@@ -65,7 +56,9 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     onDrawBoardElementSelected(thisObject.id);
   };
 
-  //Handle drag and drop
+  /**
+   * Handle drag and drop
+   */
   function onDrag(dragEvent, data) {
 
     setDragging(true)
@@ -75,8 +68,7 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     updateConnections();
   }
 
-  //Question: When the on Drag stop function is executed, there is a "mouseDown" event which will trigger the onClick event.
-  //The timeout here is bad practise, however solutions form stackoverflow did not work
+  //The timeout here is bad practise, however other solutions did not work
   const PRESS_TIME_UNTIL_DRAG_MS = 250;
   function onStop(e, data) {
 
@@ -85,7 +77,15 @@ const DrawBoardElement = ({onDrawBoardElementSelected, thisObject, svgBounds, up
     updateDrawBoardElementPosition(thisObject.id, data.x, data.y)
     setTimeout(() => setDragging(false) , PRESS_TIME_UNTIL_DRAG_MS)
   }
+
+  /**
+   * Required to use strict mode for React.Draggable
+   */
   const nodeRef = React.useRef(null);
+
+  /**
+   * Wrap element into draggable
+   */
   return (
     <React.Fragment>
 

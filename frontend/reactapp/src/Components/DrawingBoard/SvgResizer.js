@@ -3,8 +3,12 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 /**
  * Component to resize svg based on the windows size, the size of the parent element
  * and the size of the background pages
+ *
  * This Component will ensure that the svg is always at the maximum height possible,
  * to ensure all elements inside are displayed
+ *
+ * !! This component has high influence on performance and is therefore performance optimized !!
+ *
  * @param children All children, which should be displayed inside the resized svg
  * @param mostOuterDiagramDivRef The reference to the parent dom element
  * @param backgroundPageRef The reference to the background page element
