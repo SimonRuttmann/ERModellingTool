@@ -35,10 +35,7 @@ const PlayGround = ({transformToRel}) => {
   const erContentStore = useSelector(selectErContentSlice);
   const erContentStoreAccess = useDispatch();
 
-  //Adding the default display name based on this counter
-  const [counter, setCounter] = useState(0);
-
-  //The currently selected object id, or null//TODO reanme to currentSelectedObjectId
+  //The currently selected object id, or null
   const [selectedObjectId, setSelectedObjectId] = useState(null);
 
   //The current ActionState, representing the current user action
@@ -69,7 +66,6 @@ const PlayGround = ({transformToRel}) => {
   /**
    * Integration of FeedbackSystem
    */
-
   const [invalidMessages, setInvalidMessages] = useState([])
 
   useEffect( () => {
@@ -81,7 +77,10 @@ const PlayGround = ({transformToRel}) => {
   },[erContentStore])
 
 
-
+  /**
+   * Click on the canvas
+   * If elements on the draw board get clicked, this method won't be invoked
+   */
   const onCanvasSelected = () => {
 
     if(selectedObjectId == null) return;
@@ -96,7 +95,7 @@ const PlayGround = ({transformToRel}) => {
 
   /**
    * Click on a draw board element
-   * @param drawBoardElementId
+   * @param drawBoardElementId The id of the clicked element
    */
   const onDrawBoardElementSelected = (drawBoardElementId) => {
 
@@ -136,7 +135,10 @@ const PlayGround = ({transformToRel}) => {
 
   };
 
-
+  /**
+   * Invoked by a click on a connection, selects this element and de-selects, de-highlights other elements
+   * @param connectionId The id of the clicked connection
+   */
   const onConnectionSelected = (connectionId) => {
 
 
@@ -157,11 +159,14 @@ const PlayGround = ({transformToRel}) => {
       erContentStoreAccess(UnselectAndUnHighlightAllElements())
       erContentStoreAccess(SelectAnyElement({id: connection.id}))
     }
-
+//TODO change action state to default?
   };
 
 
-
+  /**
+   * Executed when an element of the left sidebar gets dropped into the canvas
+   * @param e An event containing information about the current position and the erType
+   */
   const addDrawBoardElement = (e) => {
 
     let erType = e.dataTransfer.getData('erType');
@@ -178,7 +183,7 @@ const PlayGround = ({transformToRel}) => {
 
       let newDrawBoardElement = {
         id: newId,
-        displayName: "new "+ erType + " " + counter,
+        displayName: "new "+ erType + " " + erContentStore.drawBoardElements.length,
         isHighlighted: false,
         isSelected: false,
         x: e.clientX - x - 50,
@@ -191,8 +196,6 @@ const PlayGround = ({transformToRel}) => {
       };
 
       erContentStoreAccess(AddDrawBoardElement({newElement: newDrawBoardElement}))
-      //TODO bei import ist der counter nicht geschickt... generell eher für jedes element zählen
-      setCounter(counter+1);
 
       e.stopPropagation();
     }
@@ -220,18 +223,22 @@ const PlayGround = ({transformToRel}) => {
     erContentStoreAccess(UpdateDrawBoardElementSize({id: elementId, width: width, height: height}));
   }
 
+  /**
+   * This function is invoked by the right sidebar
+   * Removes a connection or draw board element and in case of a draw board element all connections to and from it
+   * @param id The id of the element
+   */
   const removeElement = (id) => {
 
-    //TODO rename selectedObject to objectToDelete
-    let selectedObject = resolveObjectById(id, erContentStore.drawBoardElements, erContentStore.connections)
+    let objectToRemove = resolveObjectById(id, erContentStore.drawBoardElements, erContentStore.connections)
 
-    if(selectedObject.objectType === OBJECTTYPE.Connection) {
+    if(objectToRemove.objectType === OBJECTTYPE.Connection) {
       console.log("Remove connection")
-      erContentStoreAccess(RemoveConnection({id: selectedObject.id}))
+      erContentStoreAccess(RemoveConnection({id: objectToRemove.id}))
     }
-    if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement){
+    if(objectToRemove.objectType === OBJECTTYPE.DrawBoardElement){
       console.log("Remove drawBoardElement")
-      erContentStoreAccess(RemoveDrawBoardElement({id: selectedObject.id}))
+      erContentStoreAccess(RemoveDrawBoardElement({id: objectToRemove.id}))
     }
 
     erContentStoreAccess(UnselectAndUnHighlightAllElements())
@@ -239,18 +246,38 @@ const PlayGround = ({transformToRel}) => {
     changeActionState(ACTIONSTATE.Default);
   }
 
+  /**
+   * Sets the owning side property for an element
+   * @see SetDrawBoardElementOwningSide
+   */
   const setOwningSideProperty = (selectedRelationId, owningElementId) => {
     erContentStoreAccess(SetDrawBoardElementOwningSide({id: selectedRelationId, owningSide: owningElementId}))
   }
 
+  /**
+   * Sets the display name property for an element
+   * @see SetDrawBoardElementDisplayName
+   */
   const setDisplayName = (id, displayName) => {
     erContentStoreAccess(SetDrawBoardElementDisplayName({id: id, displayName: displayName}))
   }
 
+  /**
+   * Sets the min or max property for an element
+   * @see UpdateConnectionNotation
+   */
   const editConnectionNotation = (id, minMax, notation) => {
     erContentStoreAccess(UpdateConnectionNotation({id: id, notation: notation, minMax: minMax}));
   }
 
+  /**
+   * Changes the active state to the ActionState.AddConnection
+   * In this state, the elements where a connection is possible will be highlighted
+   * within the use of the validation system
+   * @param id The id of the currently selected element
+   * @param type Additional information about the connection type.
+   *             This is required to differentiate between inheritor and parent connections of IsA Structures
+   */
   const toAddConnectionState = (id, type) => {
     changeActionState(ACTIONSTATE.AddConnection, type)
     const highlightedIds = createSelection(id, type, erContentStore.drawBoardElements, erContentStore.connections)
@@ -259,7 +286,7 @@ const PlayGround = ({transformToRel}) => {
 
   /**
    * All properties, which will be passed to the right bar
-   * to perform modifying actions on the diagram
+   * to perform modifying actions on the elements
    */
   const rightBarProps = {
     selectedObjectId: selectedObjectId,

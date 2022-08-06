@@ -6,6 +6,11 @@ const erContentSlice = createSlice({
     name: 'erContent',
     initialState: {drawBoardElements: [], connections: []},
     reducers: {
+        /**
+         * Sets the current state to the given drawBoardElements and connections
+         * @payload action.payload.drawBoardElements The drawBoardElements to set the state to
+         * @payload action.payload.connections The connections to set the state to
+         */
         ImportErContent: (state, action) => {
 
             let drawBoardElements = action.payload.drawBoardElements;
@@ -52,7 +57,6 @@ const erContentSlice = createSlice({
          * @payload action.payload.idsToHighlight An array of id`s
          */
         HighlightDrawBoardElements: (state, action) => {
-            //noinspection JSUnresolvedVariable Justification, variable is resolved
             let ids = action.payload.idsToHighlight;
 
             state.drawBoardElements = state.drawBoardElements.map(element => {
@@ -105,7 +109,6 @@ const erContentSlice = createSlice({
          *
          */
         AddDrawBoardElement: (state, action) => {
-            //noinspection JSUnresolvedVariable Justification, variable is resolved
             let newElement = action.payload.newElement;
 
             state.drawBoardElements.push({
@@ -141,7 +144,7 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
-         * Updates the size of an draw board element
+         * Updates the size of a draw board element
          * @payload action.payload.id The id of the draw board element to update the size
          * @payload action.payload.height The new height of the draw board element
          * @payload action.payload.width The new width of the draw board element
@@ -224,7 +227,6 @@ const erContentSlice = createSlice({
          *     connectionType: ConnectionType   The kind of connection. Isa-Parent, AttributeConnector etc.
          */
         AddConnection: (state, action) => {
-            //noinspection JSUnresolvedVariable Justification, variable is resolved
             let newConnection = action.payload.newConnection;
 
             state.connections.push({
@@ -262,7 +264,6 @@ const erContentSlice = createSlice({
         UpdateConnectionNotation: (state, action) => {
             let id = action.payload.id;
             let notation = action.payload.notation;
-            //noinspection JSUnresolvedVariable Justification, variable is resolved
             let minMax = action.payload.minMax;
 
             let connection = state.connections.find(connection => connection.id === id)
