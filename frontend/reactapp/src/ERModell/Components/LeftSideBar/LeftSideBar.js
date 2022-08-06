@@ -10,7 +10,7 @@ const LeftSideBar = () => {
 
             <div className="leftSidebarSelectionContainer">
 
-                <div className="leftSidebarMainTitle">Er Objects</div>
+                <div className="leftSidebarMainTitle">ER-Elements</div>
                 <hr className="sidebarDivider"/>
 
                 <div className="leftSidebarTitle">Attributes</div>

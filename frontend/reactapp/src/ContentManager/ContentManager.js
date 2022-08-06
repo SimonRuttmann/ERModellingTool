@@ -1,12 +1,15 @@
-
 import '../App.css';
-import PlayGround from '../ERModell/Playground';
 import React, {useState} from "react";
-import SaveAndLoad from "./SaveAndLoad";
 import {DiagramTypes} from "../ERModell/Model/Diagram";
+import PlayGround from '../ERModell/Playground';
+import SaveAndLoad from "./SaveAndLoad";
 import RelationalManager from "../ERModell/RelationalManager";
 
-//das hier ist ne tab bar component?
+/**
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function ContentManager() {
 
     const [diagramType, setDiagramType] = useState(DiagramTypes.erDiagram)
@@ -17,8 +20,6 @@ function ContentManager() {
     }
 
     function changeToRelationalDiagram(){
-        console.log("change to rel?")
-        console.log(diagramType)
         if(diagramType === DiagramTypes.relationalDiagram) return;
         setDiagramType(DiagramTypes.relationalDiagram);
     }
@@ -47,26 +48,4 @@ function ContentManager() {
     )
 }
 
-
-
-
 export default ContentManager;
-
-/*export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
-useEffect(() => {
-    window.addEventListener('mousemove', () => {});
-
-    // returned function will be called on component unmount
-    return () => {
-        window.removeEventListener('mousemove', () => {})
-    }
-}, [])
-var myevent = new CustomEvent("myEvent"< {someData: {}})
-document.dispatchEvent(myevent)
-
-
-//wo anderst in use effect
-document.addEventListener("myEvent", (e) => doSthm(e.someData))
-//By did unmount -> document.removeEventListener("myEvent");
-*/
-
