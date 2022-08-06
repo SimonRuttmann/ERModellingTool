@@ -1,6 +1,6 @@
 import '../../App.css';
 import React, {useState} from "react";
-import {DiagramTypes} from "../../ERModell/Model/Diagram";
+import {DiagramTypes} from "../../Services/DrawBoardModel/Diagram";
 import ErManager from '../ErModel/ErManager';
 import ContentManager from "./ContentManager";
 import RelationalManager from "../RelationalModel/RelationalManager";

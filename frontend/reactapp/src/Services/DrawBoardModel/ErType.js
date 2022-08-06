@@ -1,36 +1,36 @@
 //Import draggable icons
-import IdentifyingAttributeDragBarSvg from '../Components/DraggableSvgs/Attributes/IdentifyingAttribute.svg'
-import WeakIdentifyingAttributeDragBarSvg from '../Components/DraggableSvgs/Attributes/WeakIdentifyingAttribute.svg'
-import NormalAttributeDragBarSvg from '../Components/DraggableSvgs/Attributes/NormalAttribute.svg'
-import MultivaluedAttributeDragBarSvg from '../Components/DraggableSvgs/Attributes/MultivaluedAttribute.svg'
-import StrongEntityDragBarSvg from '../Components/DraggableSvgs/Entities/StrongEntity.svg'
-import WeakEntityDragBarSvg from '../Components/DraggableSvgs/Entities/WeakEntity.svg'
-import StrongRelationDragBarSvg from '../Components/DraggableSvgs/Relations/StrongRelation.svg'
-import WeakRelationDragBarSvg from '../Components/DraggableSvgs/Relations/WeakRelation.svg'
-import IsAStructureDragBarSvg from '../Components/DraggableSvgs/IsAStructure.svg'
+import IdentifyingAttributeDragBarSvg from '../../ERModell/Components/DraggableSvgs/Attributes/IdentifyingAttribute.svg'
+import WeakIdentifyingAttributeDragBarSvg from '../../ERModell/Components/DraggableSvgs/Attributes/WeakIdentifyingAttribute.svg'
+import NormalAttributeDragBarSvg from '../../ERModell/Components/DraggableSvgs/Attributes/NormalAttribute.svg'
+import MultivaluedAttributeDragBarSvg from '../../ERModell/Components/DraggableSvgs/Attributes/MultivaluedAttribute.svg'
+import StrongEntityDragBarSvg from '../../ERModell/Components/DraggableSvgs/Entities/StrongEntity.svg'
+import WeakEntityDragBarSvg from '../../ERModell/Components/DraggableSvgs/Entities/WeakEntity.svg'
+import StrongRelationDragBarSvg from '../../ERModell/Components/DraggableSvgs/Relations/StrongRelation.svg'
+import WeakRelationDragBarSvg from '../../ERModell/Components/DraggableSvgs/Relations/WeakRelation.svg'
+import IsAStructureDragBarSvg from '../../ERModell/Components/DraggableSvgs/IsAStructure.svg'
 
 //Import tooltip images
-import IdentifyingAttributeDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Attributes/IdentifyingAttribute.svg'
-import WeakIdentifyingAttributeDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Attributes/WeakIdentifyingAttribute.svg'
-import NormalAttributeDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Attributes/NormalAttribute.svg'
-import MultivaluedAttributeDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Attributes/MultivaluedAttribute.svg'
-import StrongEntityDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Entities/StrongEntity.svg'
-import WeakEntityDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Entities/WeakEntity.svg'
-import StrongRelationDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Relations/StrongRelation.svg'
-import WeakRelationDragBarPreviewSvg from '../Components/DragBarPreviewSvg/Relations/WeakRelation.svg'
-import IsAStructureDragBarPreviewSvg from '../Components/DragBarPreviewSvg/IsAStructure.svg'
+import IdentifyingAttributeDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Attributes/IdentifyingAttribute.svg'
+import WeakIdentifyingAttributeDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Attributes/WeakIdentifyingAttribute.svg'
+import NormalAttributeDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Attributes/NormalAttribute.svg'
+import MultivaluedAttributeDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Attributes/MultivaluedAttribute.svg'
+import StrongEntityDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Entities/StrongEntity.svg'
+import WeakEntityDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Entities/WeakEntity.svg'
+import StrongRelationDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Relations/StrongRelation.svg'
+import WeakRelationDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/Relations/WeakRelation.svg'
+import IsAStructureDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/IsAStructure.svg'
 
 //Import components
-import IdentifyingAttribute from "../Components/ErObjectComponents/Attributes/IdentifyingAttribute";
-import NormalAttribute from "../Components/ErObjectComponents/Attributes/NormalAttribute";
-import MultivaluedAttribute from "../Components/ErObjectComponents/Attributes/MultivaluedAttribute";
-import WeakIdentifyingAttribute from "../Components/ErObjectComponents/Attributes/WeakIdentifyingAttribute";
-import StrongEntity from "../Components/ErObjectComponents/Entities/StrongEntity";
-import WeakEntity from "../Components/ErObjectComponents/Entities/WeakEntity";
-import StrongRelation from "../Components/ErObjectComponents/Relations/StrongRelation";
-import WeakRelation from "../Components/ErObjectComponents/Relations/WeakRelation";
-import IsAStructure from "../Components/ErObjectComponents/IsAStructure";
-import Table from "../Components/ErObjectComponents/Table";
+import IdentifyingAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/IdentifyingAttribute";
+import NormalAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/NormalAttribute";
+import MultivaluedAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/MultivaluedAttribute";
+import WeakIdentifyingAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/WeakIdentifyingAttribute";
+import StrongEntity from "../../ERModell/Components/ErObjectComponents/Entities/StrongEntity";
+import WeakEntity from "../../ERModell/Components/ErObjectComponents/Entities/WeakEntity";
+import StrongRelation from "../../ERModell/Components/ErObjectComponents/Relations/StrongRelation";
+import WeakRelation from "../../ERModell/Components/ErObjectComponents/Relations/WeakRelation";
+import IsAStructure from "../../ERModell/Components/ErObjectComponents/IsAStructure";
+import Table from "../../ERModell/Components/ErObjectComponents/Table";
 
 
 /**

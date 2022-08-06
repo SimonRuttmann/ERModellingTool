@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {ConnectionCardinality} from "../ERModell/Model/ActionState";
+import {ConnectionCardinality} from "../Services/DrawBoardModel/ActionState";
 
 /**
  * This ReduxStore is responsible for holding drawBoardElements and connections in the context of entity-relationship diagrams.

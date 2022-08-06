@@ -1,9 +1,9 @@
 import React from 'react';
-import '../../../ERModell/Playground.css';
-import {ACTIONSTATE, OBJECTTYPE} from "../../../ERModell/Model/ActionState";
-import {ERTYPE} from "../../../ERModell/Model/ErType";
+import '../../DatabaseModellingStyle.css';
+import {ACTIONSTATE, OBJECTTYPE} from "../../../Services/DrawBoardModel/ActionState";
+import {ERTYPE} from "../../../Services/DrawBoardModel/ErType";
 import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
-import {ConnectionType} from "../../../ERModell/Model/Diagram";
+import {ConnectionType} from "../../../Services/DrawBoardModel/Diagram";
 
 
 //We hold here the selected object ! when we change anything this will still be the "old" object, the new object is a clone of this one

@@ -1,5 +1,5 @@
-import {ConnectionType} from "../../ERModell/Model/Diagram";
-import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "../../ERModell/Model/ErType";
+import {ConnectionType} from "../DrawBoardModel/Diagram";
+import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "../DrawBoardModel/ErType";
 import {resolveObjectById} from "../Common/ObjectUtil";
 
 

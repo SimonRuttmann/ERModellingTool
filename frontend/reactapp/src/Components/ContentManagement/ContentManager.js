@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DiagramTypes} from "../../ERModell/Model/Diagram";
+import {DiagramTypes} from "../../Services/DrawBoardModel/Diagram";
 import axios from "axios";
 import Download from "./Download";
 import Upload from "./Upload";

@@ -6,8 +6,8 @@ import {
     isElementOfCategoryAttribute,
     resolveRootElementOfAttribute
 } from "./ErRulesUtil";
-import {ERTYPE} from "../../ERModell/Model/ErType";
-import {ConnectionType} from "../../ERModell/Model/Diagram";
+import {ERTYPE} from "../DrawBoardModel/ErType";
+import {ConnectionType} from "../DrawBoardModel/Diagram";
 import {resolveObjectById} from "../Common/ObjectUtil";
 
 /**

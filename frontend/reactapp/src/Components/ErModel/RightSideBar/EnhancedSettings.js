@@ -1,5 +1,5 @@
 import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
-import {ERTYPE} from "../../../ERModell/Model/ErType";
+import {ERTYPE} from "../../../Services/DrawBoardModel/ErType";
 import {getOtherElementsOfConnectors} from "../../../Services/ErRules/ErRulesUtil";
 import React from "react";
 

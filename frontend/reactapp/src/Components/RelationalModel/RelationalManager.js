@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import '../../ERModell/Playground.css';
+import '../DatabaseModellingStyle.css';
 import DrawBoardElement from '../DrawingBoard/DrawBoardElement';
 import ConnectionElement from '../DrawingBoard/ConnectionElement';
 import DrawBoard from "../DrawingBoard/DrawBoard";
-import {DiagramTypes} from "../../ERModell/Model/Diagram";
+import {DiagramTypes} from "../../Services/DrawBoardModel/Diagram";
 import SqlPopUp from "./SqlPopUp";
-import RelationalRightBar from "../../ERModell/RelationalRightBar";
+import RelationalRightBar from "./RelationalRightBar";
 import {
     ChangeDataTypeOfDrawBoardElement,
     selectRelationalContentSlice,

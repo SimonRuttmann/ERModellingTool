@@ -1,4 +1,4 @@
-import {ERTYPE} from "../../ERModell/Model/ErType";
+import {ERTYPE} from "../DrawBoardModel/ErType";
 import {
     isAssociationConnectionType,
     isInheritorConnectionType,
@@ -16,7 +16,7 @@ import {
     ensureIsACircleFree,
     pathDoesMax2TimesExist, pathWeakRelToWeakEntityDoesMax1TimesExist, addIfNotExists, addAllIfNotExists
 } from "./ErRulesUtil";
-import {ConnectionType} from "../../ERModell/Model/Diagram";
+import {ConnectionType} from "../DrawBoardModel/Diagram";
 
 
 export const handleSelectIdentifyingAttribute = (selectedObject, connectionType, drawBoardElements, connections) => {

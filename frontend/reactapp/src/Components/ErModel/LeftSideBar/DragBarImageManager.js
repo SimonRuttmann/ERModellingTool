@@ -1,5 +1,5 @@
 import React from "react";
-import {ERTYPE} from "../../../ERModell/Model/ErType";
+import {ERTYPE} from "../../../Services/DrawBoardModel/ErType";
 import ReactTooltip from "react-tooltip";
 import ToolTip from "./Tooltip";
 

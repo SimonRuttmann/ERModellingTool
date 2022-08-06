@@ -1,7 +1,7 @@
 import React, {useLayoutEffect} from "react";
 import SvgUtil from "../../../Services/Common/SvgUtils"
 import Column from "./Column";
-import TableUtil from "../../TableUtil";
+import TableUtil from "../../../Services/Common/TableUtil";
 
 
 

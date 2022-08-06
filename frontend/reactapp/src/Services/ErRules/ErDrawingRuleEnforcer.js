@@ -1,5 +1,5 @@
 import {resolveObjectById} from "../Common/ObjectUtil";
-import {ERTYPE} from "../../ERModell/Model/ErType";
+import {ERTYPE} from "../DrawBoardModel/ErType";
 import {
     handleSelectIdentifyingAttribute,
     handleSelectIsAStructure,

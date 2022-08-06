@@ -1,10 +1,10 @@
 import React from 'react';
-import '../../../ERModell/Playground.css';
-import {ConnectionCardinality, OBJECTTYPE} from "../../../ERModell/Model/ActionState";
-import {ERTYPE, ERTYPECATEGORY} from "../../../ERModell/Model/ErType";
+import '../../DatabaseModellingStyle.css';
+import {ConnectionCardinality, OBJECTTYPE} from "../../../Services/DrawBoardModel/ActionState";
+import {ERTYPE, ERTYPECATEGORY} from "../../../Services/DrawBoardModel/ErType";
 import {Footer, Header} from "./ObjectView";
 import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
-import {ConnectionType} from "../../../ERModell/Model/Diagram";
+import {ConnectionType} from "../../../Services/DrawBoardModel/Diagram";
 import EnhancedSettings from "./EnhancedSettings";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setOwningSideProperty}) => {
