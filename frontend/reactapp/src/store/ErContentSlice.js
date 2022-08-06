@@ -44,22 +44,21 @@ const erContentSlice = createSlice({
          * @payload action.payload.connections The connections to set the state to
          */
         ImportErContent: (state, action) => {
+            let content = action.payload;
 
-            let drawBoardElements = action.payload.drawBoardElements;
-            let connections = action.payload.connections;
+            let drawBoardElements = content.drawBoardContent.drawBoardElements;
+            let connections = content.drawBoardContent.connections;
             state.drawBoardElements = [];
             state.connections = [];
 
             //action.payload.drawBoardContent
             if(Array.isArray(drawBoardElements) )
             {
-                state = [];
-                drawBoardElements.forEach( element => state.elements.push(element))
+                drawBoardElements.forEach( element => state.drawBoardElements.push(element))
             }
 
             if(Array.isArray(connections) )
             {
-                state = [];
                 connections.forEach(connection => state.connections.push(connection))
             }
             return state;

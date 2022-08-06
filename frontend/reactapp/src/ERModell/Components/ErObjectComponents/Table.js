@@ -44,8 +44,6 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
         updateDrawBoardElementSize(id, width, tableHeight)
 
     },[width, tableHeight])
-    console.log("TABLELL")
-    console.log(object)
 
     const sortedColumns = TableUtil.sortColumnsOfTableImmutable(object);
 

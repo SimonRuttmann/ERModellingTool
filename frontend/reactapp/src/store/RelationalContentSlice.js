@@ -45,7 +45,7 @@ const relationalContentSlice = createSlice({
         ImportRelContent: (state, action) => {
             let content = action.payload;
 
-            let drawBoardElements = content.drawBoardContent.tables
+            let drawBoardElements = content.drawBoardContent.tables;
             let connections = content.drawBoardContent.connections;
             state.drawBoardElements = [];
             state.connections = [];

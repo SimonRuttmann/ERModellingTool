@@ -39,8 +39,10 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
         let downloadPackage = {
             ...metaInformation,
-            erContent:  {drawBoardElements: erContentStore.drawBoardElements, connections: erContentStore.connections},
-            relContent: {tables: relationalContentStore.drawBoardElements, connections: relationalContentStore.connections}
+            erContent:  {
+                drawBoardContent: {drawBoardElements: erContentStore.drawBoardElements, connections: erContentStore.connections}},
+            relContent: {
+                drawBoardContent: {tables: relationalContentStore.drawBoardElements, connections: relationalContentStore.connections}}
         }
 
         return JSON.stringify(downloadPackage, null, 2);
@@ -52,7 +54,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
         let importedJson = JSON.parse(importedContent)
 
-        relationalContentStoreAccess(ImportRelContent(importedJson.relationalContent))
+        relationalContentStoreAccess(ImportRelContent(importedJson.relContent))
         erContentStoreAccess(ImportErContent(importedJson.erContent))
     }
 
@@ -71,10 +73,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
         axios.post(url, contentToSend).
         then((response) => {
-            console.log("received")
-            console.log(response.data)
             relationalContentStoreAccess(ImportRelContent(response.data));
-            console.log("change")
             changeToRelationalDiagram();
         }).
         catch(error => setRelationalEndpointError(error));
