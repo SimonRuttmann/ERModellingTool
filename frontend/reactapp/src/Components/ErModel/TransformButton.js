@@ -1,8 +1,8 @@
-import transformIcon from "../../Resources/server.svg";
-import relationalIcon from "../../Resources/table.svg";
+import transformIcon from "../../Resources/Icons/server.svg";
+import relationalIcon from "../../Resources/Icons/table.svg";
 import React from "react";
-import validIcon from "../../Resources/check-circle-fill.svg";
-import invalidIcon from "../../Resources/exclamation-circle-fill.svg"
+import validIcon from "../../Resources/Icons/check-circle-fill.svg";
+import invalidIcon from "../../Resources/Icons/exclamation-circle-fill.svg"
 import ReactTooltip from "react-tooltip";
 
 const TransformButton = ({transformToRel, invalidMessages}) => {

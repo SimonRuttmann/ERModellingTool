@@ -1,5 +1,5 @@
 import React from "react";
-import uploadIcon from "../../Resources/cloud-upload.svg";
+import uploadIcon from "../../Resources/Icons/cloud-upload.svg";
 
 /**
  * Renders the upload icon and handles the input and parsing of a json file

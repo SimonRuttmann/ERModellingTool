@@ -1,9 +1,9 @@
 import React, {useLayoutEffect} from "react";
-import SvgUtil from "../../../../Services/Common/SvgUtils"
-import DisplayConfiguration from "../../../../Services/Configurations/DisplayConfiguration";
+import SvgUtil from "../../../Services/Common/SvgUtils"
+import DisplayConfiguration from "../../../Services/Configurations/DisplayConfiguration";
 
 /**
- * Renders a drawBoardElement as normal attribute
+ * Renders a drawBoardElement as strong relation
  * The fontSize and width/height of this element is determined by the text to display and the DisplayConfiguration
  * @param id                            The id of the drawBoardElement
  * @param displayText                   The text to render inside the element
@@ -14,54 +14,61 @@ import DisplayConfiguration from "../../../../Services/Configurations/DisplayCon
  *                                      height to update the drawBoardElement size
  * @see DisplayConfiguration
  */
-function NormalAttribute({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
+function StrongRelation({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
-    const xCenterPosition = 122;         const yCenterPosition = 37;
-
-    let xRadiusOuter = 100;              const yRadiusOuter = 33;
+    let width = 150;
+    const widthHeightRatio = (2/3);
 
 
     let adjustedFontSize = fontSize;
     if(DisplayConfiguration.enableTextResizeBasedOnDisplayText){
-        xRadiusOuter = ( SvgUtil.resolveRequiredWidth(xRadiusOuter * 2, DisplayConfiguration.defaultTextToFit, fontSize, fontFamily) / 2 )
-        adjustedFontSize = SvgUtil.resolveRequiredFontSize(xRadiusOuter * 2, displayText, fontFamily, fontSize);
+        width = SvgUtil.resolveRequiredWidth(width, DisplayConfiguration.defaultTextToFit, fontSize, fontFamily)
+        adjustedFontSize = SvgUtil.resolveRequiredFontSize(width, displayText, fontFamily, fontSize);
     }
     else if(DisplayConfiguration.enableSvgResizeBasedOnDisplayText){
-        xRadiusOuter = ( SvgUtil.resolveRequiredWidth(xRadiusOuter * 2, displayText, fontSize, fontFamily) / 2 )
+        width = SvgUtil.resolveRequiredWidth(width, displayText, fontSize, fontFamily);
     }
 
-    useLayoutEffect(() => {
 
-        let maxX =  (xRadiusOuter + xCenterPosition);
-        let maxY =  (yRadiusOuter + yCenterPosition);
+    let height= width * widthHeightRatio;
+    let yText = height/2;
+    let xText = width/2;
 
-        updateDrawBoardElementSize(id, maxX, maxY)
-    },[xRadiusOuter, yRadiusOuter]);
+    let pointLeft =   {x: "0",      y: height/2}
+    let pointTop =    {x: width/2,  y: "0"}
+    let pointRight =  {x: width,    y: height/2}
+    let pointBottom = {x: width/2,  y: height}
+
+
+    let path = `M ${pointLeft.x} ${pointLeft.y} L ${pointTop.x} ${pointTop.y}` +
+               `L ${pointRight.x} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y} Z`
+
+
+    useLayoutEffect( () => {
+
+        updateDrawBoardElementSize(id, width, height)
+
+    },[width, height])
 
     return (
         <React.Fragment>
 
-            <ellipse
+            <path
                 //id
                 id={id}
 
-                //position
-                cy={yCenterPosition}
-                cx={xCenterPosition}
-
                 //display style
-                ry={yRadiusOuter}
-                rx={xRadiusOuter}
+                d={path}
                 stroke="#000"
-                fill={color}/>
+                fill={color} />
 
             <text
                 //id
                 id={id}
 
                 //position
-                x={xCenterPosition}
-                y={yCenterPosition}
+                x={xText}
+                y={yText}
 
                 //alignment
                 dominantBaseline="middle"
@@ -82,4 +89,4 @@ function NormalAttribute({id, displayText, color, fontFamily, fontSize, updateDr
     )
 }
 
-export default NormalAttribute
+export default StrongRelation

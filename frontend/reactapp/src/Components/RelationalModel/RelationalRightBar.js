@@ -1,6 +1,6 @@
 import React from 'react';
 import {resolveObjectById} from "../../Services/Common/ObjectUtil";
-import {SqlDataTypes} from "../../ERModell/Components/ErObjectComponents/SqlDataTypes";
+import {SqlDataTypes} from "../../Services/DrawBoardModel/SqlDataTypes";
 import TableUtil from "../../Services/Common/TableUtil";
 
 const RelationalRightBar = ({selectedObjectId, drawBoardElements, changeDataType}) => {

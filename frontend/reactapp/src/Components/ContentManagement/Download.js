@@ -1,5 +1,5 @@
 import React from "react";
-import downloadIcon from "../../Resources/cloud-download.svg";
+import downloadIcon from "../../Resources/Icons/cloud-download.svg";
 
 /**
  * Renders the download icon and handles the logic to serve a json file to the user

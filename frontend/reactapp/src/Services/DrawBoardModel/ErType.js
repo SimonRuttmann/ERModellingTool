@@ -21,16 +21,16 @@ import WeakRelationDragBarPreviewSvg from '../../ERModell/Components/DragBarPrev
 import IsAStructureDragBarPreviewSvg from '../../ERModell/Components/DragBarPreviewSvg/IsAStructure.svg'
 
 //Import components
-import IdentifyingAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/IdentifyingAttribute";
-import NormalAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/NormalAttribute";
-import MultivaluedAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/MultivaluedAttribute";
-import WeakIdentifyingAttribute from "../../ERModell/Components/ErObjectComponents/Attributes/WeakIdentifyingAttribute";
-import StrongEntity from "../../ERModell/Components/ErObjectComponents/Entities/StrongEntity";
-import WeakEntity from "../../ERModell/Components/ErObjectComponents/Entities/WeakEntity";
-import StrongRelation from "../../ERModell/Components/ErObjectComponents/Relations/StrongRelation";
-import WeakRelation from "../../ERModell/Components/ErObjectComponents/Relations/WeakRelation";
-import IsAStructure from "../../ERModell/Components/ErObjectComponents/IsAStructure";
-import Table from "../../ERModell/Components/ErObjectComponents/Table";
+import IdentifyingAttribute from "../../Components/DrawingBoardRenderedElements/Attributes/IdentifyingAttribute";
+import NormalAttribute from "../../Components/DrawingBoardRenderedElements/Attributes/NormalAttribute";
+import MultivaluedAttribute from "../../Components/DrawingBoardRenderedElements/Attributes/MultivaluedAttribute";
+import WeakIdentifyingAttribute from "../../Components/DrawingBoardRenderedElements/Attributes/WeakIdentifyingAttribute";
+import StrongEntity from "../../Components/DrawingBoardRenderedElements/Entities/StrongEntity";
+import WeakEntity from "../../Components/DrawingBoardRenderedElements/Entities/WeakEntity";
+import StrongRelation from "../../Components/DrawingBoardRenderedElements/Relations/StrongRelation";
+import WeakRelation from "../../Components/DrawingBoardRenderedElements/Relations/WeakRelation";
+import IsAStructure from "../../Components/DrawingBoardRenderedElements/IsAStructure/IsAStructure";
+import Table from "../../Components/DrawingBoardRenderedElements/RelationalTable/Table";
 
 
 /**

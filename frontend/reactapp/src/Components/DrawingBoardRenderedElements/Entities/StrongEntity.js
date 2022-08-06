@@ -1,9 +1,9 @@
 import React, {useLayoutEffect} from "react";
-import SvgUtil from "../../../../Services/Common/SvgUtils"
-import DisplayConfiguration from "../../../../Services/Configurations/DisplayConfiguration";
+import SvgUtil from "../../../Services/Common/SvgUtils"
+import DisplayConfiguration from "../../../Services/Configurations/DisplayConfiguration";
 
 /**
- * Renders a drawBoardElement as weak relation
+ * Renders a drawBoardElement as strong entity
  * The fontSize and width/height of this element is determined by the text to display and the DisplayConfiguration
  * @param id                            The id of the drawBoardElement
  * @param displayText                   The text to render inside the element
@@ -14,10 +14,10 @@ import DisplayConfiguration from "../../../../Services/Configurations/DisplayCon
  *                                      height to update the drawBoardElement size
  * @see DisplayConfiguration
  */
-function WeakRelation({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
+function StrongEntity({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize}){
 
-    let width = 150;
-    const widthHeightRatio = (2/3);
+    const x = 0;       const y = 0;
+    let width = 137;   const height= 67;
 
     let adjustedFontSize = fontSize;
     if(DisplayConfiguration.enableTextResizeBasedOnDisplayText){
@@ -29,58 +29,37 @@ function WeakRelation({id, displayText, color, fontFamily, fontSize, updateDrawB
     }
 
 
-    let height= width * widthHeightRatio;
-    let yText = height/2;
-    let xText = width/2;
-
-    let pointLeft =   {x: "0",      y: height/2}
-    let pointTop =    {x: width/2,  y: "0"}
-    let pointRight =  {x: width,    y: height/2}
-    let pointBottom = {x: width/2,  y: height}
-
-    let path = `M ${pointLeft.x} ${pointLeft.y}   L ${pointTop.x} ${pointTop.y}` +
-               `L ${pointRight.x} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y} Z`
-
-    const offsetX = 10;
-    const offsetY = 10 * widthHeightRatio;
-
-    let innerPath = `M ${pointLeft.x + offsetX} ${pointLeft.y}   L ${pointTop.x} ${pointTop.y + offsetY}` +
-        `            L ${pointRight.x - offsetX} ${pointRight.y} L ${pointBottom.x} ${pointBottom.y - offsetY} Z`
-
     useLayoutEffect( () => {
 
         updateDrawBoardElementSize(id, width, height)
 
     },[width, height])
 
+
     return (
         <React.Fragment>
 
-            <path
+            <rect
                 //id
                 id={id}
 
-                //display style
-                d={path}
-                stroke="#000"
-                fill={color} />
-
-            <path
-                //id
-                id={id}
+                //position
+                y={y}
+                x={x}
 
                 //display style
-                d={innerPath}
+                height={height}
+                width={width}
                 stroke="#000"
-                fill={color} />
+                fill={color}/>
 
             <text
                 //id
                 id={id}
 
                 //position
-                x={xText}
-                y={yText}
+                x={x + width / 2}
+                y={y + height / 2}
 
                 //alignment
                 dominantBaseline="middle"
@@ -101,4 +80,4 @@ function WeakRelation({id, displayText, color, fontFamily, fontSize, updateDrawB
     )
 }
 
-export default WeakRelation
+export default StrongEntity

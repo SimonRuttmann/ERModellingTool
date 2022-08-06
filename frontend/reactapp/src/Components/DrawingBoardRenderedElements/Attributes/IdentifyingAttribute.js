@@ -1,6 +1,6 @@
 import React, {useLayoutEffect} from "react";
-import SvgUtil from "../../../../Services/Common/SvgUtils"
-import DisplayConfiguration from "../../../../Services/Configurations/DisplayConfiguration";
+import SvgUtil from "../../../Services/Common/SvgUtils"
+import DisplayConfiguration from "../../../Services/Configurations/DisplayConfiguration";
 
 /**
  * Renders a drawBoardElement as identifying attribute

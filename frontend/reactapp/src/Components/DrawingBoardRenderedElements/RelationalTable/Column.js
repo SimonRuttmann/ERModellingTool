@@ -1,5 +1,5 @@
 import React from "react";
-import {SqlDataTypes} from "./SqlDataTypes";
+import {SqlDataTypes} from "../../../Services/DrawBoardModel/SqlDataTypes";
 function Column({ width, height, x, y, fontFamily, fontSize, column}){
 
 

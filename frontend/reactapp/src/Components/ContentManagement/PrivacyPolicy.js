@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import privacyPolicyIcon from "../../Resources/Datenschutzerklärung/shield-exclamation.svg";
+import privacyPolicyIcon from "../../Resources/Icons/shield-exclamation.svg";
 import ReactModal from "react-modal"
 
 /**
