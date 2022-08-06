@@ -1,8 +1,12 @@
 
-// A primary
-// A primary foreign
-// A foreign
-// A --
+// noinspection JSUnresolvedVariable, Justification variables are resolved
+
+/**
+ * Sorts the columns for a table in the following order
+ * Primary Key -> Primary Key + Foreign Key -> Foreign key -> Normal Column
+ * @param table The table to sort the columns for
+ * @returns {*[]} A collection of sorted columns
+ */
 const sortColumnsOfTableImmutable = (table) => {
 
     return [...table.columns].sort( (a,b) => {
@@ -29,6 +33,9 @@ const sortColumnsOfTableImmutable = (table) => {
 
 }
 
+/**
+ * A collection of utility functions for tables
+ */
 const TableUtil = {
     sortColumnsOfTableImmutable: sortColumnsOfTableImmutable
 }
