@@ -1,8 +1,21 @@
+// noinspection JSUnresolvedVariable Justification, variables are resolved
+
 import React from "react";
 import {SqlDataTypes} from "../../../Services/DrawBoardModel/SqlDataTypes";
+
+/**
+ * Renders a column based on the given column data object
+ * A column has always a Table-component as parent
+ *
+ * @param width                         The width of this element, defined by the Table-component
+ * @param height                        The height of this element, defined by the Table-component
+ * @param x                             The x-coordinate of this element, defined by the Table-component
+ * @param y                             The x-coordinate of this element, defined by the Table-component
+ * @param fontFamily                    The font family the text should be rendered
+ * @param fontSize                      The font size the text should be rendered
+ * @param column                        The data, this column has to render
+ */
 function Column({ width, height, x, y, fontFamily, fontSize, column}){
-
-
     /*
              |--------------------------------------------|
              | [PK] [FK] | Column Display Name | DataType |

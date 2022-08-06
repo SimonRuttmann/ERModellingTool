@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode, Justification Shared Utils would highly increase dependencies
+
 import React, {useLayoutEffect} from "react";
 import SvgUtil from "../../../Services/Common/SvgUtils"
 import DisplayConfiguration from "../../../Services/Configurations/DisplayConfiguration";

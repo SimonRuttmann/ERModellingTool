@@ -3,8 +3,19 @@ import SvgUtil from "../../../Services/Common/SvgUtils"
 import Column from "./Column";
 import TableUtil from "../../../Services/Common/TableUtil";
 
-
-
+/**
+ * Renders a drawBoardElement as table
+ * Orchestrates an arbitrary number of Column components to render itself
+ *
+ * @param id                            The id of the drawBoardElement
+ * @param displayText                   The text to render inside the element
+ * @param color                         The color this element has to fill
+ * @param fontFamily                    The font family the text should be rendered
+ * @param fontSize                      The font size the text should be rendered
+ * @param updateDrawBoardElementSize    A function, receiving the id, width and
+ *                                      height to update the drawBoardElement size
+ * @param object                        The data of this element
+ */
 function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardElementSize, object}){
 
 
