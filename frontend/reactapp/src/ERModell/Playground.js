@@ -145,7 +145,7 @@ const PlayGround = ({transformToRel}) => {
     if( actionState === ACTIONSTATE.Default ||
         actionState === ACTIONSTATE.AddConnection) {
 
-      let connection = erContentStore.find(connection => connection.id === connectionId)
+      let connection = erContentStore.connections.find(connection => connection.id === connectionId)
       setSelectedObjectId(connection.id);
 
 

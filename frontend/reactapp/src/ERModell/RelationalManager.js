@@ -13,34 +13,21 @@ import {
     UpdateDrawBoardElementSize
 } from "../store/RelationalContentSlice";
 import {useDispatch, useSelector} from "react-redux";
-import {SqlDataTypes} from "./Components/ErObjectComponents/SqlDataTypes";
 
 const RelationalManager = ({generateSql, sqlServerResult}) => {
 
     const relationalContentStore = useSelector(selectRelationalContentSlice);
     const relationalContentStoreAccess = useDispatch();
 
-    const table = {
-        id: "",
-        displayName: "",
-        x: "",
-        y: "",//width, height
-        column: []
-    }
-
-    const column = {
-        id: "",
-        foreignKey: false,
-        foreignKeyReferencedId: "",
-        primaryKey: false,
-        dataType: SqlDataTypes.INT
-    }
-
-
     //The currently selected object id, or null
     const [selectedObjectId, setSelectedObjectId] = useState(null);
 
 
+    /**
+     * Creates an object from the current state and
+     * executes generateSql to receive sql from the server
+     * @see generateSql
+     */
     const prepareSqlRequest = () => {
         let dto = { projectVersion: 1, projectName: "", projectType: "",
                     drawBoardContent: {
@@ -56,7 +43,6 @@ const RelationalManager = ({generateSql, sqlServerResult}) => {
      * @param elementId The id of the element
      * @param x The x coordinate of the element
      * @param y The y coordinate of the element
-     * @see DrawBoardElement
      */
     const updateDrawBoardElementPosition = (elementId, x, y) => {
         relationalContentStoreAccess(UpdateDrawBoardElementPosition({id: elementId, x: x, y: y}))
@@ -67,20 +53,22 @@ const RelationalManager = ({generateSql, sqlServerResult}) => {
      * @param elementId The id of the element
      * @param width The width of the element
      * @param height The height of the element
-     * @see DrawBoardElement
-     * @see resolveErComponent
      */
     const updateDrawBoardElementSize = (elementId, width, height) => {
         relationalContentStoreAccess(UpdateDrawBoardElementSize({id: elementId, width: width, height: height}))
     }
 
-    const onDropOnDrawBoard = (e) => {e.stopPropagation()};
-    const onConnectionSelected = (connectionId) => {};
-
+    /**
+     * When clicked on an element, this function is invoked and selects the element
+     * @param drawBoardElementId The id of the element to select
+     */
     const onDrawBoardElementSelected = (drawBoardElementId) => {
         setSelectedObjectId(drawBoardElementId)
     };
 
+    /**
+     * Clears selection, when the canvas (not an element inside the canvas) is clicked
+     */
     const onCanvasSelected = () => {
         if(selectedObjectId == null) return;
         setSelectedObjectId(null);
@@ -93,9 +81,18 @@ const RelationalManager = ({generateSql, sqlServerResult}) => {
     const drawBoardBorderOffset = 30;
 
 
+    /**
+     * Invoked by the right sidebar to change the data type
+     * @see ChangeDataTypeOfDrawBoardElement
+     */
     const changeDataType = (tableId, columnId, dataType) => {
-       relationalContentStoreAccess(ChangeDataTypeOfDrawBoardElement(tableId, columnId, dataType))
+       relationalContentStoreAccess(ChangeDataTypeOfDrawBoardElement({tableId: tableId, columnId: columnId, dataType: dataType}))
     }
+
+    //Empty handlers connected to the drawBoardElements and connections
+    const onDropOnDrawBoard = (e) => {e.stopPropagation()};
+    //noinspection JSUnusedLocalSymbols Justification, not used handler
+    const onConnectionSelected = (connectionId) => {};
 
     return (
 

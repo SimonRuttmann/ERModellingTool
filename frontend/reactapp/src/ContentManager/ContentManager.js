@@ -6,6 +6,7 @@ import SaveAndLoad from "./SaveAndLoad";
 import {DiagramTypes} from "../ERModell/Model/Diagram";
 import RelationalManager from "../ERModell/RelationalManager";
 
+//das hier ist ne tab bar component?
 function ContentManager() {
 
     const [diagramType, setDiagramType] = useState(DiagramTypes.erDiagram)
@@ -16,6 +17,8 @@ function ContentManager() {
     }
 
     function changeToRelationalDiagram(){
+        console.log("change to rel?")
+        console.log(diagramType)
         if(diagramType === DiagramTypes.relationalDiagram) return;
         setDiagramType(DiagramTypes.relationalDiagram);
     }
@@ -31,7 +34,7 @@ function ContentManager() {
     return (
         <React.StrictMode>
         <div className="App">
-            <SaveAndLoad metaInforamtion={metaInformation}
+            <SaveAndLoad metaInformation={metaInformation}
                          diagramType={diagramType}
                          changeToErDiagram={changeToErDiagram}
                          changeToRelationalDiagram={changeToRelationalDiagram}>

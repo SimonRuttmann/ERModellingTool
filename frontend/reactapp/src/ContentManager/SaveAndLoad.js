@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ImportErContent, selectErContentSlice} from "../store/ErContentSlice";
 import {ImportRelContent, selectRelationalContentSlice} from "../store/RelationalContentSlice";
 
+//eig. ist das hier der content manager. oder der ...proxy ?
 export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
     const erContentStore = useSelector(selectErContentSlice);
@@ -24,10 +25,23 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     },[diagramType])
 
 
-    //Download
+    /**
+     * Creates a download package containing meta-information,
+     * Er model information and relational model information
+     *
+     * When the user downloads the diagram he receives this package
+     * Therefore any change must ensure that old files can still be imported
+     *
+     * To handle multiple versions the meta-information property "projectVersion" can be used
+     * @returns {string}
+     */
     function createDownloadPackage(){
 
-        let downloadPackage = {erContent: erContentStore, relContent: relationalContentStore}
+        let downloadPackage = {
+            ...metaInformation,
+            erContent:  {drawBoardElements: erContentStore.drawBoardElements, connections: erContentStore.connections},
+            relContent: {tables: relationalContentStore.drawBoardElements, connections: relationalContentStore.connections}
+        }
 
         return JSON.stringify(downloadPackage, null, 2);
     }
@@ -47,15 +61,24 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     const [relationalEndpointError, setRelationalEndpointError] = useState(false)
 
     function transformToRel(){
-        let contentToSend = {...erContentStore, ...metaInformation};
+
+        let contentToSend = {
+            ...metaInformation,
+            drawBoardContent: {
+                elements: erContentStore.drawBoardElements,
+                connections: erContentStore.connections
+            }};
 
         axios.post(url, contentToSend).
         then((response) => {
-            erContentStoreAccess(ImportRelContent(response.data))
+            console.log("received")
+            console.log(response.data)
+            relationalContentStoreAccess(ImportRelContent(response.data));
+            console.log("change")
+            changeToRelationalDiagram();
         }).
         catch(error => setRelationalEndpointError(error));
     }
-
 
 
     const urlSql = "http://localhost:8080/convert/sql"

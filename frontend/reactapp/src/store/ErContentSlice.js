@@ -1,7 +1,39 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {ConnectionCardinality} from "../ERModell/Model/ActionState";
 
-
+/**
+ * This store is responsible for holding drawBoardElements and connections in the context of entity-relationship diagrams.
+ * DrawBoardElements represent Er-Elements like StrongEntities, MultivaluedAttributes, IsAs, ...
+ * Connections are between those DrawBoardElements and hold data like min/max Cardinality,
+ * inheritor/parent of IsAs connected to entities ...
+ *
+ * @example
+ * The drawBoardElement has the following structure
+ *     id:            string            The id of this element
+ *     displayName:   string            The name of the element displayed to the user
+ *     isHighlighted: boolean           Flag indicating if the element should be displayed as highlighted
+ *     isSelected:    boolean           Flag indicating if the element should be displayed as selected
+ *     x:             double            The x coordinate on the draw field
+ *     y:             double            The y coordinate on the draw field
+ *     width:         double            The current width of the element
+ *     height:        double            The current height of the element
+ *     objectType:    ObjectType        The object type. Here ObjectType.DrawBoardElement
+ *     erType:        ErType            E.g. StrongEntity
+ *     owningSide:    string            Only applies to strong relations, it is an id for an entity
+ *
+ * @example
+ * The connection has the following structure
+ *     id:             string           The id of this connection
+ *     start:          string           The id of a draw board element to start form
+ *     end:            string           The id of a draw board element to end at
+ *     min:            string           The min cardinality
+ *     max:            string           The max cardinality
+ *     objectType:     ObjectType       The object type. Here ObjectType.Connection
+ *     isSelected:     boolean          Flag indicating if the connection should be displayed as selected
+ *     withArrow:      boolean          Flag indicating if the connection should have an arrow to the end element
+ *     withLabel:      boolean          Flag indicating if the connection should have a label
+ *     connectionType: ConnectionType   The kind of connection. Isa-Parent, AttributeConnector etc.
+ */
 const erContentSlice = createSlice({
     name: 'erContent',
     initialState: {drawBoardElements: [], connections: []},
@@ -15,6 +47,8 @@ const erContentSlice = createSlice({
 
             let drawBoardElements = action.payload.drawBoardElements;
             let connections = action.payload.connections;
+            state.drawBoardElements = [];
+            state.connections = [];
 
             //action.payload.drawBoardContent
             if(Array.isArray(drawBoardElements) )
@@ -76,11 +110,11 @@ const erContentSlice = createSlice({
         UnselectAndUnHighlightAllElements: (state) => {
 
             state.connections = state.connections.map(element => {
-                return {...element, isHighlighted: false}
+                return {...element, isSelected: false, isHighlighted: false}
             });
 
             state.drawBoardElements = state.drawBoardElements.map(element => {
-                return {...element, isHighlighted: false}
+                return {...element, isSelected: false, isHighlighted: false}
             });
 
             return state;
@@ -88,25 +122,6 @@ const erContentSlice = createSlice({
         /**
          * Adds a new element to the state
          * @payload action.payload.newElement The element to add
-         *
-         * @example
-         * The element has the following structure
-         *
-         *     id:            string            The id of this element
-         *
-         *     displayName:   string            The name of the element displayed to the user
-         *     isHighlighted: boolean           Flag indicating if the element should be displayed as highlighted
-         *     isSelected:    boolean           Flag indicating if the element should be displayed as selected
-         *
-         *     x:             double            The x coordinate on the draw field
-         *     y:             double            The y coordinate on the draw field
-         *     width:         double            The current width of the element
-         *     height:        double            The current height of the element
-         *
-         *     objectType:    ObjectType        The object type. Here ObjectType.DrawBoardElement
-         *     erType:        ErType            E.g. StrongEntity
-         *     owningSide:    string            Applies to strong relations, it is an id for a drawBoarElement as Entity
-         *
          */
         AddDrawBoardElement: (state, action) => {
             let newElement = action.payload.newElement;
@@ -138,8 +153,8 @@ const erContentSlice = createSlice({
         RemoveDrawBoardElement: (state, action) => {
             let id = action.payload.id;
 
-            state.connections = state.connections.filter(connection => connection.start === id || connection.end === id)
-            state.drawBoardElements = state.drawBoardElements.filter(element => element.id === id)
+            state.connections = state.connections.filter(connection => !(connection.start === id || connection.end === id))
+            state.drawBoardElements = state.drawBoardElements.filter(element => !(element.id === id))
 
             return state;
         },
@@ -208,23 +223,6 @@ const erContentSlice = createSlice({
         /**
          * Adds a new connection to the state
          * @payload action.payload.newConnection The connection to add
-         *
-         * @example
-         * The connection has the following structure
-         *
-         *     id:             string           The id of this connection
-         *
-         *     start:          string           The id of a draw board element to start form
-         *     end:            string           The id of a draw board element to end at
-         *
-         *     min:            string           The min cardinality
-         *     max:            string           The max cardinality
-         *
-         *     objectType:     ObjectType       The object type. Here ObjectType.Connection
-         *     isSelected:     boolean          Flag indicating if the connection should be displayed as selected
-         *     withArrow:      boolean          Flag indicating if the connection should have an arrow to the end element
-         *     withLabel:      boolean          Flag indicating if the connection should have a label
-         *     connectionType: ConnectionType   The kind of connection. Isa-Parent, AttributeConnector etc.
          */
         AddConnection: (state, action) => {
             let newConnection = action.payload.newConnection;
