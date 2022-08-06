@@ -1,10 +1,10 @@
 import React from 'react';
-import '../../Playground.css';
-import {ConnectionCardinality, OBJECTTYPE} from "../../Model/ActionState";
-import {ERTYPE, ERTYPECATEGORY} from "../../Model/ErType";
+import '../../../ERModell/Playground.css';
+import {ConnectionCardinality, OBJECTTYPE} from "../../../ERModell/Model/ActionState";
+import {ERTYPE, ERTYPECATEGORY} from "../../../ERModell/Model/ErType";
 import {Footer, Header} from "./ObjectView";
-import {resolveObjectById} from "../Util/ObjectUtil";
-import {ConnectionType} from "../../Model/Diagram";
+import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
+import {ConnectionType} from "../../../ERModell/Model/Diagram";
 import EnhancedSettings from "./EnhancedSettings";
 
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setOwningSideProperty}) => {

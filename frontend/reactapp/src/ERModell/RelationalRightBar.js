@@ -1,5 +1,5 @@
 import React from 'react';
-import {resolveObjectById} from "./Components/Util/ObjectUtil";
+import {resolveObjectById} from "../Services/Common/ObjectUtil";
 import {SqlDataTypes} from "./Components/ErObjectComponents/SqlDataTypes";
 import TableUtil from "./TableUtil";
 

@@ -1,4 +1,4 @@
-import {ConnectionType} from "../../Model/Diagram";
+import {ConnectionType} from "../../ERModell/Model/Diagram";
 
 /**
  * Offset

@@ -1,6 +1,6 @@
-import {resolveObjectById} from "../Util/ObjectUtil";
-import {ERTYPE} from "../../Model/ErType";
-import {getOtherElementsOfConnectors} from "../../ErRules/ErRulesUtil";
+import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
+import {ERTYPE} from "../../../ERModell/Model/ErType";
+import {getOtherElementsOfConnectors} from "../../../Services/ErRules/ErRulesUtil";
 import React from "react";
 
 const EnhancedSettings = ({selectedObject, drawBoardElements, connections, setOwningSideProperty}) => {

@@ -5,8 +5,8 @@ import Download from "./Download";
 import Upload from "./Upload";
 import PrivacyPolicy from "./PrivacyPolicy";
 import {useDispatch, useSelector} from "react-redux";
-import {ImportErContent, selectErContentSlice} from "../../store/ErContentSlice";
-import {ImportRelContent, selectRelationalContentSlice} from "../../store/RelationalContentSlice";
+import {ImportErContent, selectErContentSlice} from "../../ReduxStore/ErContentSlice";
+import {ImportRelContent, selectRelationalContentSlice} from "../../ReduxStore/RelationalContentSlice";
 
 /**
  * Renders the tab bar within its children.

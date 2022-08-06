@@ -1,9 +1,9 @@
 import '../../App.css';
 import React, {useState} from "react";
 import {DiagramTypes} from "../../ERModell/Model/Diagram";
-import PlayGround from '../../ERModell/Playground';
+import ErManager from '../ErModel/ErManager';
 import ContentManager from "./ContentManager";
-import RelationalManager from "../../ERModell/RelationalManager";
+import RelationalManager from "../RelationalModel/RelationalManager";
 
 /**
  * Effective root of the database modelling application, renders the content manager
@@ -39,7 +39,7 @@ function DatabaseModellingTool() {
                             changeToErDiagram={changeToErDiagram}
                             changeToRelationalDiagram={changeToRelationalDiagram}>
 
-                {diagramType === DiagramTypes.erDiagram ? <PlayGround/> : <RelationalManager/>}
+                {diagramType === DiagramTypes.erDiagram ? <ErManager/> : <RelationalManager/>}
 
             </ContentManager>
         </div>

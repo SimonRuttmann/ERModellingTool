@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import ReactModal from "react-modal"
-import sqlIcon from "../Resources/sql.svg";
+import sqlIcon from "../../Resources/sql.svg";
 
 /**
  * Renders a modal containing the sql generated from the relational model

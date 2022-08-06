@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from "react";
-import SvgUtil from "../../Util/SvgUtils"
+import SvgUtil from "../../../../Services/Common/SvgUtils"
 import DisplayConfiguration from "../../../DisplayConfiguration";
 
 /**

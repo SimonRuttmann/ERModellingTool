@@ -1,6 +1,6 @@
-import {ConnectionType} from "../Model/Diagram";
-import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "../Model/ErType";
-import {resolveObjectById} from "../Components/Util/ObjectUtil";
+import {ConnectionType} from "../../ERModell/Model/Diagram";
+import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "../../ERModell/Model/ErType";
+import {resolveObjectById} from "../Common/ObjectUtil";
 
 
 export const isAssociationConnectionType = (connectionType) => {

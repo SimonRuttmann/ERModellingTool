@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import './Playground.css';
-import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
-import RightBar from './Components/RightSideBar/RightBar';
-import ConnectionElement from './Components/DrawBoard/ConnectionElement';
-import {ERTYPE} from './Model/ErType';
-import {ACTIONSTATE, OBJECTTYPE} from "./Model/ActionState";
-import {resolveObjectById} from "./Components/Util/ObjectUtil";
-import LeftSideBar from "./Components/LeftSideBar/LeftSideBar";
-import DrawBoard from "./Components/DrawBoard/DrawBoard";
+import '../../ERModell/Playground.css';
+import DrawBoardElement from '../DrawingBoard/DrawBoardElement';
+import RightBar from './RightSideBar/RightBar';
+import ConnectionElement from '../DrawingBoard/ConnectionElement';
+import {ERTYPE} from '../../ERModell/Model/ErType';
+import {ACTIONSTATE, OBJECTTYPE} from "../../ERModell/Model/ActionState";
+import {resolveObjectById} from "../../Services/Common/ObjectUtil";
+import LeftSideBar from "./LeftSideBar/LeftSideBar";
+import DrawBoard from "../DrawingBoard/DrawBoard";
 import TransformButton from "./TransformButton";
-import {ConnectionType, DiagramTypes} from "./Model/Diagram";
-import {createConnection} from "./ConnectionCreationRules";
-import {createSelection} from "./ErRules/ErDrawingRuleEnforcer";
-import ErFeedbackSystem from "./ErRules/ErFeedbackSystem";
+import {ConnectionType, DiagramTypes} from "../../ERModell/Model/Diagram";
+import {createConnection} from "../../ERModell/ConnectionCreationRules";
+import {createSelection} from "../../Services/ErRules/ErDrawingRuleEnforcer";
+import ErFeedbackSystem from "../../Services/ErRules/ErFeedbackSystem";
 import {useSelector, useDispatch} from "react-redux";
 import {
   AddConnection,
@@ -28,9 +28,9 @@ import {
   UnselectAndUnHighlightAllElements,
   UpdateDrawBoardElementPosition,
   UpdateDrawBoardElementSize
-} from "../store/ErContentSlice";
+} from "../../ReduxStore/ErContentSlice";
 
-const PlayGround = ({transformToRel}) => {
+const ErManager = ({transformToRel}) => {
 
   const erContentStore = useSelector(selectErContentSlice);
   const erContentStoreAccess = useDispatch();
@@ -355,4 +355,4 @@ const PlayGround = ({transformToRel}) => {
     </div>
   );
 };
-export default PlayGround;
+export default ErManager;

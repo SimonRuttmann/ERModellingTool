@@ -6,9 +6,9 @@ import {
     isElementOfCategoryAttribute,
     resolveRootElementOfAttribute
 } from "./ErRulesUtil";
-import {ERTYPE} from "../Model/ErType";
-import {ConnectionType} from "../Model/Diagram";
-import {resolveObjectById} from "../Components/Util/ObjectUtil";
+import {ERTYPE} from "../../ERModell/Model/ErType";
+import {ConnectionType} from "../../ERModell/Model/Diagram";
+import {resolveObjectById} from "../Common/ObjectUtil";
 
 /**
  * The ErFeedbackSystem currently consists only of the validateErDiagram method

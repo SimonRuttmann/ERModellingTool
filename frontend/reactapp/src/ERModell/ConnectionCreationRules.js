@@ -1,8 +1,8 @@
 import {OBJECTTYPE} from "./Model/ActionState";
-import {resolveObjectById} from "./Components/Util/ObjectUtil";
+import {resolveObjectById} from "../Services/Common/ObjectUtil";
 import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "./Model/ErType";
 import {ConnectionType} from "./Model/Diagram";
-import {isElementOfCategoryAttribute} from "./ErRules/ErRulesUtil";
+import {isElementOfCategoryAttribute} from "../Services/ErRules/ErRulesUtil";
 
 
 export const createConnection = (drawBoardElements, idStart, idEnd, connectionInformation) => {

@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 
 /**
- * This store is responsible for holding drawBoardElements and connections in the context of the relational model
+ * This ReduxStore is responsible for holding drawBoardElements and connections in the context of the relational model
  * DrawBoardElements represent tables, which consist of columns. The table renders all columns itself.
  * Connections are between columns and represent foreign keys
  *

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Xarrow from 'react-xarrows';
-import {calculateOffsets} from "./OffsetCalculator";
+import {calculateOffsets} from "../../Services/Common/OffsetCalculator";
 
 /**
  * Wrapps the XArrow to add listener and additional logic

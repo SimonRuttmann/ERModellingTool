@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
-import './Playground.css';
-import DrawBoardElement from './Components/DrawBoard/DrawBoardElement';
-import ConnectionElement from './Components/DrawBoard/ConnectionElement';
-import DrawBoard from "./Components/DrawBoard/DrawBoard";
-import {DiagramTypes} from "./Model/Diagram";
+import '../../ERModell/Playground.css';
+import DrawBoardElement from '../DrawingBoard/DrawBoardElement';
+import ConnectionElement from '../DrawingBoard/ConnectionElement';
+import DrawBoard from "../DrawingBoard/DrawBoard";
+import {DiagramTypes} from "../../ERModell/Model/Diagram";
 import SqlPopUp from "./SqlPopUp";
-import RelationalRightBar from "./RelationalRightBar";
+import RelationalRightBar from "../../ERModell/RelationalRightBar";
 import {
     ChangeDataTypeOfDrawBoardElement,
     selectRelationalContentSlice,
     UpdateDrawBoardElementPosition,
     UpdateDrawBoardElementSize
-} from "../store/RelationalContentSlice";
+} from "../../ReduxStore/RelationalContentSlice";
 import {useDispatch, useSelector} from "react-redux";
 
 const RelationalManager = ({generateSql, sqlServerResult}) => {

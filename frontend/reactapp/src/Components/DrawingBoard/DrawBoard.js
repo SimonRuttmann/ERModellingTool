@@ -4,7 +4,7 @@ import {useXarrow, Xwrapper} from "react-xarrows";
 import SvgResizer from "./SvgResizer";
 import DrawBoardElement from "./DrawBoardElement";
 import ConnectionElement from "./ConnectionElement";
-import {DiagramTypes} from "../../Model/Diagram";
+import {DiagramTypes} from "../../ERModell/Model/Diagram";
 
 const DrawBoard = ({children, onDropHandler, drawBoardElements, drawBoardBorderOffset, diagramType}) => {
 

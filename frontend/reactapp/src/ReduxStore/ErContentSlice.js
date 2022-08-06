@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {ConnectionCardinality} from "../ERModell/Model/ActionState";
 
 /**
- * This store is responsible for holding drawBoardElements and connections in the context of entity-relationship diagrams.
+ * This ReduxStore is responsible for holding drawBoardElements and connections in the context of entity-relationship diagrams.
  * DrawBoardElements represent Er-Elements like StrongEntities, MultivaluedAttributes, IsAs, ...
  * Connections are between those DrawBoardElements and hold data like min/max Cardinality,
  * inheritor/parent of IsAs connected to entities ...
