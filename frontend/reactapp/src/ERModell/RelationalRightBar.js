@@ -1,6 +1,7 @@
 import React from 'react';
 import {resolveObjectById} from "./Components/Util/ObjectUtil";
 import {SqlDataTypes} from "./Components/ErObjectComponents/SqlDataTypes";
+import TableUtil from "./TableUtil";
 
 const RelationalRightBar = ({selectedObjectId, drawBoardElements, changeDataType}) => {
 
@@ -9,28 +10,8 @@ const RelationalRightBar = ({selectedObjectId, drawBoardElements, changeDataType
     let selectedObject = resolveObjectById(selectedObjectId, drawBoardElements)
     if (selectedObject == null) return null;
 
-    //TODO duplication mit table
-    const sortedColumns = selectedObject.columns.sort( (a,b) => {
-        if( a.primaryKey &&  b.primaryKey) {
 
-            if( a.foreignKey &&  b.foreignKey) return  0;
-            if( a.foreignKey && !b.foreignKey) return +1;
-            if(!a.foreignKey &&  b.foreignKey) return -1;
-            if(!a.foreignKey && !b.foreignKey) return  0;
-
-        }
-        if( a.primaryKey && !b.primaryKey) return -1;
-        if(!a.primaryKey &&  b.primaryKey) return +1;
-        if(!a.primaryKey && !b.primaryKey){
-
-            if( a.foreignKey &&  b.foreignKey) return  0;
-            if( a.foreignKey && !b.foreignKey) return -1;
-            if(!a.foreignKey &&  b.foreignKey) return +1;
-            if(!a.foreignKey && !b.foreignKey) return  0;
-
-        }
-        return 0;
-    });
+    const sortedColumns = TableUtil.sortColumnsOfTableImmutable(selectedObject);
 
     const handleChangeDataType = (columnId, dataType) => {
         changeDataType(selectedObject.id, columnId, dataType)

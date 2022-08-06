@@ -1,6 +1,7 @@
 import React, {useLayoutEffect} from "react";
 import {resolveRequiredWidth} from "../Util/SvgUtils"
 import Column from "./Column";
+import TableUtil from "../../TableUtil";
 
 
 
@@ -43,33 +44,10 @@ function Table({id, displayText, color, fontFamily, fontSize, updateDrawBoardEle
         updateDrawBoardElementSize(id, width, tableHeight)
 
     },[width, tableHeight])
+    console.log("TABLELL")
+    console.log(object)
 
-    const sortedColumns = object.columns.sort( (a,b) => {
-       if( a.primaryKey &&  b.primaryKey) {
-
-           if( a.foreignKey &&  b.foreignKey) return  0;
-           if( a.foreignKey && !b.foreignKey) return +1;
-           if(!a.foreignKey &&  b.foreignKey) return -1;
-           if(!a.foreignKey && !b.foreignKey) return  0;
-
-       }
-       if( a.primaryKey && !b.primaryKey) return -1;
-       if(!a.primaryKey &&  b.primaryKey) return +1;
-       if(!a.primaryKey && !b.primaryKey){
-
-           if( a.foreignKey &&  b.foreignKey) return  0;
-           if( a.foreignKey && !b.foreignKey) return -1;
-           if(!a.foreignKey &&  b.foreignKey) return +1;
-           if(!a.foreignKey && !b.foreignKey) return  0;
-
-       }
-       return 0;
-    });
-
-    // A primary
-    // A primary foreign
-    // A foreign
-    // A --
+    const sortedColumns = TableUtil.sortColumnsOfTableImmutable(object);
 
     return (
         <React.Fragment>
