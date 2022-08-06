@@ -17,7 +17,7 @@ public class SqlGenerator {
 
         //Add header
         tableDefinition.append("CREATE TABLE IF NOT EXISTS [")
-           .append(table.getDisplayName())
+           .append(SqlUtil.getSpaceLessDisplayName(table.getDisplayName()))
            .append("] (\n");
 
         //Add column definitions
