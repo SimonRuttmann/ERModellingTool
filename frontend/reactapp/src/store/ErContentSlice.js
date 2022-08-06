@@ -1,37 +1,36 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {ConnectionCardinality} from "../ERModell/Model/ActionState";
 
+
 const erContentSlice = createSlice({
     name: 'erContent',
     initialState: {drawBoardElements: [], connections: []},
     reducers: {
-        /**
-         *
-         * @param state
-         * @param action
-         */
         ImportErContent: (state, action) => {
+
+            let drawBoardElements = action.payload.drawBoardElements;
+            let connections = action.payload.connections;
+
             //action.payload.drawBoardContent
-            if(Array.isArray(action.payload.elements) )
+            if(Array.isArray(drawBoardElements) )
             {
                 state = [];
-                action.payload.drawBoardElements.forEach( element => state.elements.push(element))
+                drawBoardElements.forEach( element => state.elements.push(element))
             }
 
-            if(Array.isArray(action.payload.connections) )
+            if(Array.isArray(connections) )
             {
                 state = [];
-                action.payload.connections.forEach(connection => state.connections.push(connection))
+                connections.forEach(connection => state.connections.push(connection))
             }
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Sets the select property of a connection or drawBoardElement
+         * @payload action.payload.id The id of a connection or drawBoardElement
          */
         SelectAnyElement: (state, action) => {
-            let id = action.payload;
+            let id = action.payload.id;
 
             //Resolve selected object
             let element = state.drawBoardElements.find(element => element.id === id);
@@ -49,12 +48,12 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Sets the highlight property for each drawBoardElement id inside the given array
+         * @payload action.payload.idsToHighlight An array of id`s
          */
         HighlightDrawBoardElements: (state, action) => {
-            let ids = action.payload;
+            //noinspection JSUnresolvedVariable Justification, variable is resolved
+            let ids = action.payload.idsToHighlight;
 
             state.drawBoardElements = state.drawBoardElements.map(element => {
                 let isHighlighted = false;
@@ -67,11 +66,11 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Sets the select property for all connections and draw board elements
+         * Also set the highlight flags to false all elements
          */
-        UnselectAndUnHighlightAllElements: (state) => {  //TODO rename, unselect any element and unhighlight all
+        UnselectAndUnHighlightAllElements: (state) => {
+
             state.connections = state.connections.map(element => {
                 return {...element, isHighlighted: false}
             });
@@ -83,12 +82,31 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
+         * Adds a new element to the state
+         * @payload action.payload.newElement The element to add
          *
-         * @param state
-         * @param action
+         * @example
+         * The element has the following structure
+         *
+         *     id:            string            The id of this element
+         *
+         *     displayName:   string            The name of the element displayed to the user
+         *     isHighlighted: boolean           Flag indicating if the element should be displayed as highlighted
+         *     isSelected:    boolean           Flag indicating if the element should be displayed as selected
+         *
+         *     x:             double            The x coordinate on the draw field
+         *     y:             double            The y coordinate on the draw field
+         *     width:         double            The current width of the element
+         *     height:        double            The current height of the element
+         *
+         *     objectType:    ObjectType        The object type. Here ObjectType.DrawBoardElement
+         *     erType:        ErType            E.g. StrongEntity
+         *     owningSide:    string            Applies to strong relations, it is an id for a drawBoarElement as Entity
+         *
          */
         AddDrawBoardElement: (state, action) => {
-            let newElement = action.payload;
+            //noinspection JSUnresolvedVariable Justification, variable is resolved
+            let newElement = action.payload.newElement;
 
             state.drawBoardElements.push({
                 id: newElement.id,
@@ -105,19 +123,17 @@ const erContentSlice = createSlice({
                 objectType: newElement.objectType,
                 erType: newElement.erType,
                 owningSide: newElement.owningSide,
-
-                minMax: undefined
             });
 
            return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Removes a draw board element
+         * Also removes all connections to and from this element
+         * @payload action.payload.id The id of the draw board element to remove
          */
         RemoveDrawBoardElement: (state, action) => {
-            let id = action.payload;
+            let id = action.payload.id;
 
             state.connections = state.connections.filter(connection => connection.start === id || connection.end === id)
             state.drawBoardElements = state.drawBoardElements.filter(element => element.id === id)
@@ -125,41 +141,43 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Updates the size of an draw board element
+         * @payload action.payload.id The id of the draw board element to update the size
+         * @payload action.payload.height The new height of the draw board element
+         * @payload action.payload.width The new width of the draw board element
          */
         UpdateDrawBoardElementSize: (state, action) => {
             let id = action.payload.id;
             let width = action.payload.width;
             let height = action.payload.height;
 
-            let element = state.find(element => element.id === id);
+            let element = state.drawBoardElements.find(element => element.id === id);
             element.width = width;
             element.height = height;
 
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Updates the position of a draw board element
+         * @payload action.payload.id The id of the draw board element to update the position
+         * @payload action.payload.x The new x position of the draw board element
+         * @payload action.payload.y The new y position of the draw board element
          */
         UpdateDrawBoardElementPosition: (state, action) => {
             let id = action.payload.id;
             let x = action.payload.x;
             let y = action.payload.y;
 
-            let element = state.find(element => element.id === id);
+            let element = state.drawBoardElements.find(element => element.id === id);
             element.x = x;
             element.y = y;
 
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Updates the owningSide of a draw board element
+         * @payload action.payload.id The id of the draw board element to update the owning side
+         * @payload action.payload.owningSide The id of another draw board element
          */
         SetDrawBoardElementOwningSide: (state, action) => {
             let selectedElementId = action.payload.id;
@@ -171,9 +189,9 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Updates the display name of a draw board element
+         * @payload action.payload.id The id of the draw board element to update the display name
+         * @payload action.payload.displayName The new display name
          */
         SetDrawBoardElementDisplayName: (state, action) => {
             let id = action.payload.id;
@@ -185,12 +203,29 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
+         * Adds a new connection to the state
+         * @payload action.payload.newConnection The connection to add
          *
-         * @param state
-         * @param action
+         * @example
+         * The connection has the following structure
+         *
+         *     id:             string           The id of this connection
+         *
+         *     start:          string           The id of a draw board element to start form
+         *     end:            string           The id of a draw board element to end at
+         *
+         *     min:            string           The min cardinality
+         *     max:            string           The max cardinality
+         *
+         *     objectType:     ObjectType       The object type. Here ObjectType.Connection
+         *     isSelected:     boolean          Flag indicating if the connection should be displayed as selected
+         *     withArrow:      boolean          Flag indicating if the connection should have an arrow to the end element
+         *     withLabel:      boolean          Flag indicating if the connection should have a label
+         *     connectionType: ConnectionType   The kind of connection. Isa-Parent, AttributeConnector etc.
          */
         AddConnection: (state, action) => {
-            let newConnection = action.payload;
+            //noinspection JSUnresolvedVariable Justification, variable is resolved
+            let newConnection = action.payload.newConnection;
 
             state.connections.push({
                 id: newConnection.id,
@@ -208,25 +243,26 @@ const erContentSlice = createSlice({
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Removes a connection
+         * @payload action.payload.id The id of the connection to remove
          */
         RemoveConnection: (state, action) => {
-            let id = action.payload;
+            let id = action.payload.id;
 
             state.connections = state.connections.filter(element => element.id === id)
 
             return state;
         },
         /**
-         *
-         * @param state
-         * @param action
+         * Updates the cardinality of a connection
+         * @payload action.payload.id The id of the connection
+         * @payload action.payload.notation The new notation value e.g. "1" or "A"
+         * @payload action.payload.minMax The kind of notation. Cardinality.Min or Cardinality.Max
          */
-        EditConnectionNotation: (state, action) => {
+        UpdateConnectionNotation: (state, action) => {
             let id = action.payload.id;
             let notation = action.payload.notation;
+            //noinspection JSUnresolvedVariable Justification, variable is resolved
             let minMax = action.payload.minMax;
 
             let connection = state.connections.find(connection => connection.id === id)
@@ -252,7 +288,7 @@ export const {
     SetDrawBoardElementDisplayName,
     AddConnection,
     RemoveConnection,
-    EditConnectionNotation} = erContentSlice.actions;
+    UpdateConnectionNotation} = erContentSlice.actions;
 
 export default erContentSlice.reducer;
 export const selectErContentSlice = (state) => state.erContent;

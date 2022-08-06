@@ -6,7 +6,7 @@ import erContentSlice from "./ErContentSlice";
 export const store = configureStore({
     reducer: {
         erContent: erContentSlice,
-        relationalContent: relationalContentSlice()
+        relationalContent: relationalContentSlice
     }
 })
 

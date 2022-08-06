@@ -16,7 +16,9 @@ import ErFeedbackSystem from "./ErRules/ErFeedbackSystem";
 import {useSelector, useDispatch} from "react-redux";
 import {
   AddConnection,
-  AddDrawBoardElement, EditConnectionNotation, HighlightDrawBoardElements,
+  AddDrawBoardElement,
+  UpdateConnectionNotation,
+  HighlightDrawBoardElements,
   RemoveConnection,
   RemoveDrawBoardElement,
   SelectAnyElement,
@@ -29,33 +31,6 @@ import {
 } from "../store/ErContentSlice";
 
 const PlayGround = ({transformToRel}) => {
-
-  /**
-   * Schema for drawBoardElements
-   * id: newId,
-   * displayName: "new "+ erType + " " + counter,
-   * isHighlighted: false,
-   * isSelected: false,
-   * x: e.clientX - x - 50,
-   * y: e.clientY - y - 50,
-   * width: 150,
-   * height: 100,
-   * objectType: OBJECTTYPE.DrawBoardElement,
-   * erType: erType
-   */
-
-  /**
-   * Schema for connections
-   * id: `${idStart} --> ${idEnd} - ${Date.now()}`,
-   * start: idStart,
-   * end: idEnd,
-   * min: 1,
-   * max: 1,
-   * objectType: OBJECTTYPE.Connection,
-   * isSelected: false,
-   * withArrow: false,
-   * withLabel: true,
-   */
 
   const erContentStore = useSelector(selectErContentSlice);
   const erContentStoreAccess = useDispatch();
@@ -133,17 +108,12 @@ const PlayGround = ({transformToRel}) => {
 
     if(actionState === ACTIONSTATE.Default) {
 
-      if(previousSelectedObjectId == null){
-
-        erContentStoreAccess(SelectAnyElement(newSelectedObject.id))
-        setSelectedObjectId(newSelectedObject.id);
-      }
-      else{
+      if(previousSelectedObjectId != null) {
         erContentStoreAccess(UnselectAndUnHighlightAllElements())
-        erContentStoreAccess(SelectAnyElement(newSelectedObject.id))
-        setSelectedObjectId(newSelectedObject.id);
       }
 
+      erContentStoreAccess(SelectAnyElement({id: newSelectedObject.id}))
+      setSelectedObjectId(newSelectedObject.id);
     }
 
     if( actionState === ACTIONSTATE.AddConnection) {
@@ -161,7 +131,7 @@ const PlayGround = ({transformToRel}) => {
 
       //Add new connection
       let newConnection = createConnection(erContentStore.drawBoardElements, previousSelectedObjectId, drawBoardElementId, connectionInformation);
-      erContentStoreAccess(AddConnection(newConnection))
+      erContentStoreAccess(AddConnection({newConnection: newConnection}))
     }
 
   };
@@ -179,13 +149,13 @@ const PlayGround = ({transformToRel}) => {
 
       //If no element was previously selected, select the connection
       if(selectedObjectId == null){
-        erContentStoreAccess(SelectAnyElement(connection.id))
+        erContentStoreAccess(SelectAnyElement({id: connection.id}))
         return;
       }
 
-      //There is a element selected, so unselect it and highlight the new connection
+      //There is an element selected, so unselect it and highlight the new connection
       erContentStoreAccess(UnselectAndUnHighlightAllElements())
-      erContentStoreAccess(SelectAnyElement(connectionId))
+      erContentStoreAccess(SelectAnyElement({id: connection.id}))
     }
 
   };
@@ -220,14 +190,13 @@ const PlayGround = ({transformToRel}) => {
         owningSide: null
       };
 
-      erContentStoreAccess(AddDrawBoardElement(newDrawBoardElement))
+      erContentStoreAccess(AddDrawBoardElement({newElement: newDrawBoardElement}))
       //TODO bei import ist der counter nicht geschickt... generell eher für jedes element zählen
       setCounter(counter+1);
 
       e.stopPropagation();
     }
   };
-
 
   /**
    * Function given to DrawBoardElement to update the position in the state
@@ -237,9 +206,8 @@ const PlayGround = ({transformToRel}) => {
    * @see DrawBoardElement
    */
   const updateDrawBoardElementPosition = (elementId, x, y) => {
-    erContentStoreAccess(UpdateDrawBoardElementPosition(elementId, x, y));
+    erContentStoreAccess(UpdateDrawBoardElementPosition({id: elementId, x: x, y: y}));
   }
-
 
   /**
    * Function given to the concrete implementations of DrawBoardElement to update the size in the state
@@ -247,10 +215,9 @@ const PlayGround = ({transformToRel}) => {
    * @param width The width of the element
    * @param height The height of the element
    * @see DrawBoardElement
-   * @see resolveErComponent
    */
   const updateDrawBoardElementSize = (elementId, width, height) => {
-    erContentStoreAccess(UpdateDrawBoardElementSize(elementId, width, height));
+    erContentStoreAccess(UpdateDrawBoardElementSize({id: elementId, width: width, height: height}));
   }
 
   const removeElement = (id) => {
@@ -260,11 +227,11 @@ const PlayGround = ({transformToRel}) => {
 
     if(selectedObject.objectType === OBJECTTYPE.Connection) {
       console.log("Remove connection")
-      erContentStoreAccess(RemoveConnection(selectedObject.id))
+      erContentStoreAccess(RemoveConnection({id: selectedObject.id}))
     }
     if(selectedObject.objectType === OBJECTTYPE.DrawBoardElement){
       console.log("Remove drawBoardElement")
-      erContentStoreAccess(RemoveDrawBoardElement(selectedObject.id))
+      erContentStoreAccess(RemoveDrawBoardElement({id: selectedObject.id}))
     }
 
     erContentStoreAccess(UnselectAndUnHighlightAllElements())
@@ -277,17 +244,17 @@ const PlayGround = ({transformToRel}) => {
   }
 
   const setDisplayName = (id, displayName) => {
-    erContentStoreAccess(SetDrawBoardElementDisplayName(id, displayName))
+    erContentStoreAccess(SetDrawBoardElementDisplayName({id: id, displayName: displayName}))
   }
 
   const editConnectionNotation = (id, minMax, notation) => {
-    erContentStoreAccess(EditConnectionNotation(id, minMax, notation));
+    erContentStoreAccess(UpdateConnectionNotation({id: id, notation: notation, minMax: minMax}));
   }
 
   const toAddConnectionState = (id, type) => {
     changeActionState(ACTIONSTATE.AddConnection, type)
     const highlightedIds = createSelection(id, type, erContentStore.drawBoardElements, erContentStore.connections)
-    erContentStoreAccess(HighlightDrawBoardElements({ids: highlightedIds}))
+    erContentStoreAccess(HighlightDrawBoardElements({idsToHighlight: highlightedIds}))
   }
 
   /**
