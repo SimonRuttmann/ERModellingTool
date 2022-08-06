@@ -1,8 +1,18 @@
+// noinspection JSUnresolvedVariable Justification, variables are resolved
+
 import React from 'react';
 import {resolveObjectById} from "../../Services/Common/ObjectUtil";
 import {SqlDataTypes} from "../../Services/DrawBoardModel/SqlDataTypes";
 import TableUtil from "../../Services/Common/TableUtil";
 
+/**
+ * Renders the right sidebar containing information for ane table
+ * On this sidebar a selector is provided to change the dataType for the column
+ *
+ * @param selectedObjectId  The currently selected object id
+ * @param drawBoardElements The elements (tables) in the DrawBoard
+ * @param changeDataType    A function to change the dataType of a column
+ */
 const RelationalRightBar = ({selectedObjectId, drawBoardElements, changeDataType}) => {
 
     if(selectedObjectId == null) return null;
@@ -16,7 +26,7 @@ const RelationalRightBar = ({selectedObjectId, drawBoardElements, changeDataType
     const handleChangeDataType = (columnId, dataType) => {
         changeDataType(selectedObject.id, columnId, dataType)
     }
-//TODO duplicate column
+
     const getDataType = (column) => {
         if(column.dataType == null) return SqlDataTypes.INT;
         return column.dataType;

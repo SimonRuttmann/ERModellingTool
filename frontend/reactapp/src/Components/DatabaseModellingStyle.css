@@ -5,12 +5,6 @@ body {
   height: 100%;
 }
 
-/* TODO ADJUST ZOOM LEVEL, could lead to bugs, --> komische dragging mit zoom
-html {
-  zoom: 0.8;
-}
-*/
-
 /* Root element of the website*/
 .canvasStyle {
   position: absolute;
@@ -19,8 +13,6 @@ html {
   height: calc(100% - 60px);
   overflow: hidden;
 }
-
-
 
 /* Toolbox left side */
 .leftSidebarContainer {
@@ -31,7 +23,6 @@ html {
   background: #3c3f41;
   text-align: center;
 }
-
 
 .leftSidebarMainTitle {
   margin-top: 20px;
@@ -61,7 +52,6 @@ html {
   margin-bottom: 40px;
 }
 
-
 .spacerSmall {
   visibility: hidden;
   margin-top: 15px;
@@ -83,7 +73,6 @@ html {
   min-height: 100%;
   overflow: hidden;
 }
-
 
 .leftSideBarElementContainer {
   position: relative;
@@ -123,7 +112,7 @@ html {
   background-color: #2b2b2b;
 }
 
-/* The main outer drawboard container */
+/* The main outer drawBoard container */
 .outerDrawBoardContainerEr {
   position: absolute !important;
   display: block;
@@ -467,7 +456,6 @@ input:checked + .mergeCheckBoxSlider:before {
 }
 
 
-
 .select {
   appearance: none;
 
@@ -507,10 +495,7 @@ input:checked + .mergeCheckBoxSlider:before {
 }
 
 .SqlPopUp {
-  margin-left: 10%;
-  margin-right: 10%;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin: 10%;
   background-color: #222222;
   text-align: left;
   height: 70%;
@@ -518,15 +503,11 @@ input:checked + .mergeCheckBoxSlider:before {
 }
 
 .SqlContent {
-  margin-left: 10%;
-  margin-right: 10%;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin: 10%;
   background-color: #222222;
   text-align: left;
   color: #cccccc;
 }
-
 
 .SqlHighlightedWord {
   color: #e5430a

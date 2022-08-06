@@ -14,6 +14,16 @@ import {
 } from "../../ReduxStore/RelationalContentSlice";
 import {useDispatch, useSelector} from "react-redux";
 
+/**
+ * Responsible for rendering the hole relational diagram
+ * Also contains the interaction logic and provides it to child components
+ *
+ * The state of all connections and elements in the diagrams are kept in the redux store
+ *
+ * @param generateSql A function executed, when the user wants to generate sql based on this diagram
+ * @param sqlServerResult The sql code provided by the server for this diagram
+ * @see RelationalContentSlice
+ */
 const RelationalManager = ({generateSql, sqlServerResult}) => {
 
     const relationalContentStore = useSelector(selectRelationalContentSlice);
