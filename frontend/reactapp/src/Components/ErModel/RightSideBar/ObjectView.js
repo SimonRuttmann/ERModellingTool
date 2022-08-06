@@ -4,6 +4,7 @@ import {ACTIONSTATE, OBJECTTYPE} from "../../../Services/DrawBoardModel/ActionSt
 import {ERTYPE} from "../../../Services/DrawBoardModel/ErType";
 import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
 import {ConnectionType} from "../../../Services/DrawBoardModel/Diagram";
+import DisplayConfiguration from "../../../Services/Configurations/DisplayConfiguration";
 
 
 //We hold here the selected object ! when we change anything this will still be the "old" object, the new object is a clone of this one
@@ -41,7 +42,7 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
             <hr className="spacer"/>
             <div>
                 <label htmlFor="rightBarInputField" className="rightBarInputFieldLabel">Name:</label>
-                <input  type="text" className="rightBarInput" id="rightBarInputField"
+                <input  type="text" className="rightBarInput" id="rightBarInputField" maxLength={DisplayConfiguration.maxLengthForElements}
                         onChange={(e) => { setDisplayName(selectedObject.id, e.target.value)}}
                         value={selectedObject.displayName}/></div>
             <hr className="spacer"/>
