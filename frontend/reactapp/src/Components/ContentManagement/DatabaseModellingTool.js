@@ -1,16 +1,15 @@
-import '../App.css';
+import '../../App.css';
 import React, {useState} from "react";
-import {DiagramTypes} from "../ERModell/Model/Diagram";
-import PlayGround from '../ERModell/Playground';
-import SaveAndLoad from "./SaveAndLoad";
-import RelationalManager from "../ERModell/RelationalManager";
+import {DiagramTypes} from "../../ERModell/Model/Diagram";
+import PlayGround from '../../ERModell/Playground';
+import ContentManager from "./ContentManager";
+import RelationalManager from "../../ERModell/RelationalManager";
 
 /**
- *
- * @returns {JSX.Element}
- * @constructor
+ * Effective root of the database modelling application, renders the content manager
+ * Here additional meta information and hooks can be provided to the Er and relational diagrams
  */
-function ContentManager() {
+function DatabaseModellingTool() {
 
     const [diagramType, setDiagramType] = useState(DiagramTypes.erDiagram)
 
@@ -35,17 +34,17 @@ function ContentManager() {
     return (
         <React.StrictMode>
         <div className="App">
-            <SaveAndLoad metaInformation={metaInformation}
-                         diagramType={diagramType}
-                         changeToErDiagram={changeToErDiagram}
-                         changeToRelationalDiagram={changeToRelationalDiagram}>
+            <ContentManager metaInformation={metaInformation}
+                            diagramType={diagramType}
+                            changeToErDiagram={changeToErDiagram}
+                            changeToRelationalDiagram={changeToRelationalDiagram}>
 
                 {diagramType === DiagramTypes.erDiagram ? <PlayGround/> : <RelationalManager/>}
 
-            </SaveAndLoad>
+            </ContentManager>
         </div>
         </React.StrictMode>
     )
 }
 
-export default ContentManager;
+export default DatabaseModellingTool;

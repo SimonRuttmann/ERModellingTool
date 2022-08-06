@@ -1,7 +1,7 @@
 
 import './App.css';
 import React from "react";
-import ContentManager from "./ContentManager/ContentManager";
+import DatabaseModellingTool from "./Components/ContentManagement/DatabaseModellingTool";
 
 function App() {
 
@@ -9,7 +9,7 @@ function App() {
 
     <div className="App">
 
-      <ContentManager/>
+      <DatabaseModellingTool/>
 
     </div>
   )

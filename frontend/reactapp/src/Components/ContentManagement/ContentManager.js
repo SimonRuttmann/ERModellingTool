@@ -1,15 +1,24 @@
 import React, {useEffect, useState} from "react";
+import {DiagramTypes} from "../../ERModell/Model/Diagram";
+import axios from "axios";
 import Download from "./Download";
 import Upload from "./Upload";
-import {DiagramTypes} from "../ERModell/Model/Diagram";
-import axios from "axios";
 import PrivacyPolicy from "./PrivacyPolicy";
 import {useDispatch, useSelector} from "react-redux";
-import {ImportErContent, selectErContentSlice} from "../store/ErContentSlice";
-import {ImportRelContent, selectRelationalContentSlice} from "../store/RelationalContentSlice";
+import {ImportErContent, selectErContentSlice} from "../../store/ErContentSlice";
+import {ImportRelContent, selectRelationalContentSlice} from "../../store/RelationalContentSlice";
 
-//eig. ist das hier der content manager. oder der ...proxy ?
-export function SaveAndLoad({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
+/**
+ * Renders the tab bar within its children.
+ * Handles all server calls and file uploads /downloads
+ *
+ * @param children                      An arbitrary number of children, representing diagrams, to render
+ * @param metaInformation               Additional meta information added to each request and file download
+ * @param diagramType                   The currently displayed diagram type
+ * @param changeToErDiagram             Function to execute when changing to the Er diagram tab
+ * @param changeToRelationalDiagram     Function to execute when changing to the relational diagram tab
+ */
+export function ContentManager({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
     const erContentStore = useSelector(selectErContentSlice);
     const erContentStoreAccess = useDispatch();
@@ -25,6 +34,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
     },[diagramType])
 
 
+    // ----------------------------------------- Upload and Download of Json-Files -----------------------------------//
     /**
      * Creates a download package containing meta-information,
      * Er model information and relational model information
@@ -58,8 +68,11 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         erContentStoreAccess(ImportErContent(importedJson.erContent))
     }
 
+    // ----------------------------------------- Relational and Sql endpoint calls -----------------------------------//
+
 
     const url = "http://localhost:8080/convert/relational"
+    // noinspection JSUnusedLocalSymbols, Justification, no enhanced error handling implemented
     const [relationalEndpointError, setRelationalEndpointError] = useState(false)
 
     function transformToRel(){
@@ -82,6 +95,7 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
 
     const urlSql = "http://localhost:8080/convert/sql"
     const [sqlServerResult, setSqlSeverResult] = useState(null)
+    // noinspection JSUnusedLocalSymbols, Justification, no enhanced error handling implemented
     const [sqlEndpointError, setSqlEndpointError] = useState(null)
 
     function generateSql(dto){
@@ -93,12 +107,14 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
             catch(error => setSqlEndpointError(error));
     }
 
-    //Those properties are used, it is an ide fault
+    //noinspection JSUnusedGlobalSymbols, Justification properties are used in Er and relational manager
     const SaveAndLoadProps = {
         transformToRel: transformToRel,
         generateSql:generateSql,
         sqlServerResult: sqlServerResult
     }
+
+    // --------------------------------------------------- TabBar ----------------------------------------------------//
 
     const erTabActive = diagramType === DiagramTypes.erDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
     const relationalTabActive = diagramType === DiagramTypes.relationalDiagram ? "TabsButtonActive" : "TabsButtonNotActive";
@@ -120,4 +136,4 @@ export function SaveAndLoad({children, metaInformation, diagramType, changeToErD
         </React.Fragment>
     )
 }
-export default SaveAndLoad;
+export default ContentManager;

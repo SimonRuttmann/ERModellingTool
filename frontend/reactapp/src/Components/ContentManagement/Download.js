@@ -1,6 +1,10 @@
 import React from "react";
-import downloadIcon from "../Resources/cloud-download.svg";
+import downloadIcon from "../../Resources/cloud-download.svg";
 
+/**
+ * Renders the download icon and handles the logic to serve a json file to the user
+ * @param createDownloadPackage A function serving the json content, when a download is requested
+ */
 export function Download({createDownloadPackage}){
 
     function download(){

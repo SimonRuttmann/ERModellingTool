@@ -1,16 +1,19 @@
 import React, {useState} from "react";
-import privacyPolicyIcon from "../Resources/Datenschutzerklärung/shield-exclamation.svg";
+import privacyPolicyIcon from "../../Resources/Datenschutzerklärung/shield-exclamation.svg";
 import ReactModal from "react-modal"
 
-export function PrivacyPolicy({erContent}){
+/**
+ * Renders the privacy policy button and modal with its content
+ */
+export function PrivacyPolicy(){
 
     const [isShown, setIsShown] = useState(false);
 
-    function showPrivacyPopUp(e){
+    function showPrivacyPopUp(){
         setIsShown(true)
     }
 
-    function closePrivacyPopUp(e){
+    function closePrivacyPopUp(){
         setIsShown(false)
     }
 

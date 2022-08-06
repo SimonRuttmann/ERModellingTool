@@ -1,10 +1,13 @@
 import React from "react";
-import uploadIcon from "../Resources/cloud-upload.svg";
+import uploadIcon from "../../Resources/cloud-upload.svg";
 
+/**
+ * Renders the upload icon and handles the input and parsing of a json file
+ * @param importDrawBoardData A function to call, when the file is selected and the content is parsed
+ */
 export function Upload({ importDrawBoardData }) {
 
     const handleChange = e => {
-        console.log("reading")
         const fileReader = new FileReader();
         fileReader.readAsText(e.target.files[0], "UTF-8");
         fileReader.onload = e => {
