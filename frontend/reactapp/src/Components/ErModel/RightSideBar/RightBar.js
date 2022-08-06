@@ -7,6 +7,19 @@ import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
 import {ConnectionType} from "../../../Services/DrawBoardModel/Diagram";
 import EnhancedSettings from "./EnhancedSettings";
 
+/**
+ * This component is responsible for rendering the hole right sidebar
+ * Also executes provided functions at interaction with rendered elements
+ *
+ * @param selectedObjectId          The id of the currently selected object
+ * @param connections               The connections on the drawBoard
+ * @param removeElement             A function to remove an element
+ * @param setDisplayName            A function to set the new display name
+ * @param editConnectionNotation    A function to edit the cardinalities of a connection
+ * @param drawBoardElements         The elements on the drawBoard
+ * @param toAddConnectionState      A function executed to indicate, that the user wants to add a connection
+ * @param setOwningSideProperty     A function to set the owningSideProperty for an element
+ */
 const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName, editConnectionNotation, drawBoardElements, toAddConnectionState, setOwningSideProperty}) => {
 
     if(selectedObjectId == null) return null;
@@ -14,6 +27,10 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     let selectedObject = resolveObjectById(selectedObjectId, drawBoardElements, connections)
     if (selectedObject == null) return null;
 
+
+    /**
+     * Utils to display an element
+     */
 
     function getDisplayNameAndType(connection){
 
@@ -35,6 +52,10 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
       return displayName
 
     }
+
+    /**
+     * Sorting of connections, so they will always be displayed in the same order
+     */
 
     function filterAndSortConnections(){
         return connections.filter(connection =>
@@ -58,8 +79,15 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
         return filterAndSortConnections().filter(connection => connection.connectionType !== ConnectionType.attributeConnector);
     }
 
+    /**
+     * The following functions provide the main render content for a specific Er element
+     * To the main content a footer and header will be added
+     */
 
 
+    /**
+     * The main content displayed when a relation is selected
+     */
     const RelationMenu = () => {
         return (
 
@@ -93,6 +121,9 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     }
 
 
+    /**
+     * The main content displayed when a connection is selected
+     */
   const AssociationMenu = () => {
         let start = resolveObjectById(selectedObject.start, drawBoardElements)
         let end = resolveObjectById(selectedObject.end, drawBoardElements)
@@ -127,6 +158,10 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
     )
   }
 
+    /**
+     * Entities and attributes only have a default footer and header a no additional content to display
+     */
+
     const EntityMenu = () => {
         return null
     }
@@ -135,7 +170,9 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
         return null
     }
 
-
+    /**
+     * The main content displayed when an isA is selected
+     */
     const IsAMenu = () => {
 
         const parents = filterAndSortParentConnections();
@@ -173,8 +210,9 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
         )
     }
 
-
-
+    /**
+     * Selection of the main content
+     */
     const getDisplayMenu = () => {
 
       if(selectedObject == null) return;
@@ -195,6 +233,9 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
       return displayMenu;
     }
 
+    /**
+     *  Rendering of the footer, main-content and header
+     */
 
   return (
 
@@ -223,40 +264,3 @@ const RightBar = ({selectedObjectId, connections, removeElement, setDisplayName,
 };
 
 export default RightBar;
-
-
-
-
-/*
-        <p>Appearence</p>
-
-
-        <select name="Darstellung" id="cars">
-	        <option value="Direkt">Direkt</option>
-          <option value="Gitter">Gitter</option>
-          <option value="Geschwungen">Geschwungen</option>
-        </select>
-
-        <p>Pfeilausrichtung:</p>
-        <div>
-          <p>Von</p>
-          <select name="Ausrichtung" id="cars">
-            <option value="Auto">Automatisch</option>
-	          <option value="Links">Links</option>
-            <option value="Rechts">Rechts</option>
-            <option value="Oben">Oben</option>
-            <option value="Unten">Unten</option>
-          </select>
-        </div>
-
-        <div>
-          <p>Nach</p>
-          <select name="Ausrichtung" id="cars">
-            <option value="Auto">Automatisch</option>
-	          <option value="Links">Links</option>
-            <option value="Rechts">Rechts</option>
-            <option value="Oben">Oben</option>
-            <option value="Unten">Unten</option>
-          </select>
-        </div>
-        */

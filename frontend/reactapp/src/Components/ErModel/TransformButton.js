@@ -1,10 +1,16 @@
-import transformIcon from "../../Resources/Icons/server.svg";
 import relationalIcon from "../../Resources/Icons/table.svg";
 import React from "react";
 import validIcon from "../../Resources/Icons/check-circle-fill.svg";
 import invalidIcon from "../../Resources/Icons/exclamation-circle-fill.svg"
 import ReactTooltip from "react-tooltip";
 
+/**
+ * Component to render the transformation button if no invalid messages are given
+ * If there are invalid messages an invalid icon will instead be rendered
+ *
+ * @param transformToRel    A function, executed when the transformation button is clicked
+ * @param invalidMessages   A list of messages containing the errors in the Er diagram
+ */
 const TransformButton = ({transformToRel, invalidMessages}) => {
 
     const isValid = invalidMessages.length === 0;

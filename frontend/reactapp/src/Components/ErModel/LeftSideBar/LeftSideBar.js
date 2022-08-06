@@ -2,6 +2,10 @@ import DragBarManager from "./DragBarImageManager";
 import {ERTYPECATEGORY, returnNamesOfCategory} from "../../../Services/DrawBoardModel/ErType";
 import React from "react";
 
+/**
+ * Renders the hole left side bare by orchestrating DragBarManagers for all ErTypes
+ * @see DragBarManager
+ */
 const LeftSideBar = () => {
 
     return (

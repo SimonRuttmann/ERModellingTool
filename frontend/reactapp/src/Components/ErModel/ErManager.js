@@ -30,6 +30,15 @@ import {
   UpdateDrawBoardElementSize
 } from "../../ReduxStore/ErContentSlice";
 
+/**
+ * Responsible for rendering the hole Er diagram
+ * Also contains the interaction logic and provides it to child components
+ *
+ * The state of all connections and elements in the diagrams are kept in the redux store
+ *
+ * @param transformToRel A function executed, when the user wants to transform the Er diagram into the relational diagram
+ * @see ErContentSlice
+ */
 const ErManager = ({transformToRel}) => {
 
   const erContentStore = useSelector(selectErContentSlice);

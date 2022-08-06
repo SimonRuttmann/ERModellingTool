@@ -1,14 +1,19 @@
 import React from 'react';
 import '../../DatabaseModellingStyle.css';
-import {ACTIONSTATE, OBJECTTYPE} from "../../../Services/DrawBoardModel/ActionState";
+import {OBJECTTYPE} from "../../../Services/DrawBoardModel/ActionState";
 import {ERTYPE} from "../../../Services/DrawBoardModel/ErType";
 import {resolveObjectById} from "../../../Services/Common/ObjectUtil";
 import {ConnectionType} from "../../../Services/DrawBoardModel/Diagram";
 import DisplayConfiguration from "../../../Services/Configurations/DisplayConfiguration";
 
 
-//We hold here the selected object ! when we change anything this will still be the "old" object, the new object is a clone of this one
-//In zukunft arbeiten wir hier deshalb wieder nur mit der selectedId anstatt dem object
+/**
+ * The header part of the right sidebar, consisting of the name field and an input field to edit the name
+ * @param selectedObjectId The currently selected object id
+ * @param setDisplayName Function to set the display name
+ * @param drawBoardElements The elements in the drawBoard
+ * @param connections The connections in the drawBoard
+ */
 export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, connections}) => {
 
     if(selectedObjectId == null) return null;
@@ -50,6 +55,15 @@ export const Header = ({selectedObjectId, setDisplayName, drawBoardElements, con
     )
 }
 
+
+/**
+ * The footer part of the right sidebar, consisting of a addConnection button and delete button
+ * @param selectedObjectId The currently selected object id
+ * @param removeElement A function to remove an element
+ * @param drawBoardElements The elements in the drawBoard
+ * @param connections The connections in the drawBoard
+ * @param toAddConnectionState A function executed to indicate that the user wants to add a connection
+ */
 export const Footer = ({selectedObjectId, removeElement, drawBoardElements, connections, toAddConnectionState}) => {
 
     if(selectedObjectId == null) return null;
@@ -77,9 +91,8 @@ const FooterDelete = ({removeElement, selectedObject}) => {
     )
 };
 
-//bad setState
-const FooterAddConnection = ({toAddConnectionState, selectedObject}) => {
 
+const FooterAddConnection = ({toAddConnectionState, selectedObject}) => {
 
     if(selectedObject.erType === ERTYPE.IsAStructure.name)
         return(
