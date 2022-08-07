@@ -17,7 +17,6 @@ const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connections, s
     if( (copyElement.erType        === ERTYPE.IsAStructure.name && copySelectedObject.erType === ERTYPE.StrongEntity.name) ||
         (copySelectedObject.erType === ERTYPE.IsAStructure.name && copyElement.erType        === ERTYPE.StrongEntity.name) ) {
 
-        console.log("X")
         const {isa, entity} = resolveEntityIsA(copyElement, copySelectedObject)
 
         let superType = getSuperTypeOfIsA(isa, connections, elementsCopy)

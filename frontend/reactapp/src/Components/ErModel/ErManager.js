@@ -242,11 +242,9 @@ const ErManager = ({transformToRel}) => {
     let objectToRemove = resolveObjectById(id, erContentStore.drawBoardElements, erContentStore.connections)
 
     if(objectToRemove.objectType === OBJECTTYPE.Connection) {
-      console.log("Remove connection")
       erContentStoreAccess(RemoveConnection({id: objectToRemove.id}))
     }
     if(objectToRemove.objectType === OBJECTTYPE.DrawBoardElement){
-      console.log("Remove drawBoardElement")
       erContentStoreAccess(RemoveDrawBoardElement({id: objectToRemove.id}))
     }
 
