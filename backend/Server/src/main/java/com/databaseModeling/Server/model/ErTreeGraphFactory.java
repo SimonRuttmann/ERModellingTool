@@ -116,9 +116,6 @@ public class ErTreeGraphFactory {
             orderTreeRecursive(root.getNodeData(), attributeConnectors, attributes);
         }
 
-        //TODO remove this
-        System.out.println("attribute connectors should be empty");
-        System.out.println(attributeConnectors.isEmpty());
 
     }
 

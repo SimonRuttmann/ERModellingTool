@@ -2,22 +2,14 @@ package com.databaseModeling.Server.controller;
 
 import com.databaseModeling.Server.dto.ConceptionalModelDto;
 import com.databaseModeling.Server.dto.RelationalModelDto;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Controller {
 
-
-    @GetMapping("/index.html")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
-    public ModelAndView index() {
-
-        ModelAndView m = new ModelAndView();
-        m.setViewName("index.html");
-
-        return m;
-    }
 
 
     /**
@@ -31,7 +23,7 @@ public class Controller {
             @RequestBody ConceptionalModelDto type)
     {
 
-        System.out.println(type);
+
 
         ErToRelationalModelTransformer transformer = new ErToRelationalModelTransformer();
         return transformer.transform(type);
@@ -49,7 +41,7 @@ public class Controller {
             @RequestBody RelationalModelDto type)
     {
 
-        System.out.println(type);
+
 
         RelationalModelToSqlTranslator sqlTranslator = new RelationalModelToSqlTranslator();
         return sqlTranslator.translate(type);
