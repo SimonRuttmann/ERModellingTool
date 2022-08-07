@@ -20,6 +20,10 @@ import {ImportRelContent, selectRelationalContentSlice} from "../../ReduxStore/R
  */
 export function ContentManager({children, metaInformation, diagramType, changeToErDiagram, changeToRelationalDiagram}){
 
+    let baseUrl;
+    if(process.env.NODE_ENV !== "development") baseUrl = process.env.REACT_APP_BACKEND_BASEURL_PRODUCTION;
+    else baseUrl = process.env.REACT_APP_BACKEND_BASEURL_DEVELOPMENT;
+
     const erContentStore = useSelector(selectErContentSlice);
     const erContentStoreAccess = useDispatch();
 
@@ -74,7 +78,7 @@ export function ContentManager({children, metaInformation, diagramType, changeTo
     // ----------------------------------------- Relational and Sql endpoint calls -----------------------------------//
 
 
-    const url = "http://localhost:8080/convert/relational"
+    const url = baseUrl + "/convert/relational"
     // noinspection JSUnusedLocalSymbols, Justification, no enhanced error handling implemented
     const [relationalEndpointError, setRelationalEndpointError] = useState(false)
 
@@ -96,7 +100,7 @@ export function ContentManager({children, metaInformation, diagramType, changeTo
     }
 
 
-    const urlSql = "http://localhost:8080/convert/sql"
+    const urlSql = baseUrl + "/convert/sql"
     const [sqlServerResult, setSqlSeverResult] = useState(null)
     // noinspection JSUnusedLocalSymbols, Justification, no enhanced error handling implemented
     const [sqlEndpointError, setSqlEndpointError] = useState(null)
