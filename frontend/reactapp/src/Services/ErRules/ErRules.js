@@ -1,20 +1,17 @@
 import {ERTYPE} from "../DrawBoardModel/ErType";
 import {
-    checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure,
-    checkWeakTypesConsistency,
     ifDestinationAttributePathDoesNotExist,
     ifDestinationIsaPathDoesNotExist,
     isAssociationConnectionType,
     isInheritorConnectionType,
     isParentConnectionType,
-    onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
     pathDoesMax2TimesExist,
     pathDoesNotAlreadyExist,
-    relationOrEntityToAttributeIfAttributeHasNoRoot
 } from "./ErRulesUtil";
 import ErRulePipeline from "./ErRulePipeline";
 import IsAEntityRules from "./EntityIsARules";
 import WeakTypeRules from "./WeakTypeRules";
+import AttributeRules from "./AttributeRules";
 
 /**
  * Here all transition functions are defined.
@@ -36,8 +33,8 @@ const handleSelectIdentifyingAttribute = (selectedObject, connectionType, drawBo
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         identifyingAttributeRule,
         pathDoesNotAlreadyExist,
-        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+        AttributeRules.onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        AttributeRules.checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -69,8 +66,8 @@ const handleSelectNormalAttribute = (selectedObject, connectionType, drawBoardEl
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         normalAttributeRule,
         pathDoesNotAlreadyExist,
-        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+        AttributeRules.onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        AttributeRules.checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -102,8 +99,8 @@ const handleSelectMultivaluedAttribute = (selectedObject, connectionType, drawBo
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         multivaluedAttributeRule,
         pathDoesNotAlreadyExist,
-        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+        AttributeRules.onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        AttributeRules.checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -135,8 +132,8 @@ const handleSelectWeakIdentifyingAttribute = (selectedObject, connectionType, dr
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         weakIdentifyingAttributeRule,
         pathDoesNotAlreadyExist,
-        onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
-        checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
+        AttributeRules.onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnection,
+        AttributeRules.checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure)
 }
 
 
@@ -167,13 +164,13 @@ const handleSelectStrongEntity = (selectedObject, connectionType, drawBoardEleme
 
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         strongEntityRule,
-        ifDestinationAttributePathDoesNotExist, //TODO Redundant mit relationOrEntityToAttributeIfAttributeHasNoRoot
+        ifDestinationAttributePathDoesNotExist,
         ifDestinationIsaPathDoesNotExist,
-        relationOrEntityToAttributeIfAttributeHasNoRoot,
-        checkWeakTypesConsistency,
+        AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
+        WeakTypeRules.checkWeakTypesConsistency,
         WeakTypeRules.checkIfToWeakRelationItOnlyHasDeg2,
         IsAEntityRules.ensureEntityAsSubTypeToIsANoMultipleInheritance,
-        pathDoesMax2TimesExist) //TODO pathDoesMax2TimesExist, checkt ob ein pfad bereits existiert ?
+        pathDoesMax2TimesExist)
 }
 
 
@@ -205,8 +202,8 @@ const handleSelectWeakEntity = (selectedObject, connectionType, drawBoardElement
         weakEntityRule,
         ifDestinationAttributePathDoesNotExist,
         ifDestinationIsaPathDoesNotExist,
-        relationOrEntityToAttributeIfAttributeHasNoRoot,
-        checkWeakTypesConsistency,
+        AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
+        WeakTypeRules.checkWeakTypesConsistency,
         WeakTypeRules.checkIfToWeakRelationItOnlyHasDeg2,
         pathDoesNotAlreadyExist)
 
@@ -239,7 +236,7 @@ const handleSelectStrongRelation = (selectedObject, connectionType, drawBoardEle
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         strongRelationRule,
         ifDestinationAttributePathDoesNotExist,
-        relationOrEntityToAttributeIfAttributeHasNoRoot,
+        AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
         pathDoesMax2TimesExist,
         WeakTypeRules.pathWeakRelToWeakEntityDoesMax1TimesExist)
 }
@@ -271,8 +268,8 @@ const handleSelectWeakRelation = (selectedObject, connectionType, drawBoardEleme
     return ErRulePipeline.applyRules(drawBoardElements, connections, selectedObject,
         weakRelationRule,
         ifDestinationAttributePathDoesNotExist,
-        relationOrEntityToAttributeIfAttributeHasNoRoot,
-        checkWeakTypesConsistency,
+        AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
+        WeakTypeRules.checkWeakTypesConsistency,
         WeakTypeRules.checkWeakRelationHasOnly2Entities,
         pathDoesNotAlreadyExist)
 }
@@ -348,5 +345,3 @@ const TransitionFunction = {
 }
 
 export default TransitionFunction;
-
-

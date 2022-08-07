@@ -1,5 +1,11 @@
 import {ERTYPE} from "../DrawBoardModel/ErType";
-import {connectionSamePath, getConnectorsOfObject, getOtherElementsOfConnectors} from "./ErRulesUtil";
+import {
+    collectElementsOfSubgraph,
+    collectionContainsStrongEntity,
+    connectionSamePath,
+    getConnectorsOfObject,
+    getOtherElementsOfConnectors
+} from "./ErRulesUtil";
 
 
 /**
@@ -35,7 +41,9 @@ const checkIfToWeakRelationItOnlyHasDeg2 = (element, connections, selectedObject
 
 }
 
-
+/**
+ * Checks if a path between a weak relation and a weak entity does maximum 1 time exist (no reflexive relations for weak types allowed)
+ */
 const pathWeakRelToWeakEntityDoesMax1TimesExist = (element, connections, selectedObject) => {
 
     //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
@@ -49,10 +57,91 @@ const pathWeakRelToWeakEntityDoesMax1TimesExist = (element, connections, selecte
     return samePathConnections.length < 2;
 }
 
+/**
+ * Checks that every weak type can exactly one time identified
+ * Therefore it searches through a weak type subgraph (a subgraph only containing weak entiteis, weak relations and strong entities)
+ * If there is already a strong entity in the subgraph no connection to another strong entity is allowed
+ */
+const checkWeakTypesConsistency = (element, connections, selectedObject, drawBoardElements) => {
+
+    //Rule only applied to weak types and strong entities
+    if( !isElementOfWeakType(element) && !isElementStrongEntityType(element) ) return true;
+
+    let isElementIdentified;
+    let isSelectedObjectIdentified;
+
+    if(element.erType === ERTYPE.StrongEntity.name ){
+        isElementIdentified = true;
+    }
+    else{
+        const elementSubGraph = collectWeakTypesSubgraph(element, connections, drawBoardElements);
+        isElementIdentified = collectionContainsStrongEntity(elementSubGraph);
+    }
+
+    if(selectedObject.erType === ERTYPE.StrongEntity.name){
+        isSelectedObjectIdentified = true;
+    }
+    else{
+        const selectedObjectSubGraph = collectWeakTypesSubgraph(selectedObject, connections, drawBoardElements);
+        isSelectedObjectIdentified = collectionContainsStrongEntity(selectedObjectSubGraph);
+    }
+
+    if(exclusiveOr(isElementIdentified, isSelectedObjectIdentified)) return true;
+
+    if(isElementIdentified && isSelectedObjectIdentified) return false;
+
+    if(!isElementIdentified && !isSelectedObjectIdentified) return true;
+
+}
+
+/**
+ * Utils
+ */
+
+const collectWeakTypesSubgraph = (element, connections, drawBoardElements) => {
+    return collectElementsOfSubgraph(element, connections, weakTypesSubgraphBounds, drawBoardElements)
+}
+
+
+const isElementOfWeakType = (element) => {
+    return element.erType === ERTYPE.WeakRelation.name || element.erType === ERTYPE.WeakEntity.name;
+}
+
+const isElementStrongEntityType = (element) => {
+    return element.erType === ERTYPE.StrongEntity.name;
+}
+
+
+const exclusiveOr = (fistExpression, secondExpression) => {
+    return (fistExpression && !secondExpression) || (!fistExpression && secondExpression);
+}
+
+const weakTypesSubgraphBounds = (element) => {
+
+    switch (element.erType) {
+
+        case ERTYPE.IdentifyingAttribute.name:       return false;
+        case ERTYPE.NormalAttribute.name:            return false;
+        case ERTYPE.MultivaluedAttribute.name:       return false;
+        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
+
+        case ERTYPE.StrongEntity.name:               return true;
+        case ERTYPE.WeakEntity.name:                 return true;
+
+        case ERTYPE.StrongRelation.name:             return false;
+        case ERTYPE.WeakRelation.name:               return true;
+
+        case ERTYPE.IsAStructure.name:               return false;
+    }
+
+}
+
+
 const WeakTypeRules = {
     checkIfToWeakRelationItOnlyHasDeg2: checkIfToWeakRelationItOnlyHasDeg2,
     checkWeakRelationHasOnly2Entities: checkWeakRelationHasOnly2Entities,
-    pathWeakRelToWeakEntityDoesMax1TimesExist:pathWeakRelToWeakEntityDoesMax1TimesExist
+    pathWeakRelToWeakEntityDoesMax1TimesExist:pathWeakRelToWeakEntityDoesMax1TimesExist,
+    checkWeakTypesConsistency:checkWeakTypesConsistency
 }
 
 export default WeakTypeRules;
