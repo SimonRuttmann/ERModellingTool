@@ -248,7 +248,7 @@ const erContentSlice = createSlice({
         RemoveConnection: (state, action) => {
             let id = action.payload.id;
 
-            state.connections = state.connections.filter(element => element.id === id)
+            state.connections = state.connections.filter(element => !(element.id === id))
 
             return state;
         },

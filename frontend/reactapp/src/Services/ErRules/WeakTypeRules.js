@@ -1,6 +1,6 @@
 import {ERTYPE} from "../DrawBoardModel/ErType";
 import {
-    collectElementsOfSubgraph,
+    collectElementsOfSubgraph, collectionContains,
     collectionContainsStrongEntity,
     connectionSamePath,
     getConnectorsOfObject,
@@ -44,7 +44,7 @@ const checkIfToWeakRelationItOnlyHasDeg2 = (element, connections, selectedObject
 /**
  * Checks if a path between a weak relation and a weak entity does maximum 1 time exist (no reflexive relations for weak types allowed)
  */
-const pathWeakRelToWeakEntityDoesMax1TimesExist = (element, connections, selectedObject) => {
+const pathRelToWeakEntityDoesMax1TimesExist = (element, connections, selectedObject) => {
 
     //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
 
@@ -95,6 +95,20 @@ const checkWeakTypesConsistency = (element, connections, selectedObject, drawBoa
 }
 
 /**
+ * Checks that weak type subgraph are circle free
+ * When a weak type is selected (entity or relation) applies to another weak type (entity or relation)
+ */
+const checkWeakTypesCircleFree = (element, connections, selectedObject, drawBoardElements) => {
+
+    //Rule only applied to weak types
+    if( !isElementOfWeakType(element)) return true;
+
+    const elementSubGraph = collectWeakTypesSubgraph(element, connections, drawBoardElements);
+
+    return !collectionContains(elementSubGraph, selectedObject);
+}
+
+/**
  * Utils
  */
 
@@ -140,9 +154,10 @@ const weakTypesSubgraphBounds = (element) => {
 const WeakTypeRules = {
     checkIfToWeakRelationItOnlyHasDeg2: checkIfToWeakRelationItOnlyHasDeg2,
     checkWeakRelationHasOnly2Entities: checkWeakRelationHasOnly2Entities,
-    pathWeakRelToWeakEntityDoesMax1TimesExist:pathWeakRelToWeakEntityDoesMax1TimesExist,
+    pathRelToWeakEntityDoesMax1TimesExist:pathRelToWeakEntityDoesMax1TimesExist,
     checkWeakTypesConsistency:checkWeakTypesConsistency,
-    collectWeakTypesSubgraph:collectWeakTypesSubgraph
+    collectWeakTypesSubgraph:collectWeakTypesSubgraph,
+    checkWeakTypesCircleFree:checkWeakTypesCircleFree
 }
 
 export default WeakTypeRules;

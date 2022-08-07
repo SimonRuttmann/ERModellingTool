@@ -169,6 +169,7 @@ const handleSelectStrongEntity = (selectedObject, connectionType, drawBoardEleme
         AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
         WeakTypeRules.checkWeakTypesConsistency,
         WeakTypeRules.checkIfToWeakRelationItOnlyHasDeg2,
+        WeakTypeRules.checkWeakTypesCircleFree,
         IsAEntityRules.ensureEntityAsSubTypeToIsANoMultipleInheritance,
         pathDoesMax2TimesExist)
 }
@@ -205,6 +206,7 @@ const handleSelectWeakEntity = (selectedObject, connectionType, drawBoardElement
         AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
         WeakTypeRules.checkWeakTypesConsistency,
         WeakTypeRules.checkIfToWeakRelationItOnlyHasDeg2,
+        WeakTypeRules.checkWeakTypesCircleFree,
         pathDoesNotAlreadyExist)
 
 }
@@ -238,7 +240,7 @@ const handleSelectStrongRelation = (selectedObject, connectionType, drawBoardEle
         ifDestinationAttributePathDoesNotExist,
         AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
         pathDoesMax2TimesExist,
-        WeakTypeRules.pathWeakRelToWeakEntityDoesMax1TimesExist)
+        WeakTypeRules.pathRelToWeakEntityDoesMax1TimesExist)
 }
 
 const strongRelationRule = (element) => {
@@ -271,6 +273,7 @@ const handleSelectWeakRelation = (selectedObject, connectionType, drawBoardEleme
         AttributeRules.relationOrEntityToAttributeIfAttributeHasNoRoot,
         WeakTypeRules.checkWeakTypesConsistency,
         WeakTypeRules.checkWeakRelationHasOnly2Entities,
+        WeakTypeRules.checkWeakTypesCircleFree,
         pathDoesNotAlreadyExist)
 }
 

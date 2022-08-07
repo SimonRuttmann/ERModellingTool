@@ -154,4 +154,8 @@ export const addAllIfNotExists = (elements, collection) => {
     }
 }
 
+export const collectionContains = (collection, element) => {
+    return collection.indexOf(element) !== -1;
+}
+
 
