@@ -1,16 +1,6 @@
 import {resolveObjectById} from "../Common/ObjectUtil";
 import {ERTYPE} from "../DrawBoardModel/ErType";
-import {
-    handleSelectIdentifyingAttribute,
-    handleSelectIsAStructure,
-    handleSelectMultivaluedAttribute,
-    handleSelectNormalAttribute,
-    handleSelectStrongEntity,
-    handleSelectStrongRelation,
-    handleSelectWeakEntity,
-    handleSelectWeakIdentifyingAttribute,
-    handleSelectWeakRelation
-} from "./ErRules";
+import TransitionFunction from "./ErRules";
 
 /**
  * Determines which elements from the current element can be connected to
@@ -29,18 +19,18 @@ const createSelection = (id, connectionType, drawBoardElements, connections) => 
 
     switch (type) {
 
-        case ERTYPE.IdentifyingAttribute.name:       appliedRule = handleSelectIdentifyingAttribute;    break;
-        case ERTYPE.NormalAttribute.name:            appliedRule = handleSelectNormalAttribute;         break;
-        case ERTYPE.MultivaluedAttribute.name:       appliedRule = handleSelectMultivaluedAttribute;    break;
-        case ERTYPE.WeakIdentifyingAttribute.name:   appliedRule = handleSelectWeakIdentifyingAttribute;break;
+        case ERTYPE.IdentifyingAttribute.name:       appliedRule = TransitionFunction.handleSelectIdentifyingAttribute;    break;
+        case ERTYPE.NormalAttribute.name:            appliedRule = TransitionFunction.handleSelectNormalAttribute;         break;
+        case ERTYPE.MultivaluedAttribute.name:       appliedRule = TransitionFunction.handleSelectMultivaluedAttribute;    break;
+        case ERTYPE.WeakIdentifyingAttribute.name:   appliedRule = TransitionFunction.handleSelectWeakIdentifyingAttribute;break;
 
-        case ERTYPE.StrongEntity.name:               appliedRule = handleSelectStrongEntity;            break;
-        case ERTYPE.WeakEntity.name:                 appliedRule = handleSelectWeakEntity;              break;
+        case ERTYPE.StrongEntity.name:               appliedRule = TransitionFunction.handleSelectStrongEntity;            break;
+        case ERTYPE.WeakEntity.name:                 appliedRule = TransitionFunction.handleSelectWeakEntity;              break;
 
-        case ERTYPE.StrongRelation.name:             appliedRule = handleSelectStrongRelation;          break;
-        case ERTYPE.WeakRelation.name:               appliedRule = handleSelectWeakRelation;            break;
+        case ERTYPE.StrongRelation.name:             appliedRule = TransitionFunction.handleSelectStrongRelation;          break;
+        case ERTYPE.WeakRelation.name:               appliedRule = TransitionFunction.handleSelectWeakRelation;            break;
 
-        case ERTYPE.IsAStructure.name:               appliedRule = handleSelectIsAStructure;            break;
+        case ERTYPE.IsAStructure.name:               appliedRule = TransitionFunction.handleSelectIsAStructure;            break;
     }
 
     let copiedDrawBoardElements = [...drawBoardElements]

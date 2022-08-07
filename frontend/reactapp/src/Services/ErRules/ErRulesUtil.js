@@ -14,6 +14,9 @@ export const isParentConnectionType = (connectionType) => {
 export const isInheritorConnectionType = (connectionType) => {
     return connectionType === ConnectionType.inheritor;
 }
+
+
+
 //Tested from iden -> rest
 /**
  * This method checks if there is already a connection between the two elements
@@ -41,21 +44,9 @@ export const pathDoesMax2TimesExist = (element, connections, selectedObject) => 
 
     return samePathConnections.length < 2;
 }
-//TODO neu dazugekommen, testen!
-export const pathWeakRelToWeakEntityDoesMax1TimesExist = (element, connections, selectedObject) => {
 
-    //Check if path of type Element --> SelectedObject or SelectedObject <-- Element exist
 
-    const samePathConnections  =
-        connections.filter(connection => connectionSamePath(connection, element, selectedObject));
-
-    if(element.erType === ERTYPE.WeakEntity.name)
-        return samePathConnections.length < 1;
-
-    return samePathConnections.length < 2;
-}
-
-const connectionSamePath = (connection, elementOne, elementTwo) => {
+export const connectionSamePath = (connection, elementOne, elementTwo) => {
 
     const isSamePath =          (connection.start === elementOne.id && connection.end === elementTwo.id)
     const isSamePathReversed =  (connection.start === elementTwo.id && connection.end === elementOne.id)
@@ -104,34 +95,15 @@ export const onlyAllowConnectToRelationOrEntityIfNoCurrentEntityOrRelationConnec
     //If it is another, the attribute would connect two roots, if it is the same, then we would create a duplicate connection
     //in any case, we are not allowed to connect these attributes
     return false;
-
-    /*
-    //Destination is of type Entity or Relation
-    const connectorsOfSelectedObject =
-        connections.filter(connection => connection.end === selectedObject.id || connection.start === selectedObject.id)
-
-    if(connectorsOfSelectedObject.length === 0) return true;
-
-    connectorsOfSelectedObject.forEach( connection => {
-        let otherObject;
-
-        if(connection.start === selectedObject.id) otherObject = resolveObjectById(connection.end)
-        else otherObject = resolveObjectById(connection.start)
-
-        if(isElementOfCategoryEntityOrRelation(otherObject)) return false;
-    })
-
-    return true;
-    */
-
 }
-//TESTED
+
+
 /**
  * Checks if a given elements erType is any kind of entity or relation
  * @param element The element to test
  * @returns {boolean} True if the element is of category entity or relation
  */
-const isElementOfCategoryEntityOrRelation = (element) => {
+export const isElementOfCategoryEntityOrRelation = (element) => {
     const entityTypes = returnNamesOfCategory(ERTYPECATEGORY.Entity);
     const relationTypes = returnNamesOfCategory(ERTYPECATEGORY.Relation);
 
@@ -147,45 +119,10 @@ export const isElementOfCategoryAttribute = (element) => {
     return !isNoAttribute;
 }
 
-/**
- * Filters all elements based on the given rules as callback functions
- * @param elements The elements to apply the rule to
- * @param connections All connections which already persist
- * @param selectedObject The origin object
- * @param rules Callback functions which define specific rules every element has to pass
- *              Those callback functions will be executed with each element, the provided connections and the selectedObject
- * @returns {*} All elements, which pass all rules
- */
-export const applyRules = (elements, connections, selectedObject, ...rules) => {
-
-    let currentlyPassedElements = [];
-    currentlyPassedElements.push(...elements);
-    currentlyPassedElements = currentlyPassedElements.filter(element => element.id !== selectedObject.id);
-
-    for (let rule of rules){
-
-        //Filter elements based on rule
-        currentlyPassedElements = currentlyPassedElements.filter(
-            element => {
-                return rule(element, connections, selectedObject, elements);
-            })
-
-    }
-
-    //All elements which passed all rules
-    return currentlyPassedElements;
-}
-
-//Tested
 export const getConnectorsOfObject = (element, connections) => {
-    if(connections == null) {
-        console.log("CONNECTIONS ARE UNDEFINED")
-        console.log(element)
-    }
     return connections.filter(connection => connection.end === element.id || connection.start === element.id)
 }
 
-//TEsted
 /**
  * Returns all elements the connections are connected two,
  * except the one which is given
@@ -203,8 +140,8 @@ export const getOtherElementsOfConnectors = (element, connections, drawBoardElem
     return otherElements;
 }
 
-//null oder element des roots
-//Tested
+
+///ATTRIBUTES
 /**
  * Resolves the root element
  * @param element
@@ -218,8 +155,6 @@ export const resolveRootElementOfAttribute = (element, connections, drawBoardEle
     return resolveRootElementOfAttributeRecursive(element, connections, drawBoardElements, checkedElements)
 }
 
-//TODO while testing check if any circles are possible
-//TODO THIS IS IMPORTANT to prevent infinite loops
 const resolveRootElementOfAttributeRecursive = (element, connections, drawBoardElements, checkedElements) => {
 
     //if element is already checked, terminate
@@ -240,31 +175,7 @@ const resolveRootElementOfAttributeRecursive = (element, connections, drawBoardE
     }
 
 }
-/*
-const getAllElementsOfSubGraph = (element, connections, drawBoardElements) => {
-    let subGraphElements = [];
-    getAllElementsOfSubGraphRecursive(element, connections, subGraphElements, drawBoardElements)
 
-    return subGraphElements;
-}
-//das ist nicht gut, wir holen uns hier alle elements
-const getAllElementsOfSubGraphRecursive = (element, connections, subGraphElements, drawBoardElements) => {
-
-    //Check element is not already traversed
-    if(subGraphElements.indexOf(element) !== -1) return;
-
-    subGraphElements.push(element)
-
-    const connectorsOfElement = getConnectorsOfObject(element, connections);
-    const connectedElements = getOtherElementsOfConnectors(element, connectorsOfElement, drawBoardElements);
-
-    //Search through all neighbours
-    for(let connectedElement of connectedElements){
-        getAllElementsOfSubGraphRecursive(connectedElement, connections, subGraphElements, drawBoardElements)
-    }
-
-}
-*/
 
 
 
@@ -276,13 +187,6 @@ const getAllElementsOfSubGraphRecursive = (element, connections, subGraphElement
 //      2. Determine the root of the attribute to connect to
 //              If there is no root, than you can connct to it          BEACHTE SPECIAL CASE
 //              If there is a root, than you can NOT connect to it, REGARDLESS it is is the same or not
-
-//Spezialfall, wenn beide attribute keine root haben, dann
-// Ermittle ob es bereits irgendeine verbindung zwsichen diesen gibt
-
-
-//kann eine Entity oder Relation zu einem Attribute connecten
-// Nur wenn das attribut keinen root hat
 
 
 export const checkIfConnectionBetweenAttributesKeepsConsistencyOfAttributeStructure = (element, connections, selectedObject, drawBoardElements) => {
@@ -394,9 +298,7 @@ const collectAttributesSubgraph = (element, connections, drawBoardElements) => {
     return collectElementsOfSubgraph(element, connections, attributeTypesSubgraphBounds, drawBoardElements)
 }
 
-const collectIsATypesSubgraph = (element, connections, drawBoardElements) => {
-    return collectElementsOfSubgraph(element, connections, isATypesSubgraphBounds, drawBoardElements)
-}
+
 
 const collectElementsOfSubgraph = (element, connections, subgraphBounds, drawBoardElements) => {
     let collectedElements = [];
@@ -426,8 +328,7 @@ export const addIfNotExists = (element, collection) => {
     return true;
 }
 
-//TODO instead use array.method = addAllIfNotExists
-//TODO mit function createCollection
+
 
 export const addAllIfNotExists = (elements, collection) => {
     for (let element of elements){
@@ -477,47 +378,3 @@ const attributeTypesSubgraphBounds = (element) => {
 
 }
 
-
-const isATypesSubgraphBounds = (element) => {
-
-    switch (element.erType) {
-
-        case ERTYPE.IdentifyingAttribute.name:       return false;
-        case ERTYPE.NormalAttribute.name:            return false;
-        case ERTYPE.MultivaluedAttribute.name:       return false;
-        case ERTYPE.WeakIdentifyingAttribute.name:   return false;
-
-        case ERTYPE.StrongEntity.name:               return true;
-        case ERTYPE.WeakEntity.name:                 return false;
-
-        case ERTYPE.StrongRelation.name:             return false;
-        case ERTYPE.WeakRelation.name:               return false;
-
-        case ERTYPE.IsAStructure.name:               return true;
-    }
-
-}
-
-//TODO jede entity<->Relation max 2 connections zu sich selbst (Reflexive...)
-
-//TODO Einfache regel. Entity entweder eine inheritor oder parent beziehung! Weak entity ist nicht in der IsA-Struktur vorhanden!
-
-export const ensureIsACircleFree = (element, connections, selectedObject, drawBoardElements) => {
-
-    //Rule only applies if selected object and element of type StrongEntity and IsA
-    if( (selectedObject.erType === ERTYPE.IsAStructure.name && element.erType === ERTYPE.StrongEntity.name) ||
-        (selectedObject.erType === ERTYPE.StrongEntity.name && element.erType === ERTYPE.IsAStructure.name))      {
-
-        const typesIsAGraph = collectIsATypesSubgraph(selectedObject, connections, drawBoardElements);
-        const elementPartOfIsaGraph = collectionContains(typesIsAGraph, element)
-        return !elementPartOfIsaGraph;
-
-    }
-
-    return true;
-}
-
-
-const collectionContains = (collection, element) => {
-    return collection.indexOf(element) !== -1;
-}
