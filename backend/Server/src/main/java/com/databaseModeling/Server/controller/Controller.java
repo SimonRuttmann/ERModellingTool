@@ -9,7 +9,7 @@ public class Controller {
 
 
     @GetMapping("/index")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com"})
     public String index() {
 
         return "INDEX";
@@ -22,7 +22,7 @@ public class Controller {
      * @return The relational model
      */
     @PostMapping("/convert/relational")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com"})
     public RelationalModelDto convertToRelational(
             @RequestBody ConceptionalModelDto type)
     {
@@ -40,7 +40,7 @@ public class Controller {
      * @return The generated sql
      */
     @PostMapping("/convert/sql")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com"})
     public String convertToSql(
             @RequestBody RelationalModelDto type)
     {
