@@ -28,6 +28,8 @@ export function ContentManager({children, metaInformation, diagramType, changeTo
 
     const [currentDiagram, updateDiagram] = useState(DiagramTypes.erDiagram)
 
+    const [importExecuted, setImportExecuted] = useState(false);
+    const triggerImportComplete = () => {setImportExecuted(false)}
 
     useEffect( () => {
         if(currentDiagram !== diagramType) updateDiagram(diagramType)
@@ -66,6 +68,7 @@ export function ContentManager({children, metaInformation, diagramType, changeTo
 
         relationalContentStoreAccess(ImportRelContent(importedJson.relContent))
         erContentStoreAccess(ImportErContent(importedJson.erContent))
+        setImportExecuted(true)
     }
 
     // ----------------------------------------- Relational and Sql endpoint calls -----------------------------------//
@@ -111,7 +114,9 @@ export function ContentManager({children, metaInformation, diagramType, changeTo
     const SaveAndLoadProps = {
         transformToRel: transformToRel,
         generateSql:generateSql,
-        sqlServerResult: sqlServerResult
+        sqlServerResult: sqlServerResult,
+        importExecuted: importExecuted,
+        triggerImportComplete: triggerImportComplete
     }
 
     // --------------------------------------------------- TabBar ----------------------------------------------------//

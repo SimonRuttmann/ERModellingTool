@@ -37,9 +37,11 @@ import {
  * The state of all connections and elements in the diagrams are kept in the redux store
  *
  * @param transformToRel A function executed, when the user wants to transform the Er diagram into the relational diagram
+ * @param importExecuted A flag to indicate if an import was executed
+ * @param triggerImportComplete A function to reset the importExecuted flag
  * @see ErContentSlice
  */
-const ErManager = ({transformToRel}) => {
+const ErManager = ({transformToRel, importExecuted, triggerImportComplete}) => {
 
   const erContentStore = useSelector(selectErContentSlice);
   const erContentStoreAccess = useDispatch();
@@ -52,6 +54,17 @@ const ErManager = ({transformToRel}) => {
 
   //This state only indicate which kind of connection should be added
   const [connectionInformation, addConnectionInformation] = useState(ConnectionType.association)
+
+
+  //Reset selected object id on import
+  useEffect( () => {
+
+    if(importExecuted) {
+      setSelectedObjectId(null)
+      triggerImportComplete()
+    }
+
+  },[importExecuted])
 
   /**
    * Method to change the current ActionState
@@ -168,7 +181,7 @@ const ErManager = ({transformToRel}) => {
       erContentStoreAccess(UnselectAndUnHighlightAllElements())
       erContentStoreAccess(SelectAnyElement({id: connection.id}))
     }
-//TODO change action state to default?
+
   };
 
 

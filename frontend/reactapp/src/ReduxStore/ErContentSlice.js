@@ -51,6 +51,10 @@ const erContentSlice = createSlice({
             state.drawBoardElements = [];
             state.connections = [];
 
+            drawBoardElements = drawBoardElements.map(drawBoardElements => {
+                return {...drawBoardElements, isHighlighted: false, isSelected: false}
+            })
+
             //action.payload.drawBoardContent
             if(Array.isArray(drawBoardElements) )
             {
