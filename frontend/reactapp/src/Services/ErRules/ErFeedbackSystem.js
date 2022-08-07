@@ -1,14 +1,14 @@
 import {
     collectionContainsStrongEntity,
-    collectWeakTypesSubgraph,
     getConnectorsOfObject,
     getOtherElementsOfConnectors,
     isElementOfCategoryAttribute,
-    resolveRootElementOfAttribute
 } from "./ErRulesUtil";
 import {ERTYPE} from "../DrawBoardModel/ErType";
 import {ConnectionType} from "../DrawBoardModel/Diagram";
 import {resolveObjectById} from "../Common/ObjectUtil";
+import AttributeRules from "./AttributeRules";
+import WeakTypeRules from "./WeakTypeRules";
 
 /**
  * The ErFeedbackSystem currently consists only of the validateErDiagram method
@@ -43,7 +43,7 @@ const validateErDiagram = (connections, drawBoardElements) => {
     let attributes = drawBoardElements.filter(element => isElementOfCategoryAttribute(element))
     for(let attribute of attributes){
 
-        const root = resolveRootElementOfAttribute(attribute, connections, drawBoardElements);
+        const root = AttributeRules.resolveRootElementOfAttribute(attribute, connections, drawBoardElements);
 
         if(root == null)
             invalidMessages.push(`The attribute "${attribute.displayName}" is not connected to a entity or relation!`)
@@ -124,7 +124,7 @@ const validateErDiagram = (connections, drawBoardElements) => {
 
     for(let weakEntity of weakEntities){
 
-        const elementSubGraph = collectWeakTypesSubgraph(weakEntity, connections, drawBoardElements);
+        const elementSubGraph = WeakTypeRules.collectWeakTypesSubgraph(weakEntity, connections, drawBoardElements);
         const isElementIdentified = collectionContainsStrongEntity(elementSubGraph);
 
         if(!isElementIdentified)

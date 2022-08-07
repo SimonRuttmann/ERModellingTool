@@ -141,7 +141,8 @@ const WeakTypeRules = {
     checkIfToWeakRelationItOnlyHasDeg2: checkIfToWeakRelationItOnlyHasDeg2,
     checkWeakRelationHasOnly2Entities: checkWeakRelationHasOnly2Entities,
     pathWeakRelToWeakEntityDoesMax1TimesExist:pathWeakRelToWeakEntityDoesMax1TimesExist,
-    checkWeakTypesConsistency:checkWeakTypesConsistency
+    checkWeakTypesConsistency:checkWeakTypesConsistency,
+    collectWeakTypesSubgraph:collectWeakTypesSubgraph
 }
 
 export default WeakTypeRules;
