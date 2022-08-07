@@ -7,25 +7,28 @@ import {ConnectionType} from "../DrawBoardModel/Diagram";
  */
 const ensureEntityAsSubTypeToIsANoMultipleInheritance = (element, connections, selectedObject, drawBoardElements) => {
 
+    //We use copies here to be able to add a fake super type to isAs
+
+    let elementsCopy = JSON.parse(JSON.stringify(drawBoardElements));
+    let copySelectedObject = elementsCopy.find(copy => copy.id === selectedObject.id)
+    let copyElement = elementsCopy.find(copy => copy.id === element.id)
+
     //Rule only applies to isa and entity
-    if( (element.erType        === ERTYPE.IsAStructure.name && selectedObject.erType === ERTYPE.StrongEntity.name) ||
-        (selectedObject.erType === ERTYPE.IsAStructure.name && element.erType        === ERTYPE.StrongEntity.name) ) {
+    if( (copyElement.erType        === ERTYPE.IsAStructure.name && copySelectedObject.erType === ERTYPE.StrongEntity.name) ||
+        (copySelectedObject.erType === ERTYPE.IsAStructure.name && copyElement.erType        === ERTYPE.StrongEntity.name) ) {
 
+        console.log("X")
+        const {isa, entity} = resolveEntityIsA(copyElement, copySelectedObject)
 
-        const {isa, entity} = resolveEntityIsA(element, selectedObject)
+        let superType = getSuperTypeOfIsA(isa, connections, elementsCopy)
 
-        let superType = getSuperTypeOfIsA(isa, connections, drawBoardElements)
-
-        addFakeMissingSuperTypes(drawBoardElements, connections);
-
+        addFakeMissingSuperTypes(elementsCopy, connections);
         if (superType == null) superType = isa.fakeSuperType;
 
-        const impactedSet = collectImpactedEntitySet(entity, connections, drawBoardElements)
+        const impactedSet = collectImpactedEntitySet(entity, connections, elementsCopy)
+        const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, elementsCopy)
 
-        const superTypeSet = collectSuperTypeSetOfEntity(superType, connections, drawBoardElements)
-
-        removeFakeMissingSuperTypes(drawBoardElements, connections);
-
+        removeFakeMissingSuperTypes(elementsCopy, connections);
 
         return areCollectionsDisjoint(superTypeSet, impactedSet);
 
@@ -81,7 +84,8 @@ const ensureEntityAsSuperTypeToIsANoMultipleInheritance = (element, connections,
 const areCollectionsDisjoint = (firstCollection, secondCollection) => {
 
     for(let element of firstCollection){
-        if(secondCollection.indexOf(element) !== -1) return false;
+        let foundElement = secondCollection.find(secondElement => secondElement.id === element.id);
+        if(foundElement != null) return false;
     }
     return true;
 }
@@ -162,8 +166,6 @@ const collectSubTypeSetOfEntityRecursive = (element, connections, drawBoardEleme
  */
 const collectSuperTypeSetOfEntity = (element, connections, drawBoardElements) => {
     let collectedElements = [];
-    console.log("A")
-    console.log(element)
     addIfNotExists(element, collectedElements);
     collectSuperTypeSetOfEntityRecursive(element, connections, drawBoardElements, collectedElements)
     return collectedElements;
