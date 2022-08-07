@@ -10,8 +10,8 @@ import LeftSideBar from "./LeftSideBar/LeftSideBar";
 import DrawBoard from "../DrawingBoard/DrawBoard";
 import TransformButton from "./TransformButton";
 import {ConnectionType, DiagramTypes} from "../../Services/DrawBoardModel/Diagram";
-import {createConnection} from "../../Services/ErConnectionCreation/ConnectionCreationRules";
-import {createSelection} from "../../Services/ErRules/ErDrawingRuleEnforcer";
+import ErConnectionCreator from "../../Services/ErConnectionCreation/ErConnectionCreator";
+import ErPartialConsistencyValidation from "../../Services/ErRules/ErPartialConsistencyValidation";
 import ErFeedbackSystem from "../../Services/ErRules/ErFeedbackSystem";
 import {useSelector, useDispatch} from "react-redux";
 import {
@@ -138,7 +138,7 @@ const ErManager = ({transformToRel}) => {
       if(previousSelectedObject.objectType === OBJECTTYPE.Connection) return;
 
       //Add new connection
-      let newConnection = createConnection(erContentStore.drawBoardElements, previousSelectedObjectId, drawBoardElementId, connectionInformation);
+      let newConnection = ErConnectionCreator.createConnection(erContentStore.drawBoardElements, previousSelectedObjectId, drawBoardElementId, connectionInformation);
       erContentStoreAccess(AddConnection({newConnection: newConnection}))
     }
 
@@ -289,7 +289,7 @@ const ErManager = ({transformToRel}) => {
    */
   const toAddConnectionState = (id, type) => {
     changeActionState(ACTIONSTATE.AddConnection, type)
-    const highlightedIds = createSelection(id, type, erContentStore.drawBoardElements, erContentStore.connections)
+    const highlightedIds = ErPartialConsistencyValidation.createSelection(id, type, erContentStore.drawBoardElements, erContentStore.connections)
     erContentStoreAccess(HighlightDrawBoardElements({idsToHighlight: highlightedIds}))
   }
 

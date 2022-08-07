@@ -1,11 +1,22 @@
 import {OBJECTTYPE} from "../DrawBoardModel/ActionState";
 import {resolveObjectById} from "../Common/ObjectUtil";
-import {ERTYPE, ERTYPECATEGORY, returnNamesOfCategory} from "../DrawBoardModel/ErType";
+import {ERTYPE, ERTYPECATEGORY} from "../DrawBoardModel/ErType";
 import {ConnectionType} from "../DrawBoardModel/Diagram";
 import {isElementOfCategoryAttribute} from "../ErRules/ErRulesUtil";
 
-
-export const createConnection = (drawBoardElements, idStart, idEnd, connectionInformation) => {
+/**
+ * Handles the creation of connections based on the provided start and end ids
+ * and the additional information provided in connectionInformation
+ *
+ * @param drawBoardElements The elements on the DrawBoard
+ * @param idStart The id of the element to start from
+ * @param idEnd The id of the element to end at
+ * @param connectionInformation Additional connection information (e.g. parent connection, inheritor connection...)
+ *
+ * The data structure of connections are documented at
+ * @see ErContentSlice
+ */
+const createConnection = (drawBoardElements, idStart, idEnd, connectionInformation) => {
 
     let startId = idStart;
     let endId = idEnd;
@@ -83,6 +94,12 @@ const isPartOfAttribute = (startElement, endElement) => {
 const isPartOfIsA = (startElement, endElement) => {
     return startElement.erType === ERTYPE.IsAStructure.name || endElement.erType === ERTYPE.IsAStructure.name;
 }
+
+const ErConnectionCreator = {
+    createConnection: createConnection
+}
+
+export default ErConnectionCreator;
 
 
 

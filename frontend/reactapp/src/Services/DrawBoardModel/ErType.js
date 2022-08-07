@@ -242,7 +242,7 @@ export const resolveErComponent = (type, props) => {
         case ERTYPENAME.StrongRelation: return <StrongRelation {...props}/>
         case ERTYPENAME.WeakRelation: return <WeakRelation {...props}/>
         case ERTYPENAME.IsAStructure: return <IsAStructure {...props}/>
-        case RELATIONALTYPENAME.Table: return <Table {...props}/> //TODO
+        case RELATIONALTYPENAME.Table: return <Table {...props}/>
         default: return <Table {...props}/>
     }
 }

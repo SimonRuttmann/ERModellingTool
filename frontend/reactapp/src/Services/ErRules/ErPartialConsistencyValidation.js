@@ -12,8 +12,15 @@ import {
     handleSelectWeakRelation
 } from "./ErRules";
 
-
-export const createSelection = (id, connectionType, drawBoardElements, connections) => {
+/**
+ * Determines which elements from the current element can be connected to
+ * @param id The id of the currently selected element
+ * @param connectionType The connectionType providing additional information (e.g. parent, inheritor, association ...)
+ * @param drawBoardElements The elements on the DrawBoard
+ * @param connections The connection on the DrawBoard
+ * @returns {*[]|*} An collection of id's. Each element with one of those id's is valid to connect to
+ */
+const createSelection = (id, connectionType, drawBoardElements, connections) => {
     let selectedObject = resolveObjectById(id, drawBoardElements, connections)
 
 
@@ -45,14 +52,10 @@ export const createSelection = (id, connectionType, drawBoardElements, connectio
     return selectableDrawBoardElements.map(element => element.id);
 }
 
+const ErPartialConsistencyValidation = {
+    createSelection: createSelection
+}
 
-//TODO die validierung muss auch die kardinalitäten überprüfen
-//Bei mehr als 2 ent auf bez mit 1:1 oder 1:N -> error message
+export default ErPartialConsistencyValidation;
 
 
-
-//Todo Ein to do ist noch offen, es muss noch die breite / höhe abhängig von der anzahl der zeichen ermittellt werden
-
-//TODO im backend zu prüfen
-// jedes attribut hat eine verbindung
-// jede relation hat mind. 2 verbindungen

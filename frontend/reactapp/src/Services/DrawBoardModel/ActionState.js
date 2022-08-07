@@ -1,3 +1,7 @@
+/**
+ * Enums required by the Er diagram and are associated to the current ActionState
+ */
+
 export const ACTIONSTATE = {
     Default: "Default",
     AddConnection: "AddConnection",
