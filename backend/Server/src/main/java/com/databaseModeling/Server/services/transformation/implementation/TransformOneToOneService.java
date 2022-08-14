@@ -87,13 +87,13 @@ public class TransformOneToOneService implements ITransformOneToOneService {
 
         //Owning side is the mandatory side
         if(isMandatoryToOptional(firstEdge, secondEdge)){
-            owningNode = nodeOfSecondEdge;
-            nodeToReference = nodeOfFirstEge;
+            owningNode = nodeOfFirstEge;
+            nodeToReference = nodeOfSecondEdge;
         }
 
         if(isMandatoryToOptional(secondEdge, firstEdge)){
-            owningNode = nodeOfFirstEge;
-            nodeToReference = nodeOfSecondEdge;
+            owningNode = nodeOfSecondEdge;
+            nodeToReference = nodeOfFirstEge;
         }
 
         //Transformation of the relation

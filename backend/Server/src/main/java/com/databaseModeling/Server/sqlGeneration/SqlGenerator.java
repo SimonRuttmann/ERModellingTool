@@ -16,9 +16,9 @@ public class SqlGenerator {
         StringBuilder tableDefinition = new StringBuilder();
 
         //Add header
-        tableDefinition.append("CREATE TABLE IF NOT EXISTS [")
+        tableDefinition.append("CREATE TABLE IF NOT EXISTS ")
            .append(SqlUtil.getSpaceLessDisplayName(table.getDisplayName()))
-           .append("] (\n");
+           .append(" (\n");
 
         //Add column definitions
         for(var column : table.getColumns()){
@@ -90,11 +90,11 @@ public class SqlGenerator {
         foreignKeyConstraint.
                 append("\tFOREIGN KEY (").
                 append(SqlUtil.getSpaceLessDisplayName(column.getDisplayName())).
-                append(") REFERENCES [").
+                append(") REFERENCES ").
                 append(SqlUtil.getSpaceLessDisplayName(referencedTable.getDisplayName())).
-                append("].").
+                append("(").
                 append(SqlUtil.getSpaceLessDisplayName(referencedColumn.getDisplayName())).
-                append(",\n");
+                append("),\n");
 
         return foreignKeyConstraint.toString();
     }
