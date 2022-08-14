@@ -1,9 +1,0 @@
-FROM postgres:latest
-
-#ENV POSTGRES_PASSWORD: rootpassword
-ENV POSTGRES_PASSWORD rootpassword
-ENV POSTGRES_HOST_AUTH_METHOD=trust
-
-ENV POSTGRES_DB dbmodeler
-
-EXPOSE 5432
