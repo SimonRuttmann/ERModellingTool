@@ -55,12 +55,12 @@ public class TransformManyToOneService implements ITransformManyToOneService {
         GraphNode<TreeNode<EntityRelationElement>, EntityRelationAssociation> manyNode;
 
         if (isManyToOne(firstEdge, secondEdge)) {
-            singleNode = nodeOfSecondEdge;
-            manyNode = nodeOfFirstEge;
-        }
-        else if(isManyToOne(secondEdge, firstEdge)){
             singleNode = nodeOfFirstEge;
             manyNode = nodeOfSecondEdge;
+        }
+        else if(isManyToOne(secondEdge, firstEdge)){
+            singleNode = nodeOfSecondEdge;
+            manyNode = nodeOfFirstEge;
         }
         else return;
 
