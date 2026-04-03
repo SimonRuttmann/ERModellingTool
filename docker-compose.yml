@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend/Server
+    ports:
+      - "8080:8080"
+  frontend:
+    build: ./frontend/reactapp
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
