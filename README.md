@@ -6,6 +6,13 @@ This project was originally developed as part of a project thesis at **Aalen Uni
 
 ---
 
+## Attention
+
+Due to pricing reasons the site moved from heroku to azure.
+The url is no longer https://dbmodelling.herokuapp.com but https://db-modelling-frontend-bqarc9d0ajekbug9.germanywestcentral-01.azurewebsites.net/
+
+--- 
+
 ## Overview
 
 Designing relational databases usually involves several manual and repetitive steps:
