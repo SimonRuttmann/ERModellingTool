@@ -9,7 +9,7 @@ public class Controller {
 
 
     @GetMapping("/index")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com", "https://db-modelling-frontend-bqarc9d0ajekbug9.germanywestcentral-01.azurewebsites.net"})
     public String index() {
 
         return "INDEX";
@@ -22,7 +22,7 @@ public class Controller {
      * @return The relational model
      */
     @PostMapping("/convert/relational")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com", "https://db-modelling-frontend-bqarc9d0ajekbug9.germanywestcentral-01.azurewebsites.net"})
     public RelationalModelDto convertToRelational(
             @RequestBody ConceptionalModelDto type)
     {
@@ -40,7 +40,7 @@ public class Controller {
      * @return The generated sql
      */
     @PostMapping("/convert/sql")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com"})
+    @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "https://dbmodelling.herokuapp.com", "https://db-modelling-frontend-bqarc9d0ajekbug9.germanywestcentral-01.azurewebsites.net"})
     public String convertToSql(
             @RequestBody RelationalModelDto type)
     {
